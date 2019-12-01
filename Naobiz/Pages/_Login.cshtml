@@ -1,0 +1,22 @@
+﻿@page
+
+@namespace Naobiz.Pages
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Naobiz.Data
+
+@inject AppDbContext DbContext
+
+@functions {
+    public async Task<IActionResult> OnGetAsync(string email, string password)
+    {
+        if (DbContext.Users.Any(user => user.Email == email && user.ActivationCode == null && user.Password == password))
+        {
+            var claim = new Claim(ClaimsIdentity.DefaultNameClaimType, email);
+            var id = new ClaimsIdentity(new[] { claim }, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            await HttpContext.SignInAsync(new ClaimsPrincipal(id));
+        }
+
+        return LocalRedirect("/");
+    }
+}

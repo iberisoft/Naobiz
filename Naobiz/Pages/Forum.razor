@@ -1,0 +1,53 @@
+﻿@page "/forum"
+
+@inherits AuthorizedBase
+@inject UserService UserService
+
+<Heading Size="HeadingSize.Is1">Forum</Heading>
+
+@if (groups == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    @foreach (var group in groups)
+    {
+        var linkUrl = "forum/" + group.Id;
+        var topicCount = Service.ForumTopics.Count(topic => topic.Group == group);
+        <Column ColumnSize="ColumnSize.IsQuarter">
+            <Card Margin="Margin.Is4.FromBottom">
+                <CardHeader>
+                    <CardSubtitle>@group.Name</CardSubtitle>
+                </CardHeader>
+                @if (group.ImageSource != null)
+                {
+                    <CardLink Source="@linkUrl">
+                        <CardImage Source="@group.ImageSource" />
+                    </CardLink>
+                }
+                <CardBody>
+                    <CardLink Source="@linkUrl">Topics: @topicCount</CardLink>
+                </CardBody>
+            </Card>
+        </Column>
+    }
+</Row>
+
+@code {
+    List<ForumGroup> groups;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        groups = await Service.ForumGroups.OrderBy(group => group.Name).ToListAsync();
+    }
+}

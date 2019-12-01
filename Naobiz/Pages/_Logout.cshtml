@@ -1,0 +1,13 @@
+﻿@page
+
+@namespace Naobiz.Pages
+@using Microsoft.AspNetCore.Authentication;
+
+@functions {
+    public async Task<IActionResult> OnGetAsync()
+    {
+        await HttpContext.SignOutAsync();
+
+        return LocalRedirect("/login");
+    }
+}

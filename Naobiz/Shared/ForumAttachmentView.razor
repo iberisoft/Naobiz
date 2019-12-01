@@ -1,0 +1,66 @@
+﻿@implements IDisposable
+
+<Field>
+    <InputFile multiple OnChange="UploadFiles" />
+    <FieldHelp>@AttachmentModel.SizeQuota MB each max</FieldHelp>
+</Field>
+
+@foreach (var model in models)
+{
+    <Row>
+        <Column>
+            <Tooltip Text="@Helper.SizeToString(model.Size)" Placement="Placement.Right" IsFade="true" IsInline="true">
+                <Badge Color="Color.Light">@model.Name</Badge>
+            </Tooltip>
+        </Column>
+        <Column>
+            @if (model.SizeExceedsQuota)
+            {
+                <Badge Color="Color.Warning">Max quota exceeded</Badge>
+            }
+            else
+            {
+                <Progress>
+                    <ProgressBar Value="model.Progress" />
+                </Progress>
+            }
+        </Column>
+    </Row>
+}
+
+@code {
+    List<AttachmentModel> models = new List<AttachmentModel>();
+
+    public void Dispose()
+    {
+        foreach (var model in models)
+        {
+            model.Dispose();
+        }
+    }
+
+    private async Task UploadFiles(IFileListEntry[] files)
+    {
+        var newModels = files.Where(file => !models.Any(model => model.Name == file.Name)).Select(file => new AttachmentModel(file)).ToList();
+        models.AddRange(newModels);
+        foreach (var model in newModels.Where(model => !model.SizeExceedsQuota))
+        {
+            await model.UploadAsync(async () => await InvokeAsync(StateHasChanged));
+        }
+    }
+
+    public bool AllAttachmentsUploaded => models.Where(model => !model.SizeExceedsQuota).All(model => model.Uploaded);
+
+    public IEnumerable<ForumAttachment> CreateAttachments()
+    {
+        foreach (var model in models.Where(model => !model.SizeExceedsQuota && model.Uploaded))
+        {
+            var attachment = new ForumAttachment();
+            attachment.Name = model.Name;
+            attachment.Size = model.Size;
+            attachment.Content = new Blob();
+            attachment.Content.Data = model.Data.ToArray();
+            yield return attachment;
+        }
+    }
+}

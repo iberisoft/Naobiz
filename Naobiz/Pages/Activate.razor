@@ -1,0 +1,53 @@
+﻿@page "/activate"
+
+@inherits OwningComponentBase<AppDbContext>
+@inject NavigationManager NavigationManager
+
+<Heading Size="HeadingSize.Is1">Activate</Heading>
+
+@if (user != null)
+{
+    <Row>
+        <Column ColumnSize="ColumnSize.IsThird.IsThird.WithOffset">
+            <Field>
+                <FieldLabel>Email:</FieldLabel>
+                <TextEdit IsReadonly="true" Text="@user.Email" />
+            </Field>
+            <Field>
+                <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+            </Field>
+        </Column>
+    </Row>
+}
+else
+{
+    <Paragraph>Account not found or already processed.</Paragraph>
+}
+
+@code {
+    User user;
+
+    public string Email { get; set; }
+
+    public string Code { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        NavigationManager.ParseQueryString(this);
+
+        if (Code != null)
+        {
+            user = await Service.Users.SingleOrDefaultAsync(user => user.Email == Email && user.ActivationCode == Code);
+        }
+    }
+
+    private async Task SubmitChanges()
+    {
+        user.ActivationCode = null;
+        await Service.SaveChangesAsync();
+
+        var uri = "login";
+        uri = QueryHelpers.AddQueryString(uri, "email", user.Email);
+        NavigationManager.NavigateTo(uri);
+    }
+}

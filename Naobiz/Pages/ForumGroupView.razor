@@ -1,0 +1,148 @@
+﻿@page "/forum/{groupid:int}"
+
+@inherits AuthorizedBase
+@inject UserService UserService
+
+@if (group == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Heading Size="HeadingSize.Is1">@group.Name</Heading>
+
+<Row Margin="Margin.Is1.FromBottom">
+    <Column ColumnSize="ColumnSize.Is10">
+        <TextEdit Text="@topicFilter" TextChanged="ChangeTopicFilter" />
+    </Column>
+    <Column ColumnSize="ColumnSize.Is2">
+        <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
+    </Column>
+</Row>
+
+@foreach (var topic in topics)
+{
+    <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
+}
+
+<Modal IsOpen="newTopic != null">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>New Topic</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Validations @ref="validations" Mode="ValidationMode.Manual">
+                @if (newTopic != null)
+                {
+                    <Field>
+                        <FieldLabel>Title:</FieldLabel>
+                        <Validation Validator="Helper.IsTrimmedNotEmpty">
+                            <TextEdit MaxLength="100" @bind-Text="newTopic.Title" />
+                        </Validation>
+                        <FieldHelp>100 symbols max</FieldHelp>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Message:</FieldLabel>
+                        <Validation Validator="Helper.IsTrimmedNotEmpty">
+                            <MemoEdit MaxLength="1000" Rows="10" @bind-Text="newTopic.Message.Text" />
+                        </Validation>
+                        <FieldHelp>1000 symbols max</FieldHelp>
+                    </Field>
+                    <ForumAttachmentView @ref="attachmentView" />
+                }
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="SendTopic">Send</Button>
+            <Button Color="Color.Secondary" Clicked="() => newTopic = null">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public int GroupId { get; set; }
+
+    User user;
+    ForumGroup group;
+    string topicFilter;
+    List<ForumTopic> topics;
+    ForumTopic newTopic;
+    Validations validations;
+    ForumAttachmentView attachmentView;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        group = await Service.ForumGroups.SingleAsync(group => group.Id == GroupId);
+        await UpdateTopics();
+    }
+
+    private async Task UpdateTopics()
+    {
+        var topicQuery = Service.ForumTopics.Where(topic => topic.Group == group);
+        if (!string.IsNullOrEmpty(topicFilter))
+        {
+            foreach (var keyword in topicFilter.Split((char[])null, StringSplitOptions.RemoveEmptyEntries))
+            {
+                topicQuery = topicQuery.Where(topic => topic.Title.Contains(keyword) || topic.Message.Text.Contains(keyword));
+            }
+        }
+        topicQuery = topicQuery.OrderByDescending(topic => topic.Message.CreationDateTime);
+        topics = await topicQuery.ToListAsync();
+    }
+
+    private void CreateTopic()
+    {
+        newTopic = new ForumTopic();
+        newTopic.Group = group;
+        newTopic.Message = new ForumMessage();
+        newTopic.Message.Initialize(user);
+    }
+
+    private async Task SendTopic()
+    {
+        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded)
+        {
+            return;
+        }
+
+        newTopic.Title = newTopic.Title.Trim();
+        Service.ForumTopics.Add(newTopic);
+        newTopic.Message.Text = newTopic.Message.Text.Trim();
+        Service.ForumMessages.Add(newTopic.Message);
+
+        foreach (var attachment in attachmentView.CreateAttachments())
+        {
+            attachment.Message = newTopic.Message;
+            Service.ForumAttachments.Add(attachment);
+            Service.Blobs.Add(attachment.Content);
+        }
+
+        await Service.SaveChangesAsync();
+
+        topicFilter = null;
+        await UpdateTopics();
+        newTopic = null;
+    }
+
+    private async Task ChangeTopicFilter(string value)
+    {
+        topicFilter = value;
+        await UpdateTopics();
+    }
+
+    private async Task OnTopicDeleted()
+    {
+        await UpdateTopics();
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,70 @@
+﻿@page "/login"
+
+@inherits OwningComponentBase<AppDbContext>
+@inject NavigationManager NavigationManager
+
+<Heading Size="HeadingSize.Is1">Login</Heading>
+
+<Row>
+    <Column ColumnSize="ColumnSize.IsThird.IsThird.WithOffset">
+        <Field>
+            <FieldLabel>Email:</FieldLabel>
+            <TextEdit @bind-Text="email" />
+        </Field>
+        <Field>
+            <FieldLabel>Password:</FieldLabel>
+            <TextEdit Role="TextRole.Password" @bind-Text="password" />
+        </Field>
+        <Field>
+            <Button Color="Color.Primary" Clicked="LoginAccount">Enter</Button>
+            <Button Color="Color.Link" Float="Float.Right" Clicked="RegisterAccount">Register</Button>
+        </Field>
+        <Field>
+            <Button Color="Color.Link" Clicked="RecoverPassword">Recover Password</Button>
+        </Field>
+        <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
+    </Column>
+</Row>
+
+@code {
+    string email;
+    string password;
+    string alertMessage;
+
+    public string Email { get; set; }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.ParseQueryString(this);
+
+        email = Email;
+    }
+
+    private async Task LoginAccount()
+    {
+        var user = await Service.Users.SingleOrDefaultAsync(user => user.Email == email && user.Password == password);
+        if (user != null)
+        {
+            await Service.Entry<User>(user).ReloadAsync();
+            if (user.ActivationCode == null)
+            {
+                var uri = "_login";
+                uri = QueryHelpers.AddQueryString(uri, "email", email);
+                uri = QueryHelpers.AddQueryString(uri, "password", password);
+                NavigationManager.NavigateTo(uri, true);
+            }
+            else
+            {
+                alertMessage = "Please activate your account.";
+            }
+        }
+        else
+        {
+            alertMessage = "Wrong email or password.";
+        }
+    }
+
+    private void RegisterAccount() => NavigationManager.NavigateTo("register");
+
+    private void RecoverPassword() => NavigationManager.NavigateTo("recover-password");
+}

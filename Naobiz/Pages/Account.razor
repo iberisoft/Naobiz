@@ -1,0 +1,130 @@
+﻿@page "/account"
+
+@inherits AuthorizedBase
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+<Heading Size="HeadingSize.Is1">Account</Heading>
+
+@if (model == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is4">
+        <ChangePassword />
+    </Column>
+    <Column ColumnSize="ColumnSize.Is8">
+        <Validations @ref="validations" Mode="ValidationMode.Manual">
+            <Row>
+                <Column>
+                    <Field>
+                        <FieldLabel>Tax ID:</FieldLabel>
+                        <Validation UsePattern="true">
+                            <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
+                                <Feedback>
+                                    <ValidationError>Must be 9 digits or empty string</ValidationError>
+                                </Feedback>
+                            </TextEdit>
+                        </Validation>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Name:</FieldLabel>
+                        <Validation Validator="Helper.IsTrimmedNotEmpty">
+                            <TextEdit MaxLength="100" @bind-Text="model.Name" />
+                        </Validation>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Phone:</FieldLabel>
+                        <Validation UsePattern="true">
+                            <TextEdit MaxLength="20" Pattern="^\+?(\d|\s)*$" @bind-Text="model.Phone">
+                                <ValidationError>Must be digits and spaces with optional leading +</ValidationError>
+                            </TextEdit>
+                        </Validation>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Address:</FieldLabel>
+                        <Validation Validator="Helper.IsAny">
+                            <TextEdit MaxLength="100" @bind-Text="model.Address" />
+                        </Validation>
+                    </Field>
+                </Column>
+                <Column>
+                    <Field>
+                        <FieldLabel>Country:</FieldLabel>
+                        <SelectEdit @bind-SelectedValue="model.Country">
+                            <TerritoryList FileName="countries.json" />
+                        </SelectEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Province:</FieldLabel>
+                        <SelectEdit @bind-SelectedValue="model.Province">
+                            <TerritoryList FileName="provinces.json" />
+                        </SelectEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>City:</FieldLabel>
+                        <Validation Validator="Helper.IsAny">
+                            <TextEdit MaxLength="100" @bind-Text="model.City" />
+                        </Validation>
+                    </Field>
+                    <Field>
+                        <FieldLabel>ZIP Code:</FieldLabel>
+                        <Validation UsePattern="true">
+                            <TextEdit MaxLength="5" Pattern="^(|\d{5})$" @bind-Text="model.ZipCode">
+                                <Feedback>
+                                    <ValidationError>Must be 5 digits or empty string</ValidationError>
+                                </Feedback>
+                            </TextEdit>
+                        </Validation>
+                    </Field>
+                </Column>
+            </Row>
+            <Row>
+                <Column>
+                    <Field>
+                        <CheckEdit @bind-Checked="model.InfoRequested">I agree to receive information about Naobiz via email</CheckEdit>
+                    </Field>
+                    <Field>
+                        <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+                    </Field>
+                </Column>
+            </Row>
+        </Validations>
+    </Column>
+</Row>
+
+@code {
+    User user;
+    AccountModel model;
+    Validations validations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        model = new AccountModel();
+        model.CopyFrom(user);
+    }
+
+    private async Task SubmitChanges()
+    {
+        if (!validations.ValidateAll())
+        {
+            return;
+        }
+
+        model.CopyTo(user);
+        await Service.SaveChangesAsync();
+
+        NavigationManager.NavigateTo("");
+    }
+}

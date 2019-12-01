@@ -1,0 +1,201 @@
+﻿@inherits OwningComponentBase<AppDbContext>
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+@if (message == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    <Column>
+        <Tooltip Text="@message.Creator.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
+            <Badge Color="Color.Info">@message.Creator.Name</Badge>
+        </Tooltip>
+        <Badge Color="Color.Light" Float="Float.Right">@message.CreationDateTime</Badge>
+    </Column>
+</Row>
+<Row Margin="Margin.Is1.FromBottom">
+    <Column ColumnSize="ColumnSize.Is11">
+        <Alert Color="Color.Info" IsShow="true">
+            @foreach (var line in message.Text.Split('\n'))
+            {
+                <Paragraph>@line</Paragraph>
+            }
+        </Alert>
+    </Column>
+    <Column ColumnSize="ColumnSize.Is1">
+        @if (message.Creator == user)
+        {
+            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessage = true">Delete</Button>
+        }
+        else
+        {
+            <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Reply</Button>
+        }
+    </Column>
+</Row>
+
+@foreach (var attachment in attachments)
+{
+    <Tooltip Text="@Helper.SizeToString(attachment.Size)" IsFade="true">
+        <Button Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
+    </Tooltip>
+}
+
+@if (childMessageCount > 0)
+{
+    <Row Padding="Margin.Is1.FromLeft">
+        <Column>
+            @if (childMessages == null)
+            {
+                <Button Color="Color.Link" Size="ButtonSize.Small" Margin="Margin.Is1.FromBottom" Clicked="UpdateChildMessages">Replies: @childMessageCount</Button>
+            }
+            else
+            {
+                foreach (var childMessage in childMessages)
+                {
+                    <ForumMessageView @key="childMessage.Id" MessageId="childMessage.Id" MessageDeleted="OnChildMessageDeleted" />
+                }
+            }
+        </Column>
+    </Row>
+}
+
+<Modal IsOpen="newMessage != null">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Reply</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Validations @ref="validations" Mode="ValidationMode.Manual">
+                @if (newMessage != null)
+                {
+                    <Field>
+                        <FieldLabel>Message:</FieldLabel>
+                        <Validation Validator="Helper.IsTrimmedNotEmpty">
+                            <MemoEdit MaxLength="1000" Rows="10" @bind-Text="newMessage.Text" />
+                        </Validation>
+                        <FieldHelp>1000 symbols max</FieldHelp>
+                    </Field>
+                    <ForumAttachmentView @ref="attachmentView" />
+                }
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Info" Clicked="SendMessage">Send</Button>
+            <Button Color="Color.Secondary" Clicked="() => newMessage = null">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal IsOpen="deleteMessage">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Small">
+        <ModalBody>
+            <Paragraph>Delete message?</Paragraph>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="DeleteMessage">Yes</Button>
+            <Button Color="Color.Secondary" Clicked="() => deleteMessage = false">No</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public int MessageId { get; set; }
+
+    [Parameter]
+    public EventCallback MessageDeleted { get; set; }
+
+    User user;
+    ForumMessage message;
+    List<ForumAttachment> attachments;
+    int childMessageCount;
+    List<ForumMessage> childMessages;
+    ForumMessage newMessage;
+    bool deleteMessage;
+    Validations validations;
+    ForumAttachmentView attachmentView;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserService.GetCurrentAsync(Service);
+
+        message = await Service.ForumMessages.SingleAsync(message => message.Id == MessageId);
+        attachments = await Service.ForumAttachments.Where(attachment => attachment.Message == message).OrderBy(attachment => attachment.Name).ToListAsync();
+        childMessageCount = await Service.ForumMessages.CountAsync(childMessage => childMessage.ParentMessage == message);
+    }
+
+    private async Task UpdateChildMessages()
+    {
+        childMessages = await Service.ForumMessages.Where(childMessage => childMessage.ParentMessage == message).OrderBy(message => message.CreationDateTime).ToListAsync();
+        childMessageCount = childMessages.Count;
+    }
+
+    private void CreateMessage()
+    {
+        newMessage = new ForumMessage();
+        newMessage.Initialize(user);
+        newMessage.ParentMessage = message;
+    }
+
+    private async Task SendMessage()
+    {
+        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded)
+        {
+            return;
+        }
+
+        newMessage.Text = newMessage.Text.Trim();
+        Service.ForumMessages.Add(newMessage);
+
+        foreach (var attachment in attachmentView.CreateAttachments())
+        {
+            attachment.Message = newMessage;
+            Service.ForumAttachments.Add(attachment);
+            Service.Blobs.Add(attachment.Content);
+        }
+
+        await Service.SaveChangesAsync();
+
+        await UpdateChildMessages();
+        newMessage = null;
+    }
+
+    private void DownloadAttachment(ForumAttachment attachment)
+    {
+        var uri = "_forum-attachment";
+        uri = QueryHelpers.AddQueryString(uri, "id", attachment.Id.ToString());
+        NavigationManager.NavigateTo(uri, true);
+    }
+
+    private async Task DeleteMessage()
+    {
+        if (await Service.ForumMessages.AnyAsync(message2 => message2.ParentMessage == message))
+        {
+            return;
+        }
+
+        Service.ForumMessages.Remove(message);
+        var topic = await Service.ForumTopics.SingleOrDefaultAsync(topic => topic.Message == message);
+        if (topic != null)
+        {
+            Service.ForumTopics.Remove(topic);
+        }
+
+        await Service.SaveChangesAsync();
+
+        await MessageDeleted.InvokeAsync(EventArgs.Empty);
+        deleteMessage = false;
+    }
+
+    private async Task OnChildMessageDeleted()
+    {
+        await UpdateChildMessages();
+        StateHasChanged();
+    }
+}

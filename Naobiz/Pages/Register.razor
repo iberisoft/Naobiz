@@ -1,0 +1,181 @@
+﻿@page "/register"
+
+@inherits OwningComponentBase<AppDbContext>
+@inject NavigationManager NavigationManager
+@inject IConfiguration Config
+@inject IWebHostEnvironment Environment
+@inject EmailService EmailService
+
+<Heading Size="HeadingSize.Is1">Register</Heading>
+
+@if (model == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Validations @ref="validations" Mode="ValidationMode.Manual">
+    <Row>
+        <Column>
+            <Field>
+                <FieldLabel>Email:</FieldLabel>
+                <Validation Validator="ValidationRule.IsEmail">
+                    <TextEdit MaxLength="254" @bind-Text="email" />
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Password:</FieldLabel>
+                <Validation Validator="ValidationRule.IsNotEmpty">
+                    <TextEdit MaxLength="100" Role="TextRole.Password" @bind-Text="password" />
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Confirm Password:</FieldLabel>
+                <Validation Validator="e => Helper.IsPasswordConfirmed(e, password)">
+                    <TextEdit MaxLength="100" Role="TextRole.Password">
+                        <Feedback>
+                            <ValidationError>Confirmation and password do not match.</ValidationError>
+                        </Feedback>
+                    </TextEdit>
+                </Validation>
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Tax ID:</FieldLabel>
+                <Validation UsePattern="true">
+                    <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
+                        <Feedback>
+                            <ValidationError>Must be 9 digits or empty string</ValidationError>
+                        </Feedback>
+                    </TextEdit>
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Name:</FieldLabel>
+                <Validation Validator="Helper.IsTrimmedNotEmpty">
+                    <TextEdit MaxLength="100" @bind-Text="model.Name" />
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Phone:</FieldLabel>
+                <Validation UsePattern="true">
+                    <TextEdit MaxLength="20" Pattern="^\+?(\d|\s)*$" @bind-Text="model.Phone">
+                        <ValidationError>Must be digits and spaces with optional leading +</ValidationError>
+                    </TextEdit>
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Address:</FieldLabel>
+                <Validation Validator="Helper.IsAny">
+                    <TextEdit MaxLength="100" @bind-Text="model.Address" />
+                </Validation>
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Country:</FieldLabel>
+                <SelectEdit @bind-SelectedValue="model.Country">
+                    <TerritoryList FileName="countries.json" />
+                </SelectEdit>
+            </Field>
+            <Field>
+                <FieldLabel>Province:</FieldLabel>
+                <SelectEdit @bind-SelectedValue="model.Province">
+                    <TerritoryList FileName="provinces.json" />
+                </SelectEdit>
+            </Field>
+            <Field>
+                <FieldLabel>City:</FieldLabel>
+                <Validation Validator="Helper.IsAny">
+                    <TextEdit MaxLength="100" @bind-Text="model.City" />
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>ZIP Code:</FieldLabel>
+                <Validation UsePattern="true">
+                    <TextEdit MaxLength="5" Pattern="^(|\d{5})$" @bind-Text="model.ZipCode">
+                        <Feedback>
+                            <ValidationError>Must be 5 digits or empty string</ValidationError>
+                        </Feedback>
+                    </TextEdit>
+                </Validation>
+            </Field>
+        </Column>
+    </Row>
+    <Row>
+        <Column>
+            <Field>
+                <Validation Validator="Helper.IsTrue">
+                    <CheckEdit>
+                        <ChildContent>I accept Naobiz legal terms and cookie policy</ChildContent>
+                        <Feedback>
+                            <ValidationError>Please accept</ValidationError>
+                        </Feedback>
+                    </CheckEdit>
+                </Validation>
+            </Field>
+            <Field>
+                <CheckEdit @bind-Checked="model.InfoRequested">I agree to receive information about Naobiz via email</CheckEdit>
+            </Field>
+            <Field>
+                <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+            </Field>
+            <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
+        </Column>
+    </Row>
+</Validations>
+
+@code {
+    string email;
+    string password;
+    readonly AccountModel model = new AccountModel();
+    string alertMessage;
+    Validations validations;
+
+    private async Task SubmitChanges()
+    {
+        if (!validations.ValidateAll())
+        {
+            return;
+        }
+
+        var user = await Service.Users.SingleOrDefaultAsync(user => user.Email == email);
+        if (user == null)
+        {
+            user = new User();
+            user.Initialize("", Environment.IsDevelopment());
+            user.Email = email;
+            user.Password = password;
+            model.CopyTo(user);
+
+            if (user.ActivationCode == null)
+            {
+                Service.Users.Add(user);
+                await Service.SaveChangesAsync();
+
+                NavigationManager.NavigateTo("login");
+                return;
+            }
+
+            alertMessage = "Sending email...";
+            StateHasChanged();
+
+            if (await EmailService.SendAsync(user, "Account Activation", "activate.cshtml", new Models.Emails.ActivateModel(user, Config["SiteUrl"])))
+            {
+                Service.Users.Add(user);
+                await Service.SaveChangesAsync();
+
+                alertMessage = $"An activation email has sent to {user.Email}.";
+            }
+            else
+            {
+                alertMessage = "An error occured when sending the activation email.";
+            }
+        }
+        else
+        {
+            alertMessage = "Email already exists.";
+        }
+    }
+}

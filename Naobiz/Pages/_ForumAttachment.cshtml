@@ -1,0 +1,19 @@
+﻿@page "/_forum-attachment"
+
+@namespace Naobiz.Pages
+@using Naobiz.Data
+
+@inject AppDbContext DbContext
+
+@functions {
+    public IActionResult OnGet(int id)
+    {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            var attachment = DbContext.ForumAttachments.Single(attachment => attachment.Id == id);
+            DbContext.Entry<ForumAttachment>(attachment).Reference(entity => entity.Content).Load();
+            return File(attachment.Content.Data, "application/octet-stream", attachment.Name);
+        }
+        return new EmptyResult();
+    }
+}

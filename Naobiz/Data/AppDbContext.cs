@@ -1,0 +1,76 @@
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Naobiz.Data
+{
+    public class AppDbContext : DbContext
+    {
+        readonly IWebHostEnvironment m_Environment;
+
+        public AppDbContext(IWebHostEnvironment environment, DbContextOptions options)
+            : base(options)
+        {
+            m_Environment = environment;
+
+            Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<UserActivityLink>()
+                .HasKey(entity => new { entity.UserId, entity.ActivityId });
+
+            modelBuilder.Entity<Activity>().HasData(LoadArray<Activity>(Path.Combine(m_Environment.WebRootPath, "activities.json")));
+
+            modelBuilder.Entity<ForumGroup>().HasData(LoadArray<ForumGroup>(Path.Combine(m_Environment.WebRootPath, "forum-groups.json")));
+
+            modelBuilder.Entity<ForumTopic>()
+                .HasIndex(entity => entity.Title);
+
+            modelBuilder.Entity<ForumMessage>()
+                .HasIndex(entity => entity.Text);
+        }
+
+        private T[] LoadArray<T>(string filePath)
+        {
+            var objs = JsonConvert.DeserializeObject<T[]>(File.ReadAllText(filePath));
+            for (var i = 0; i < objs.Length; ++i)
+            {
+                dynamic obj = objs[i];
+                obj.Id = i + 1;
+            }
+            return objs;
+        }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Activity> Activities { get; set; }
+
+        public DbSet<UserActivityLink> UserActivityLinks { get; set; }
+
+        public IQueryable<Activity> GetUserActivities(User user) => UserActivityLinks.Where(link => link.User == user).Select(link => link.Activity);
+
+        public void AddUserActivity(User user, Activity activity) => UserActivityLinks.Add(new UserActivityLink { User = user, Activity = activity });
+
+        public async Task RemovevUserActivityAsync(User user, Activity activity) =>
+            UserActivityLinks.Remove(await UserActivityLinks.SingleOrDefaultAsync(link => link.User == user && link.Activity == activity));
+
+        public DbSet<ForumGroup> ForumGroups { get; set; }
+
+        public DbSet<ForumTopic> ForumTopics { get; set; }
+
+        public DbSet<ForumMessage> ForumMessages { get; set; }
+
+        public DbSet<ForumAttachment> ForumAttachments { get; set; }
+
+        public DbSet<Blob> Blobs { get; set; }
+    }
+}

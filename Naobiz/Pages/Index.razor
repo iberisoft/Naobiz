@@ -1,0 +1,52 @@
+﻿@page "/"
+
+@inherits AuthorizedBase
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+@inject IConfiguration Config
+
+<Heading Size="HeadingSize.Is1">Home</Heading>
+
+@if (dashboard == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    @foreach (var item in dashboard)
+    {
+        <Column ColumnSize="ColumnSize.IsQuarter">
+            <Card Margin="Margin.Is4.FromBottom">
+                <CardHeader>
+                    <CardSubtitle>@item["Name"]</CardSubtitle>
+                </CardHeader>
+                <CardLink Source="@item["LinkUrl"]">
+                    <CardImage Source="@item["ImageSource"]" />
+                </CardLink>
+            </Card>
+        </Column>
+    }
+</Row>
+
+@code {
+    List<IConfigurationSection> dashboard;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        dashboard = Config.GetSection("Dashboard").GetChildren().ToList();
+
+        if (!await Service.GetUserActivities(user).AnyAsync())
+        {
+            NavigationManager.NavigateTo("activities");
+        }
+    }
+}

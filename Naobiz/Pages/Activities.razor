@@ -1,0 +1,81 @@
+﻿@page "/activities"
+
+@inherits AuthorizedBase
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+<Heading Size="HeadingSize.Is1">Activities</Heading>
+
+@if (activities == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    <Column>
+        @foreach (var activity in activities.Take(activities.Count / 2))
+        {
+            <Field>
+                <CheckEdit @bind-Checked="activity.Selected">@activity.Value.Name</CheckEdit>
+            </Field>
+        }
+    </Column>
+    <Column>
+        @foreach (var activity in activities.Skip(activities.Count / 2))
+        {
+            <Field>
+                <CheckEdit @bind-Checked="activity.Selected">@activity.Value.Name</CheckEdit>
+            </Field>
+        }
+    </Column>
+</Row>
+<Row>
+    <Column>
+        <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+    </Column>
+</Row>
+
+@code {
+    User user;
+    List<SelectedValue<Activity>> activities;
+    List<Activity> selectedActivities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        selectedActivities = await Service.GetUserActivities(user).ToListAsync();
+        activities = SelectedValue<Activity>.Create(await Service.Activities.ToListAsync(), selectedActivities).ToList();
+    }
+
+    private async Task SubmitChanges()
+    {
+        foreach (var activity in activities)
+        {
+            if (activity.Selected)
+            {
+                if (!selectedActivities.Contains(activity.Value))
+                {
+                    Service.AddUserActivity(user, activity.Value);
+                }
+            }
+            else
+            {
+                if (selectedActivities.Contains(activity.Value))
+                {
+                    await Service.RemovevUserActivityAsync(user, activity.Value);
+                }
+            }
+        }
+        await Service.SaveChangesAsync();
+
+        NavigationManager.NavigateTo("");
+    }
+}

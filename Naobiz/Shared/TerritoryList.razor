@@ -1,0 +1,13 @@
+﻿@using System.IO
+
+@inject IWebHostEnvironment Environment
+
+@foreach (var territory in Territory.Load(Path.Combine(Environment.WebRootPath, FileName)))
+{
+    <SelectItem Value="territory.Code">@territory.Name</SelectItem>
+}
+
+@code {
+    [Parameter]
+    public string FileName { get; set; }
+}

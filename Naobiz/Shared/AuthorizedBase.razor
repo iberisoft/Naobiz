@@ -1,0 +1,14 @@
+﻿@inherits OwningComponentBase<AppDbContext>
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            NavigationManager.NavigateTo("_logout");
+        }
+    }
+}

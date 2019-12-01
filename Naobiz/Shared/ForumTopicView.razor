@@ -1,0 +1,36 @@
+﻿@inherits OwningComponentBase<AppDbContext>
+
+@if (topic == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Card Margin="Margin.Is1.FromBottom">
+    <CardHeader>
+        <CardSubtitle>@topic.Title</CardSubtitle>
+    </CardHeader>
+    <CardBody>
+        <ForumMessageView MessageId="topic.Message.Id" MessageDeleted="OnMessageDeleted" />
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public int TopicId { get; set; }
+
+    [Parameter]
+    public EventCallback TopicDeleted { get; set; }
+
+    ForumTopic topic;
+
+    protected override async Task OnInitializedAsync()
+    {
+        topic = await Service.ForumTopics.SingleAsync(topic => topic.Id == TopicId);
+    }
+
+    private async Task OnMessageDeleted()
+    {
+        await TopicDeleted.InvokeAsync(EventArgs.Empty);
+    }
+}

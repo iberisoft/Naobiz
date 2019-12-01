@@ -1,0 +1,26 @@
+[
+	{
+		"Name": "Logistica y compras",
+		"ImageSource": "images/cart-icon.png"
+	},
+	{
+		"Name": "Marketing y ventas",
+		"ImageSource": "images/analytics-icon.png"
+	},
+	{
+		"Name": "Recursos humanos",
+		"ImageSource": "images/contact-icon.png"
+	},
+	{
+		"Name": "Contabilidad y fiscalidad",
+		"ImageSource": "images/bucket-icon.png"
+	},
+	{
+		"Name": "Financiacion",
+		"ImageSource": "images/currency-icon.png"
+	},
+	{
+		"Name": "Compartir recursos",
+		"ImageSource": "images/browser-icon.png"
+	}
+]

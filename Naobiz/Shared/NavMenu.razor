@@ -1,0 +1,33 @@
+﻿<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark" Margin="Margin.Is3.FromBottom">
+    <Container>
+        <BarToggler />
+        <BarMenu>
+            <BarStart>
+                <AuthorizeView>
+                    <Authorized>
+                        <BarLink To="">Home</BarLink>
+                        <BarLink To="forum" Match="Match.Prefix">Forum</BarLink>
+                        <BarLink To="activities">Activities</BarLink>
+                        <BarLink To="account">Account</BarLink>
+                    </Authorized>
+                    <NotAuthorized>
+                        <BarLink To="login">Home</BarLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </BarStart>
+            <BarEnd>
+                <AuthorizeView>
+                    <Authorized>
+                        <BarLink To="_logout">Logout</BarLink>
+                        <Text Color="TextColor.White50" Margin="Margin.Is2">@context.User.Identity.Name</Text>
+                    </Authorized>
+                </AuthorizeView>
+            </BarEnd>
+            <BarBrand>
+                <Figure Margin="Margin.Is3.FromLeft.Is3.FromTop">
+                    <FigureImage Source="images/logo.png" />
+                </Figure>
+            </BarBrand>
+        </BarMenu>
+    </Container>
+</Bar>
