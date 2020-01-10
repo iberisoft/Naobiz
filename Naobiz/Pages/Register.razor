@@ -2,7 +2,7 @@
 
 @inherits OwningComponentBase<AppDbContext>
 @inject NavigationManager NavigationManager
-@inject IConfiguration Config
+@inject Settings Settings
 @inject IWebHostEnvironment Environment
 @inject EmailService EmailService
 
@@ -161,7 +161,7 @@
             alertMessage = "Sending email...";
             StateHasChanged();
 
-            if (await EmailService.SendAsync(user, "Account Activation", "activate.cshtml", new Models.Emails.ActivateModel(user, Config["SiteUrl"])))
+            if (await EmailService.SendAsync(user, "Account Activation", "activate.cshtml", new Models.Emails.ActivateModel(user, Settings.SiteUrl)))
             {
                 Service.Users.Add(user);
                 await Service.SaveChangesAsync();

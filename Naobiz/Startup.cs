@@ -25,8 +25,10 @@ namespace Naobiz
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection));
+            var settings = Configuration.Get<Settings>();
+            services.AddSingleton(settings);
+
+            services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(settings.DbConnection));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
@@ -41,9 +43,9 @@ namespace Naobiz
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
 
-            services.AddFluentEmail(Configuration["SiteEmail"])
+            services.AddFluentEmail(settings.SiteEmail)
                 .AddRazorRenderer()
-                .AddSmtpSender(Configuration["Smtp:Host"], int.Parse(Configuration["Smtp:Port"]), Configuration["Smtp:User"], Configuration["Smtp:Password"]);
+                .AddSmtpSender(settings.Smtp.Host, settings.Smtp.Port, settings.Smtp.User, settings.Smtp.Password);
 
             services.AddScoped<UserService>();
             services.AddScoped<EmailService>();
