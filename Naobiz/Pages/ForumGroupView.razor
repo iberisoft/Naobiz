@@ -25,7 +25,7 @@
     <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
 }
 
-<Modal IsOpen="newTopic != null">
+<Modal @ref="newTopicModal">
     <ModalBackdrop />
     <ModalContent IsCentered="true" Size="ModalSize.Large">
         <ModalHeader>
@@ -55,7 +55,7 @@
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="SendTopic">Send</Button>
-            <Button Color="Color.Secondary" Clicked="() => newTopic = null">Close</Button>
+            <Button Color="Color.Secondary" Clicked="() => newTopicModal.Hide()">Close</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -69,6 +69,7 @@
     string topicFilter;
     List<ForumTopic> topics;
     ForumTopic newTopic;
+    Modal newTopicModal;
     Validations validations;
     AttachmentView attachmentView;
 
@@ -106,6 +107,7 @@
         newTopic.Group = group;
         newTopic.Message = new ForumMessage();
         newTopic.Message.Initialize(user);
+        newTopicModal.Show();
     }
 
     private async Task SendTopic()
@@ -131,7 +133,7 @@
 
         topicFilter = null;
         await UpdateTopics();
-        newTopic = null;
+        newTopicModal.Hide();
     }
 
     private async Task ChangeTopicFilter(string value)

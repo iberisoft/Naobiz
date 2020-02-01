@@ -28,7 +28,7 @@
     <Column ColumnSize="ColumnSize.Is1">
         @if (message.Creator == user)
         {
-            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessage = true">Delete</Button>
+            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageModal.Show()">Delete</Button>
         }
         else
         {
@@ -63,7 +63,7 @@
     </Row>
 }
 
-<Modal IsOpen="newMessage != null">
+<Modal @ref="newMessageModal">
     <ModalBackdrop />
     <ModalContent IsCentered="true" Size="ModalSize.Large">
         <ModalHeader>
@@ -86,12 +86,12 @@
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Info" Clicked="SendMessage">Send</Button>
-            <Button Color="Color.Secondary" Clicked="() => newMessage = null">Close</Button>
+            <Button Color="Color.Secondary" Clicked="() => newMessageModal.Hide()">Close</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
 
-<Modal IsOpen="deleteMessage">
+<Modal @ref="deleteMessageModal">
     <ModalBackdrop />
     <ModalContent IsCentered="true" Size="ModalSize.Small">
         <ModalBody>
@@ -99,7 +99,7 @@
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Danger" Clicked="DeleteMessage">Yes</Button>
-            <Button Color="Color.Secondary" Clicked="() => deleteMessage = false">No</Button>
+            <Button Color="Color.Secondary" Clicked="() => deleteMessageModal.Hide()">No</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -117,7 +117,8 @@
     int childMessageCount;
     List<ForumMessage> childMessages;
     ForumMessage newMessage;
-    bool deleteMessage;
+    Modal newMessageModal;
+    Modal deleteMessageModal;
     Validations validations;
     AttachmentView attachmentView;
 
@@ -141,6 +142,7 @@
         newMessage = new ForumMessage();
         newMessage.Initialize(user);
         newMessage.ParentMessage = message;
+        newMessageModal.Show();
     }
 
     private async Task SendMessage()
@@ -163,7 +165,7 @@
         await Service.SaveChangesAsync();
 
         await UpdateChildMessages();
-        newMessage = null;
+        newMessageModal.Hide();
     }
 
     private void DownloadAttachment(ForumAttachment attachment)
@@ -190,7 +192,7 @@
         await Service.SaveChangesAsync();
 
         await MessageDeleted.InvokeAsync(EventArgs.Empty);
-        deleteMessage = false;
+        deleteMessageModal.Hide();
     }
 
     private async Task OnChildMessageDeleted()
