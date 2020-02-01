@@ -7,6 +7,8 @@ namespace Naobiz.Data
     {
         public int Id { get; set; }
 
+        public bool Admin { get; set; }
+
         public DateTime RegistrationDateTime { get; set; }
 
         [Required]
