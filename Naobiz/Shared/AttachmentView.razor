@@ -51,11 +51,12 @@
 
     public bool AllAttachmentsUploaded => models.Where(model => !model.SizeExceedsQuota).All(model => model.Uploaded);
 
-    public IEnumerable<ForumAttachment> CreateAttachments()
+    public IEnumerable<T> CreateAttachments<T>()
+        where T : Attachment, new()
     {
         foreach (var model in models.Where(model => !model.SizeExceedsQuota && model.Uploaded))
         {
-            var attachment = new ForumAttachment();
+            var attachment = new T();
             attachment.Name = model.Name;
             attachment.Size = model.Size;
             attachment.Content = new Blob();

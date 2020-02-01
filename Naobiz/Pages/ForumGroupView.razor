@@ -49,7 +49,7 @@
                         </Validation>
                         <FieldHelp>1000 symbols max</FieldHelp>
                     </Field>
-                    <ForumAttachmentView @ref="attachmentView" />
+                    <AttachmentView @ref="attachmentView" />
                 }
             </Validations>
         </ModalBody>
@@ -70,7 +70,7 @@
     List<ForumTopic> topics;
     ForumTopic newTopic;
     Validations validations;
-    ForumAttachmentView attachmentView;
+    AttachmentView attachmentView;
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,7 +120,7 @@
         newTopic.Message.Text = newTopic.Message.Text.Trim();
         Service.ForumMessages.Add(newTopic.Message);
 
-        foreach (var attachment in attachmentView.CreateAttachments())
+        foreach (var attachment in attachmentView.CreateAttachments<ForumAttachment>())
         {
             attachment.Message = newTopic.Message;
             Service.ForumAttachments.Add(attachment);
