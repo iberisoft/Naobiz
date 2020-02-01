@@ -1,0 +1,18 @@
+[
+	{
+		"Name": "Peticiones de compra",
+		"ImageSource": "images/purchase-icon.png"
+	},
+	{
+		"Name": "Cursos de formación",
+		"ImageSource": "images/student-icon.png"
+	},
+	{
+		"Name": "Gestión inmobiliaria",
+		"ImageSource": "images/home-icon.png"
+	},
+	{
+		"Name": "Eventos empresariales",
+		"ImageSource": "images/case-icon.png"
+	}
+]
