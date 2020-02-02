@@ -25,40 +25,7 @@
     <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
 }
 
-<Modal @ref="newTopicModal">
-    <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Large">
-        <ModalHeader>
-            <ModalTitle>New Topic</ModalTitle>
-        </ModalHeader>
-        <ModalBody>
-            <Validations @ref="validations" Mode="ValidationMode.Manual">
-                @if (newTopic != null)
-                {
-                    <Field>
-                        <FieldLabel>Title:</FieldLabel>
-                        <Validation Validator="Helper.IsTrimmedNotEmpty">
-                            <TextEdit MaxLength="100" @bind-Text="newTopic.Title" />
-                        </Validation>
-                        <FieldHelp>100 symbols max</FieldHelp>
-                    </Field>
-                    <Field>
-                        <FieldLabel>Message:</FieldLabel>
-                        <Validation Validator="Helper.IsTrimmedNotEmpty">
-                            <MemoEdit MaxLength="1000" Rows="10" @bind-Text="newTopic.Message.Text" />
-                        </Validation>
-                        <FieldHelp>1000 symbols max</FieldHelp>
-                    </Field>
-                    <AttachmentView @ref="attachmentView" />
-                }
-            </Validations>
-        </ModalBody>
-        <ModalFooter>
-            <Button Color="Color.Primary" Clicked="SendTopic">Send</Button>
-            <Button Color="Color.Secondary" Clicked="() => newTopicModal.Hide()">Close</Button>
-        </ModalFooter>
-    </ModalContent>
-</Modal>
+<ForumMessageEdit @ref="newTopicEdit" IsTitleVisible="true" Submitted="SendTopic" />
 
 @code {
     [Parameter]
@@ -69,9 +36,7 @@
     string topicFilter;
     List<ForumTopic> topics;
     ForumTopic newTopic;
-    Modal newTopicModal;
-    Validations validations;
-    AttachmentView attachmentView;
+    ForumMessageEdit newTopicEdit;
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,22 +72,16 @@
         newTopic.Group = group;
         newTopic.Message = new ForumMessage();
         newTopic.Message.Initialize(user);
-        newTopicModal.Show();
+        newTopicEdit.Show();
     }
 
     private async Task SendTopic()
     {
-        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded)
-        {
-            return;
-        }
-
-        newTopic.Title = newTopic.Title.Trim();
+        newTopicEdit.Get(newTopic);
         Service.ForumTopics.Add(newTopic);
-        newTopic.Message.Text = newTopic.Message.Text.Trim();
         Service.ForumMessages.Add(newTopic.Message);
 
-        foreach (var attachment in attachmentView.CreateAttachments<ForumAttachment>())
+        foreach (var attachment in newTopicEdit.CreateAttachments())
         {
             attachment.Message = newTopic.Message;
             Service.ForumAttachments.Add(attachment);
@@ -133,7 +92,6 @@
 
         topicFilter = null;
         await UpdateTopics();
-        newTopicModal.Hide();
     }
 
     private async Task ChangeTopicFilter(string value)

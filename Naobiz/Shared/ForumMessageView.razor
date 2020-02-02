@@ -28,7 +28,7 @@
     <Column ColumnSize="ColumnSize.Is1">
         @if (message.Creator == user)
         {
-            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageModal.Show()">Delete</Button>
+            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
         }
         else
         {
@@ -63,46 +63,9 @@
     </Row>
 }
 
-<Modal @ref="newMessageModal">
-    <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Large">
-        <ModalHeader>
-            <ModalTitle>Reply</ModalTitle>
-        </ModalHeader>
-        <ModalBody>
-            <Validations @ref="validations" Mode="ValidationMode.Manual">
-                @if (newMessage != null)
-                {
-                    <Field>
-                        <FieldLabel>Message:</FieldLabel>
-                        <Validation Validator="Helper.IsTrimmedNotEmpty">
-                            <MemoEdit MaxLength="1000" Rows="10" @bind-Text="newMessage.Text" />
-                        </Validation>
-                        <FieldHelp>1000 symbols max</FieldHelp>
-                    </Field>
-                    <AttachmentView @ref="attachmentView" />
-                }
-            </Validations>
-        </ModalBody>
-        <ModalFooter>
-            <Button Color="Color.Info" Clicked="SendMessage">Send</Button>
-            <Button Color="Color.Secondary" Clicked="() => newMessageModal.Hide()">Close</Button>
-        </ModalFooter>
-    </ModalContent>
-</Modal>
+<ForumMessageEdit @ref="newMessageEdit" Submitted="SendMessage" />
 
-<Modal @ref="deleteMessageModal">
-    <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Small">
-        <ModalBody>
-            <Paragraph>Delete message?</Paragraph>
-        </ModalBody>
-        <ModalFooter>
-            <Button Color="Color.Danger" Clicked="DeleteMessage">Yes</Button>
-            <Button Color="Color.Secondary" Clicked="() => deleteMessageModal.Hide()">No</Button>
-        </ModalFooter>
-    </ModalContent>
-</Modal>
+<Confirm @ref="deleteMessageConfirm" Text="Delete message?" Confirmed="DeleteMessage" />
 
 @code {
     [Parameter]
@@ -117,10 +80,8 @@
     int childMessageCount;
     List<ForumMessage> childMessages;
     ForumMessage newMessage;
-    Modal newMessageModal;
-    Modal deleteMessageModal;
-    Validations validations;
-    AttachmentView attachmentView;
+    ForumMessageEdit newMessageEdit;
+    Confirm deleteMessageConfirm;
 
     protected override async Task OnInitializedAsync()
     {
@@ -142,20 +103,15 @@
         newMessage = new ForumMessage();
         newMessage.Initialize(user);
         newMessage.ParentMessage = message;
-        newMessageModal.Show();
+        newMessageEdit.Show();
     }
 
     private async Task SendMessage()
     {
-        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded)
-        {
-            return;
-        }
-
-        newMessage.Text = newMessage.Text.Trim();
+        newMessageEdit.Get(newMessage);
         Service.ForumMessages.Add(newMessage);
 
-        foreach (var attachment in attachmentView.CreateAttachments<ForumAttachment>())
+        foreach (var attachment in newMessageEdit.CreateAttachments())
         {
             attachment.Message = newMessage;
             Service.ForumAttachments.Add(attachment);
@@ -165,7 +121,6 @@
         await Service.SaveChangesAsync();
 
         await UpdateChildMessages();
-        newMessageModal.Hide();
     }
 
     private void DownloadAttachment(ForumAttachment attachment)
@@ -192,7 +147,6 @@
         await Service.SaveChangesAsync();
 
         await MessageDeleted.InvokeAsync(null);
-        deleteMessageModal.Hide();
     }
 
     private async Task OnChildMessageDeleted()

@@ -1,0 +1,38 @@
+﻿<Modal @ref="modal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Small">
+        <ModalBody>
+            <Paragraph>@Text</Paragraph>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="Yes">Yes</Button>
+            <Button Color="Color.Secondary" Clicked="No">No</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public EventCallback Confirmed { get; set; }
+
+    Modal modal;
+
+    public void Show()
+    {
+        modal.Show();
+    }
+
+    private async Task Yes()
+    {
+        modal.Hide();
+        await Confirmed.InvokeAsync(null);
+    }
+
+    private void No()
+    {
+        modal.Hide();
+    }
+}

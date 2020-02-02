@@ -1,0 +1,85 @@
+﻿<Modal @ref="modal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Message</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Validations @ref="validations" Mode="ValidationMode.Manual">
+                @if (IsTitleVisible)
+                {
+                    <Field>
+                        <FieldLabel>Title:</FieldLabel>
+                        <Validation Validator="Helper.IsTrimmedNotEmpty">
+                            <TextEdit MaxLength="100" @bind-Text="title" />
+                        </Validation>
+                        <FieldHelp>100 symbols max</FieldHelp>
+                    </Field>
+                }
+                <Field>
+                    <FieldLabel>Message:</FieldLabel>
+                    <Validation Validator="Helper.IsTrimmedNotEmpty">
+                        <MemoEdit MaxLength="1000" Rows="10" @bind-Text="text" />
+                    </Validation>
+                    <FieldHelp>1000 symbols max</FieldHelp>
+                </Field>
+                <AttachmentView @ref="attachmentView" />
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="Submit">Send</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public bool IsTitleVisible { get; set; }
+
+    [Parameter]
+    public EventCallback Submitted { get; set; }
+
+    string title;
+    string text;
+    Modal modal;
+    Validations validations;
+    AttachmentView attachmentView;
+
+    public void Show()
+    {
+        title = null;
+        text = null;
+
+        modal.Show();
+    }
+
+    public void Get(ForumTopic topic)
+    {
+        topic.Title = title?.Trim();
+        topic.Message.Text = text?.Trim();
+    }
+
+    public void Get(ForumMessage message)
+    {
+        message.Text = text?.Trim();
+    }
+
+    private async Task Submit()
+    {
+        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded)
+        {
+            return;
+        }
+
+        modal.Hide();
+        await Submitted.InvokeAsync(null);
+    }
+
+    private void Close()
+    {
+        modal.Hide();
+    }
+
+    public IEnumerable<ForumAttachment> CreateAttachments() => attachmentView.CreateAttachments<ForumAttachment>();
+}
