@@ -1,0 +1,12 @@
+﻿@inject TerritoryService TerritoryService
+
+<Tooltip Text="@User.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
+    <Badge Color="Color.Info">@User.Name</Badge>
+</Tooltip>
+<Badge Color="Color.Light">@User.City</Badge>
+<Badge Color="Color.Light">@TerritoryService.GetProvinceName(User.Province)</Badge>
+
+@code {
+    [Parameter]
+    public User User { get; set; }
+}

@@ -1,7 +1,6 @@
 ﻿@inherits OwningComponentBase<AppDbContext>
 @inject NavigationManager NavigationManager
 @inject UserService UserService
-@inject TerritoryService TerritoryService
 
 @if (resource == null)
 {
@@ -19,11 +18,7 @@
     <CardBody>
         <Row>
             <Column>
-                <Tooltip Text="@resource.Owner.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
-                    <Badge Color="Color.Info">@resource.Owner.Name</Badge>
-                </Tooltip>
-                <Badge Color="Color.Light">@resource.Owner.City</Badge>
-                <Badge Color="Color.Light">@TerritoryService.GetProvinceName(resource.Owner.Province)</Badge>
+                <UserInfo User="resource.Owner" />
                 <Badge Color="Color.Light" Float="Float.Right">@resource.CreationDateTime</Badge>
             </Column>
         </Row>
