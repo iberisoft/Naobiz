@@ -2,6 +2,10 @@
 
 @inject IWebHostEnvironment Environment
 
+@if (IsNullable)
+{
+    <SelectItem TValue="string"></SelectItem>
+}
 @foreach (var territory in Territory.Load(Path.Combine(Environment.WebRootPath, FileName)))
 {
     <SelectItem Value="territory.Code">@territory.Name</SelectItem>
@@ -10,4 +14,7 @@
 @code {
     [Parameter]
     public string FileName { get; set; }
+
+    [Parameter]
+    public bool IsNullable { get; set; }
 }
