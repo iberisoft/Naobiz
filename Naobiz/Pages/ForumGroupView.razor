@@ -13,7 +13,7 @@
 
 <Row Margin="Margin.Is1.FromBottom">
     <Column ColumnSize="ColumnSize.Is10">
-        <TextEdit Text="@topicFilter" TextChanged="ChangeTopicFilter" />
+        <TextEdit Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
     </Column>
     <Column ColumnSize="ColumnSize.Is2">
         <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
@@ -33,7 +33,7 @@
 
     User user;
     ForumGroup group;
-    string topicFilter;
+    string keywordFilter;
     List<ForumTopic> topics;
     ForumTopic newTopic;
     ForumMessageEdit newTopicEdit;
@@ -55,9 +55,9 @@
     private async Task UpdateTopics()
     {
         var topicQuery = Service.ForumTopics.Where(topic => topic.Group == group);
-        if (!string.IsNullOrEmpty(topicFilter))
+        if (keywordFilter != null)
         {
-            foreach (var keyword in topicFilter.Split((char[])null, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var keyword in keywordFilter.Split((char[])null, StringSplitOptions.RemoveEmptyEntries))
             {
                 topicQuery = topicQuery.Where(topic => topic.Title.Contains(keyword) || topic.Message.Text.Contains(keyword));
             }
@@ -90,13 +90,13 @@
 
         await Service.SaveChangesAsync();
 
-        topicFilter = null;
+        keywordFilter = null;
         await UpdateTopics();
     }
 
-    private async Task ChangeTopicFilter(string value)
+    private async Task ChangeKeywordFilter(string value)
     {
-        topicFilter = value;
+        keywordFilter = value;
         await UpdateTopics();
     }
 
