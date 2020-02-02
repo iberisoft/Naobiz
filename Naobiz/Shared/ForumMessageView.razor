@@ -1,6 +1,7 @@
 ﻿@inherits OwningComponentBase<AppDbContext>
 @inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject TerritoryService TerritoryService
 
 @if (message == null)
 {
@@ -13,6 +14,8 @@
         <Tooltip Text="@message.Creator.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
             <Badge Color="Color.Info">@message.Creator.Name</Badge>
         </Tooltip>
+        <Badge Color="Color.Light">@message.Creator.City</Badge>
+        <Badge Color="Color.Light">@TerritoryService.GetProvinceName(message.Creator.Province)</Badge>
         <Badge Color="Color.Light" Float="Float.Right">@message.CreationDateTime</Badge>
     </Column>
 </Row>
