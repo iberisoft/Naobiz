@@ -1,0 +1,53 @@
+﻿@page "/resources"
+
+@inherits AuthorizedBase
+@inject UserService UserService
+
+<Heading Size="HeadingSize.Is1">Resources</Heading>
+
+@if (types == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    @foreach (var type in types)
+    {
+        var linkUrl = "resources/" + type.Id;
+        var resourceCount = Service.Resources.Count(resource => resource.Type == type);
+        <Column ColumnSize="ColumnSize.IsQuarter">
+            <Card Margin="Margin.Is4.FromBottom">
+                <CardHeader>
+                    <CardSubtitle>@type.Name</CardSubtitle>
+                </CardHeader>
+                @if (type.ImageSource != null)
+                {
+                    <CardLink Source="@linkUrl">
+                        <CardImage Source="@type.ImageSource" />
+                    </CardLink>
+                }
+                <CardBody>
+                    <CardLink Source="@linkUrl">Resources: @resourceCount</CardLink>
+                </CardBody>
+            </Card>
+        </Column>
+    }
+</Row>
+
+@code {
+    List<ResourceType> types;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        types = await Service.ResourceTypes.OrderBy(type => type.Name).ToListAsync();
+    }
+}

@@ -1,0 +1,151 @@
+﻿@page "/resources/{typeid:int}"
+
+@inherits AuthorizedBase
+@inject UserService UserService
+@inject TerritoryService TerritoryService
+
+@if (type == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Heading Size="HeadingSize.Is1">@type.Name</Heading>
+
+<Row>
+    <Column>
+        <Field>
+            <FieldLabel>Province:</FieldLabel>
+            <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
+            </SelectEdit>
+        </Field>
+    </Column>
+    <Column>
+        <Field>
+            <FieldLabel>Activity:</FieldLabel>
+            <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                         IsNullable="true" />
+        </Field>
+    </Column>
+</Row>
+<Row Margin="Margin.Is1.FromBottom">
+    <Column ColumnSize="ColumnSize.Is10">
+        <TextEdit Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+    </Column>
+    <Column ColumnSize="ColumnSize.Is2">
+        @if (user.Admin)
+        {
+            <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateResource">New Resource</Button>
+        }
+    </Column>
+</Row>
+
+@foreach (var resource in resources)
+{
+    <ResourceView @key="resource.Id" ResourceId="resource.Id" ResourceDeleted="OnResourceDeleted" />
+}
+
+<ResourceEdit @ref="newResourceEdit" Service="Service" Submitted="SubmitResource" />
+
+@code {
+    [Parameter]
+    public int TypeId { get; set; }
+
+    User user;
+    ResourceType type;
+    string provinceFilter;
+    List<Activity> activities;
+    Activity activityFilter;
+    string keywordFilter;
+    List<Resource> resources;
+    Resource newResource;
+    ResourceEdit newResourceEdit;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        type = await Service.ResourceTypes.SingleAsync(type => type.Id == TypeId);
+        activities = await Service.Activities.OrderBy(activity => activity.Name).ToListAsync();
+        await UpdateResources();
+    }
+
+    private async Task UpdateResources()
+    {
+        var resourceQuery = Service.Resources.Where(resource => resource.Type == type);
+        if (provinceFilter != null)
+        {
+            resourceQuery = resourceQuery.Where(resource => resource.Owner.Province == provinceFilter);
+        }
+        if (activityFilter != null)
+        {
+            resourceQuery = resourceQuery.Where(resource => resource.Activity == activityFilter);
+        }
+        if (keywordFilter != null)
+        {
+            foreach (var keyword in keywordFilter.Split((char[])null, StringSplitOptions.RemoveEmptyEntries))
+            {
+                resourceQuery = resourceQuery.Where(resource => resource.Title.Contains(keyword) || resource.Description.Contains(keyword) || resource.Owner.Name.Contains(keyword));
+            }
+        }
+        resourceQuery = resourceQuery.OrderByDescending(resource => resource.CreationDateTime);
+        resources = await resourceQuery.ToListAsync();
+    }
+
+    private async Task CreateResource()
+    {
+        newResource = new Resource();
+        newResource.Type = type;
+        newResource.Initialize();
+        await newResourceEdit.Show(newResource);
+    }
+
+    private async Task SubmitResource()
+    {
+        newResourceEdit.Get(newResource);
+        Service.Resources.Add(newResource);
+
+        foreach (var attachment in newResourceEdit.CreateAttachments())
+        {
+            attachment.Resource = newResource;
+            Service.ResourceAttachments.Add(attachment);
+            Service.Blobs.Add(attachment.Content);
+        }
+
+        await Service.SaveChangesAsync();
+
+        keywordFilter = null;
+        await UpdateResources();
+    }
+
+    private async Task ChangeProvinceFilter(string value)
+    {
+        provinceFilter = value;
+        await UpdateResources();
+    }
+
+    private async Task ChangeActivityFilter(Activity value)
+    {
+        activityFilter = value;
+        await UpdateResources();
+    }
+
+    private async Task ChangeKeywordFilter(string value)
+    {
+        keywordFilter = value;
+        await UpdateResources();
+    }
+
+    private async Task OnResourceDeleted()
+    {
+        await UpdateResources();
+        StateHasChanged();
+    }
+}

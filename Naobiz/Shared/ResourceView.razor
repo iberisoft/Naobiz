@@ -1,0 +1,103 @@
+﻿@inherits OwningComponentBase<AppDbContext>
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+@inject TerritoryService TerritoryService
+
+@if (resource == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Card Margin="Margin.Is1.FromBottom">
+    <CardHeader>
+        <CardSubtitle>
+            <Paragraph>@resource.Title</Paragraph>
+            <Badge Color="Color.Secondary">@resource.Activity.Name</Badge>
+        </CardSubtitle>
+    </CardHeader>
+    <CardBody>
+        <Row>
+            <Column>
+                <Tooltip Text="@resource.Owner.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
+                    <Badge Color="Color.Info">@resource.Owner.Name</Badge>
+                </Tooltip>
+                <Badge Color="Color.Light">@resource.Owner.City</Badge>
+                <Badge Color="Color.Light">@TerritoryService.GetProvinceName(resource.Owner.Province)</Badge>
+                <Badge Color="Color.Light" Float="Float.Right">@resource.CreationDateTime</Badge>
+            </Column>
+        </Row>
+        <Row Margin="Margin.Is1.FromBottom">
+            <Column ColumnSize="ColumnSize.Is11">
+                <Alert Color="Color.Info" IsShow="true">
+                    @foreach (var line in resource.Description.Split('\n'))
+                    {
+                        <Paragraph>@line</Paragraph>
+                    }
+                </Alert>
+            </Column>
+            <Column ColumnSize="ColumnSize.Is1">
+                @if (user.Admin)
+                {
+                    <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Delete</Button>
+                }
+            </Column>
+        </Row>
+        @if (resource.Url != null)
+        {
+            <Row>
+                <Column>
+                    <Button Color="Color.Link" Size="ButtonSize.Small" Clicked="NavigateToUrl">@resource.Url</Button>
+                </Column>
+            </Row>
+        }
+
+        @foreach (var attachment in attachments)
+        {
+            <Tooltip Text="@Helper.SizeToString(attachment.Size)" IsFade="true">
+                <Button Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
+            </Tooltip>
+        }
+    </CardBody>
+</Card>
+
+<Confirm @ref="deleteResourceConfirm" Text="Delete resource?" Confirmed="DeleteResource" />
+
+@code {
+    [Parameter]
+    public int ResourceId { get; set; }
+
+    [Parameter]
+    public EventCallback ResourceDeleted { get; set; }
+
+    User user;
+    Resource resource;
+    List<ResourceAttachment> attachments;
+    Confirm deleteResourceConfirm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserService.GetCurrentAsync(Service);
+
+        resource = await Service.Resources.SingleAsync(resource => resource.Id == ResourceId);
+        attachments = await Service.ResourceAttachments.Where(attachment => attachment.Resource == resource).OrderBy(attachment => attachment.Name).ToListAsync();
+    }
+
+    private void NavigateToUrl() => NavigationManager.NavigateTo(resource.Url);
+
+    private void DownloadAttachment(ResourceAttachment attachment)
+    {
+        var uri = "_resource-attachment";
+        uri = QueryHelpers.AddQueryString(uri, "id", attachment.Id.ToString());
+        NavigationManager.NavigateTo(uri, true);
+    }
+
+    private async Task DeleteResource()
+    {
+        Service.Resources.Remove(resource);
+
+        await Service.SaveChangesAsync();
+
+        await ResourceDeleted.InvokeAsync(null);
+    }
+}

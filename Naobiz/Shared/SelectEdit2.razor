@@ -1,0 +1,45 @@
+﻿@typeparam TItem
+
+<SelectEdit TValue="int?" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
+    @if (IsNullable)
+    {
+        <SelectItem TValue="int?"></SelectItem>
+    }
+    @if (Items != null)
+    {
+        foreach (var item in Items)
+        {
+            <SelectItem Value="GetKey(item)">@GetText(item)</SelectItem>
+        }
+    }
+</SelectEdit>
+
+@code {
+    [Parameter]
+    public Func<TItem, int> KeyGetter { get; set; }
+
+    [Parameter]
+    public Func<TItem, string> TextGetter { get; set; }
+
+    [Parameter]
+    public IEnumerable<TItem> Items { get; set; }
+
+    [Parameter]
+    public TItem SelectedItem { get; set; }
+
+    [Parameter]
+    public EventCallback<TItem> SelectedItemChanged { get; set; }
+
+    [Parameter]
+    public bool IsNullable { get; set; }
+
+    private int? GetKey(TItem item) => (item != null ? KeyGetter?.Invoke(item) : null) ?? 0;
+
+    private string GetText(TItem item) => item != null ? TextGetter?.Invoke(item) : null;
+
+    private async Task ChangeSelectedValue(int? value)
+    {
+        SelectedItem = Items.SingleOrDefault(item => GetKey(item) == value);
+        await SelectedItemChanged.InvokeAsync(SelectedItem);
+    }
+}

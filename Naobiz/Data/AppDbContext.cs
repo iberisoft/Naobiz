@@ -24,6 +24,8 @@ namespace Naobiz.Data
             modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.Email)
                 .IsUnique();
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Name);
 
             modelBuilder.Entity<UserActivityLink>()
                 .HasKey(entity => new { entity.UserId, entity.ActivityId });
@@ -37,6 +39,13 @@ namespace Naobiz.Data
 
             modelBuilder.Entity<ForumMessage>()
                 .HasIndex(entity => entity.Text);
+
+            modelBuilder.Entity<ResourceType>().HasData(LoadArray<ResourceType>(Path.Combine(m_Environment.WebRootPath, "resource-types.json")));
+
+            modelBuilder.Entity<Resource>()
+                .HasIndex(entity => entity.Title);
+            modelBuilder.Entity<Resource>()
+                .HasIndex(entity => entity.Description);
         }
 
         private T[] LoadArray<T>(string filePath)
@@ -70,6 +79,12 @@ namespace Naobiz.Data
         public DbSet<ForumMessage> ForumMessages { get; set; }
 
         public DbSet<ForumAttachment> ForumAttachments { get; set; }
+
+        public DbSet<ResourceType> ResourceTypes { get; set; }
+
+        public DbSet<Resource> Resources { get; set; }
+
+        public DbSet<ResourceAttachment> ResourceAttachments { get; set; }
 
         public DbSet<Blob> Blobs { get; set; }
     }

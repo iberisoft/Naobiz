@@ -1,0 +1,117 @@
+﻿<Modal @ref="modal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Resource</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Validations @ref="validations" Mode="ValidationMode.Manual">
+                <Row>
+                    <Column>
+                        <Field>
+                            <FieldLabel>Owner:</FieldLabel>
+                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" SelectedItem="owner" SelectedItemChanged="ChangeOwner" />
+                        </Field>
+                    </Column>
+                    <Column>
+                        <Field>
+                            <FieldLabel>Activity:</FieldLabel>
+                            <SelectEdit2 KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
+                        </Field>
+                    </Column>
+                </Row>
+                <Field>
+                    <FieldLabel>Title:</FieldLabel>
+                    <Validation Validator="Helper.IsTrimmedNotEmpty">
+                        <TextEdit MaxLength="100" @bind-Text="title" />
+                    </Validation>
+                    <FieldHelp>100 symbols max</FieldHelp>
+                </Field>
+                <Field>
+                    <FieldLabel>Description:</FieldLabel>
+                    <Validation Validator="Helper.IsTrimmedNotEmpty">
+                        <MemoEdit MaxLength="1000" Rows="4" @bind-Text="description" />
+                    </Validation>
+                    <FieldHelp>1000 symbols max</FieldHelp>
+                </Field>
+                <Field>
+                    <FieldLabel>Website:</FieldLabel>
+                    <TextEdit MaxLength="1000" @bind-Text="url" />
+                </Field>
+                <AttachmentView @ref="attachmentView" />
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="Submit">Submit</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public AppDbContext Service { get; set; }
+
+    [Parameter]
+    public EventCallback Submitted { get; set; }
+
+    List<User> owners;
+    User owner;
+    List<Activity> activities;
+    Activity activity;
+    string title;
+    string description;
+    string url;
+    Modal modal;
+    Validations validations;
+    AttachmentView attachmentView;
+
+    public async Task Show(Resource resource)
+    {
+        owners = await Service.Users.OrderBy(user => user.Name).ToListAsync();
+        owner = resource.Owner ?? owners.First();
+        activities = await GetActivities();
+        activity = resource.Activity ?? activities.FirstOrDefault();
+        title = resource.Title;
+        description = resource.Description;
+        url = resource.Url;
+
+        modal.Show();
+    }
+
+    private async Task ChangeOwner(User value)
+    {
+        owner = value;
+        activities = await GetActivities();
+        activity = activities.FirstOrDefault();
+    }
+
+    private async Task<List<Activity>> GetActivities() => await Service.GetUserActivities(owner).OrderBy(activity => activity.Name).ToListAsync();
+
+    public void Get(Resource resource)
+    {
+        resource.Owner = owner;
+        resource.Activity = activity;
+        resource.Title = title?.Trim();
+        resource.Description = description?.Trim();
+        resource.Url = url?.Trim();
+    }
+
+    private async Task Submit()
+    {
+        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded || owner == null || activity == null)
+        {
+            return;
+        }
+
+        modal.Hide();
+        await Submitted.InvokeAsync(null);
+    }
+
+    private void Close()
+    {
+        modal.Hide();
+    }
+
+    public IEnumerable<ResourceAttachment> CreateAttachments() => attachmentView.CreateAttachments<ResourceAttachment>();
+}
