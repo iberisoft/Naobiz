@@ -22,10 +22,7 @@
 <Row Margin="Margin.Is1.FromBottom">
     <Column ColumnSize="ColumnSize.Is11">
         <Alert Color="Color.Info" IsShow="true">
-            @foreach (var line in message.Text.Split('\n'))
-            {
-                <Paragraph>@line</Paragraph>
-            }
+            <MultilineText Text="@message.Text" />
         </Alert>
     </Column>
     <Column ColumnSize="ColumnSize.Is1">

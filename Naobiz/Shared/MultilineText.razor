@@ -1,0 +1,9 @@
+﻿@foreach (var line in Text.Split('\n'))
+{
+    <Paragraph>@line</Paragraph>
+}
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+}

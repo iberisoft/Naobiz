@@ -30,10 +30,7 @@
         <Row Margin="Margin.Is1.FromBottom">
             <Column ColumnSize="ColumnSize.Is11">
                 <Alert Color="Color.Info" IsShow="true">
-                    @foreach (var line in resource.Description.Split('\n'))
-                    {
-                        <Paragraph>@line</Paragraph>
-                    }
+                    <MultilineText Text="@resource.Description" />
                 </Alert>
             </Column>
             <Column ColumnSize="ColumnSize.Is1">
