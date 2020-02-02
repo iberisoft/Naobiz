@@ -49,6 +49,7 @@ namespace Naobiz
 
             services.AddScoped<UserService>();
             services.AddScoped<EmailService>();
+            services.AddScoped<TerritoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

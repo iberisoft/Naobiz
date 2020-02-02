@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Naobiz.Models
 {
-    class Territory
+    public class Territory
     {
         public Territory()
             : this(null, "") { }

@@ -3,6 +3,7 @@
 @inherits AuthorizedBase
 @inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject TerritoryService TerritoryService
 
 <Heading Size="HeadingSize.Is1">Account</Heading>
 
@@ -55,13 +56,13 @@
                     <Field>
                         <FieldLabel>Country:</FieldLabel>
                         <SelectEdit @bind-SelectedValue="model.Country">
-                            <TerritoryList FileName="countries.json" />
+                            <TerritoryList Territories="TerritoryService.Countries" />
                         </SelectEdit>
                     </Field>
                     <Field>
                         <FieldLabel>Province:</FieldLabel>
                         <SelectEdit @bind-SelectedValue="model.Province">
-                            <TerritoryList FileName="provinces.json" />
+                            <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                         </SelectEdit>
                     </Field>
                     <Field>
