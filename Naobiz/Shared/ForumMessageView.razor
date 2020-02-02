@@ -191,7 +191,7 @@
 
         await Service.SaveChangesAsync();
 
-        await MessageDeleted.InvokeAsync(EventArgs.Empty);
+        await MessageDeleted.InvokeAsync(null);
         deleteMessageModal.Hide();
     }
 
