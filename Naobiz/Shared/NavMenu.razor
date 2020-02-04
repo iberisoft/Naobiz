@@ -1,4 +1,7 @@
-﻿<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark" Margin="Margin.Is3.FromBottom">
+﻿@inherits OwningComponentBase<AppDbContext>
+@inject UserService UserService
+
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark" Margin="Margin.Is3.FromBottom">
     <Container>
         <BarToggler />
         <BarMenu>
@@ -10,6 +13,10 @@
                         <BarLink To="resources" Match="Match.Prefix">Resources</BarLink>
                         <BarLink To="activities">Activities</BarLink>
                         <BarLink To="account">Account</BarLink>
+                        @if (user != null && user.Admin)
+                        {
+                            <BarLink To="users">Users</BarLink>
+                        }
                     </Authorized>
                     <NotAuthorized>
                         <BarLink To="login">Home</BarLink>
@@ -32,3 +39,12 @@
         </BarMenu>
     </Container>
 </Bar>
+
+@code {
+    User user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserService.GetCurrentAsync(Service);
+    }
+}
