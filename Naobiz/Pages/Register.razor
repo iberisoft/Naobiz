@@ -145,7 +145,7 @@
         if (user == null)
         {
             user = new User();
-            user.Initialize("", Environment.IsDevelopment());
+            user.Initialize(Environment.IsDevelopment());
             user.Email = email;
             user.Password = password;
             model.CopyTo(user);

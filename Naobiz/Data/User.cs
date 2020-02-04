@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Naobiz.Data
 {
@@ -11,9 +12,10 @@ namespace Naobiz.Data
 
         public DateTime RegistrationDateTime { get; set; }
 
-        [Required]
+        public DateTime? LoginDateTime { get; set; }
+
         [MaxLength(15)]
-        public string RegistrationIpAddress { get; set; }
+        public string LoginIpAddress { get; set; }
 
         [MaxLength(32)]
         public string ActivationCode { get; set; }
@@ -56,10 +58,9 @@ namespace Naobiz.Data
 
         public bool InfoRequested { get; set; }
 
-        public void Initialize(string ipAddress, bool activated)
+        public void Initialize(bool activated)
         {
             RegistrationDateTime = DateTime.Now;
-            RegistrationIpAddress = ipAddress;
             if (!activated)
             {
                 ActivationCode = Guid.NewGuid().ToString("N");
@@ -69,6 +70,12 @@ namespace Naobiz.Data
         public void ResetPassword()
         {
             PasswordResetCode = Guid.NewGuid().ToString("N");
+        }
+
+        public void UpdateLoginInfo(IPAddress ipAddress)
+        {
+            LoginDateTime = DateTime.Now;
+            LoginIpAddress = ipAddress.ToString();
         }
     }
 }

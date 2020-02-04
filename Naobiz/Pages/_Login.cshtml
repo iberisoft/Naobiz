@@ -10,8 +10,14 @@
 @functions {
     public async Task<IActionResult> OnGetAsync(string email, string password)
     {
-        if (DbContext.Users.Any(user => user.Email == email && user.ActivationCode == null && user.Password == password))
+        var user = DbContext.Users.SingleOrDefault(user => user.Email == email && user.ActivationCode == null && user.Password == password);
+        if (user != null)
         {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress;
+            ipAddress = ipAddress.MapToIPv4();
+            user.UpdateLoginInfo(ipAddress);
+            await DbContext.SaveChangesAsync();
+
             var claim = new Claim(ClaimsIdentity.DefaultNameClaimType, email);
             var id = new ClaimsIdentity(new[] { claim }, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(new ClaimsPrincipal(id));
