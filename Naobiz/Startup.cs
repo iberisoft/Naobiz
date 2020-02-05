@@ -29,6 +29,7 @@ namespace Naobiz
             services.AddSingleton(settings);
 
             services.AddDbContext<AppDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(settings.DbConnection));
+            services.AddHttpContextAccessor();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();

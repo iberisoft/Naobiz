@@ -6,7 +6,16 @@
     protected override async Task OnInitializedAsync()
     {
         var user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
+        if (user != null)
+        {
+            var ipAddress = UserService.GetRemoteIpAddress();
+            if (ipAddress != null)
+            {
+                user.UpdateLoginInfo(ipAddress);
+                await Service.SaveChangesAsync();
+            }
+        }
+        else
         {
             NavigationManager.NavigateTo("_logout");
         }
