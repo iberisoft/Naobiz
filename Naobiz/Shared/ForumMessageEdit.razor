@@ -11,7 +11,7 @@
                     <Field>
                         <FieldLabel>Title:</FieldLabel>
                         <Validation Validator="Helper.IsTrimmedNotEmpty">
-                            <TextEdit MaxLength="100" @bind-Text="title" />
+                            <TextEdit @ref="titleEdit" MaxLength="100" @bind-Text="title" />
                         </Validation>
                         <FieldHelp>100 symbols max</FieldHelp>
                     </Field>
@@ -19,7 +19,7 @@
                 <Field>
                     <FieldLabel>Message:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
-                        <MemoEdit MaxLength="1000" Rows="10" @bind-Text="text" />
+                        <MemoEdit @ref="textEdit" MaxLength="1000" Rows="10" @bind-Text="text" />
                     </Validation>
                     <FieldHelp>1000 symbols max</FieldHelp>
                 </Field>
@@ -41,10 +41,24 @@
     public EventCallback Submitted { get; set; }
 
     string title;
+    TextEdit titleEdit;
     string text;
+    MemoEdit textEdit;
     Modal modal;
     Validations validations;
     AttachmentView attachmentView;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (IsTitleVisible)
+        {
+            titleEdit?.Focus();
+        }
+        else
+        {
+            textEdit?.Focus();
+        }
+    }
 
     public void Show()
     {

@@ -16,7 +16,7 @@
             <TextEdit Role="TextRole.Password" @bind-Text="password" />
         </Field>
         <Field>
-            <Button Color="Color.Primary" Clicked="LoginAccount">Enter</Button>
+            <Button @ref="enterButton" Color="Color.Primary" Clicked="LoginAccount">Enter</Button>
             <Button Color="Color.Link" Float="Float.Right" Clicked="RegisterAccount">Register</Button>
         </Field>
         <Field>
@@ -30,6 +30,7 @@
     string email;
     string password;
     string alertMessage;
+    Button enterButton;
 
     public string Email { get; set; }
 
@@ -38,6 +39,11 @@
         NavigationManager.ParseQueryString(this);
 
         email = Email;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        enterButton?.Focus();
     }
 
     private async Task LoginAccount()

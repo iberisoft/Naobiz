@@ -13,7 +13,7 @@
 
 <Row Margin="Margin.Is1.FromBottom">
     <Column ColumnSize="ColumnSize.Is10">
-        <TextEdit Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+        <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
     </Column>
     <Column ColumnSize="ColumnSize.Is2">
         <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
@@ -34,6 +34,7 @@
     User user;
     ForumGroup group;
     string keywordFilter;
+    TextEdit keywordFilterEdit;
     List<ForumTopic> topics;
     ForumTopic newTopic;
     ForumMessageEdit newTopicEdit;
@@ -50,6 +51,11 @@
 
         group = await Service.ForumGroups.SingleAsync(group => group.Id == GroupId);
         await UpdateTopics();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        keywordFilterEdit?.Focus();
     }
 
     private async Task UpdateTopics()

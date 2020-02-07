@@ -31,7 +31,7 @@
 </Row>
 <Row Margin="Margin.Is1.FromBottom">
     <Column ColumnSize="ColumnSize.Is10">
-        <TextEdit Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+        <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
     </Column>
     <Column ColumnSize="ColumnSize.Is2">
         @if (user.Admin)
@@ -58,6 +58,7 @@
     List<Activity> activities;
     Activity activityFilter;
     string keywordFilter;
+    TextEdit keywordFilterEdit;
     List<Resource> resources;
     Resource newResource;
     ResourceEdit newResourceEdit;
@@ -75,6 +76,11 @@
         type = await Service.ResourceTypes.SingleAsync(type => type.Id == TypeId);
         activities = await Service.Activities.OrderBy(activity => activity.Name).ToListAsync();
         await UpdateResources();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        keywordFilterEdit?.Focus();
     }
 
     private async Task UpdateResources()

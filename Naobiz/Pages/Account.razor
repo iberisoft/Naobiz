@@ -24,7 +24,7 @@
                     <Field>
                         <FieldLabel>Tax ID:</FieldLabel>
                         <Validation UsePattern="true">
-                            <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
+                            <TextEdit @ref="taxIdEdit" MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
                                 <Feedback>
                                     <ValidationError>Must be 9 digits or empty string</ValidationError>
                                 </Feedback>
@@ -101,6 +101,7 @@
     User user;
     AccountModel model;
     Validations validations;
+    TextEdit taxIdEdit;
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,6 +115,11 @@
 
         model = new AccountModel();
         model.CopyFrom(user);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        taxIdEdit?.Focus();
     }
 
     private async Task SubmitChanges()

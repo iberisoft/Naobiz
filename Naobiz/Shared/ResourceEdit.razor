@@ -23,7 +23,7 @@
                 <Field>
                     <FieldLabel>Title:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
-                        <TextEdit MaxLength="100" @bind-Text="title" />
+                        <TextEdit @ref="titleEdit" MaxLength="100" @bind-Text="title" />
                     </Validation>
                     <FieldHelp>100 symbols max</FieldHelp>
                 </Field>
@@ -60,6 +60,7 @@
     List<Activity> activities;
     Activity activity;
     string title;
+    TextEdit titleEdit;
     string description;
     string url;
     Modal modal;
@@ -77,6 +78,11 @@
         url = resource.Url;
 
         modal.Show();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        titleEdit?.Focus();
     }
 
     private async Task ChangeOwner(User value)
