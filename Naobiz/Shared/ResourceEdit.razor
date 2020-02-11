@@ -36,7 +36,9 @@
                 </Field>
                 <Field>
                     <FieldLabel>Website:</FieldLabel>
-                    <TextEdit MaxLength="1000" @bind-Text="url" />
+                    <Validation Validator="Helper.IsUrl">
+                        <TextEdit MaxLength="1000" @bind-Text="url" />
+                    </Validation>
                 </Field>
                 <AttachmentView @ref="attachmentView" />
             </Validations>

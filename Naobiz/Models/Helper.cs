@@ -1,4 +1,5 @@
 ﻿using Blazorise;
+using System;
 
 namespace Naobiz.Models
 {
@@ -13,5 +14,7 @@ namespace Naobiz.Models
         public static void IsTrimmedNotEmpty(ValidatorEventArgs e) => e.Status = ((string)e.Value)?.Trim()?.Length > 0 ? ValidationStatus.Success : ValidationStatus.Error;
 
         public static void IsPasswordConfirmed(ValidatorEventArgs e, string password) => e.Status = password != null ? (string)e.Value == password ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
+
+        public static void IsUrl(ValidatorEventArgs e) => e.Status = e.Value != null ? Uri.TryCreate((string)e.Value, UriKind.Absolute, out Uri _) ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
     }
 }
