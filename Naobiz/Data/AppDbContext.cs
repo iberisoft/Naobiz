@@ -40,12 +40,20 @@ namespace Naobiz.Data
             modelBuilder.Entity<ForumMessage>()
                 .HasIndex(entity => entity.Text);
 
+            modelBuilder.Entity<ForumAttachment>()
+                .HasIndex(entity => new { entity.MessageId, entity.Name })
+                .IsUnique();
+
             modelBuilder.Entity<ResourceType>().HasData(LoadArray<ResourceType>(Path.Combine(m_Environment.WebRootPath, "resource-types.json")));
 
             modelBuilder.Entity<Resource>()
                 .HasIndex(entity => entity.Title);
             modelBuilder.Entity<Resource>()
                 .HasIndex(entity => entity.Description);
+
+            modelBuilder.Entity<ResourceAttachment>()
+                .HasIndex(entity => new { entity.ResourceId, entity.Name })
+                .IsUnique();
         }
 
         private T[] LoadArray<T>(string filePath)

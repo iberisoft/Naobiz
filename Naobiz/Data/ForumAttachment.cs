@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Naobiz.Data
+﻿namespace Naobiz.Data
 {
     public class ForumAttachment : Attachment
     {
-        [Required]
+        public int MessageId { get; set; }
+
         public virtual ForumMessage Message { get; set; }
     }
 }

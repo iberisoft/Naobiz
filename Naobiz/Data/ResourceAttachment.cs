@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Naobiz.Data
+﻿namespace Naobiz.Data
 {
     public class ResourceAttachment : Attachment
     {
-        [Required]
+        public int ResourceId { get; set; }
+
         public virtual Resource Resource { get; set; }
     }
 }
