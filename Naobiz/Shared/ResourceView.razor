@@ -31,7 +31,16 @@
             <Column ColumnSize="ColumnSize.Is1">
                 @if (user.Admin)
                 {
-                    <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Delete</Button>
+                    <Row Margin="Margin.Is1.FromBottom">
+                        <Column>
+                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="EditResource">Edit</Button>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column>
+                            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Delete</Button>
+                        </Column>
+                    </Row>
                 }
             </Column>
         </Row>
@@ -53,6 +62,8 @@
     </CardBody>
 </Card>
 
+<ResourceEdit @ref="resourceEdit" Service="Service" Submitted="SubmitResource" />
+
 <Confirm @ref="deleteResourceConfirm" Text="Delete resource?" Confirmed="DeleteResource" />
 
 @code {
@@ -64,6 +75,7 @@
 
     User user;
     Resource resource;
+    ResourceEdit resourceEdit;
     List<ResourceAttachment> attachments;
     Confirm deleteResourceConfirm;
 
@@ -72,6 +84,11 @@
         user = await UserService.GetCurrentAsync(Service);
 
         resource = await Service.Resources.SingleAsync(resource => resource.Id == ResourceId);
+        await UpdateAttachments();
+    }
+
+    private async Task UpdateAttachments()
+    {
         attachments = await Service.ResourceAttachments.Where(attachment => attachment.Resource == resource).OrderBy(attachment => attachment.Name).ToListAsync();
     }
 
@@ -82,6 +99,35 @@
         var uri = "_resource-attachment";
         uri = QueryHelpers.AddQueryString(uri, "id", attachment.Id.ToString());
         NavigationManager.NavigateTo(uri, true);
+    }
+
+    private async Task EditResource()
+    {
+        await resourceEdit.Show(resource);
+    }
+
+    private async Task SubmitResource()
+    {
+        resourceEdit.Get(resource);
+
+        foreach (var model in resourceEdit.RemovedModels)
+        {
+            var attachment = Service.ResourceAttachments.SingleOrDefault(attachment => attachment.Resource == resource && attachment.Name == model.Name);
+            if (attachment != null)
+            {
+                Service.ResourceAttachments.Remove(attachment);
+            }
+        }
+        foreach (var attachment in resourceEdit.CreateAttachments())
+        {
+            attachment.Resource = resource;
+            Service.ResourceAttachments.Add(attachment);
+            Service.Blobs.Add(attachment.Content);
+        }
+
+        await Service.SaveChangesAsync();
+
+        await UpdateAttachments();
     }
 
     private async Task DeleteResource()

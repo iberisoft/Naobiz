@@ -5,13 +5,21 @@ using System.Threading.Tasks;
 
 namespace Naobiz.Models
 {
-    class AttachmentModel : IDisposable
+    public class AttachmentModel : IDisposable
     {
         readonly IFileListEntry m_Source;
 
         public AttachmentModel(IFileListEntry source)
         {
             m_Source = source;
+            Name = source.Name;
+            Size = source.Size;
+        }
+
+        public AttachmentModel(string name, long size)
+        {
+            Name = name;
+            Size = size;
         }
 
         public void Dispose()
@@ -19,9 +27,9 @@ namespace Naobiz.Models
             Data?.Dispose();
         }
 
-        public string Name => m_Source.Name;
+        public string Name { get; }
 
-        public long Size => m_Source.Size;
+        public long Size { get; }
 
         public const int SizeQuota = 20;
 
@@ -42,6 +50,6 @@ namespace Naobiz.Models
 
         public bool Uploaded { get; private set; }
 
-        public int Progress => (int)(Data?.Position * 100 / Size ?? 0);
+        public int Progress => (int)(Data?.Position * 100 / Size ?? 100);
     }
 }

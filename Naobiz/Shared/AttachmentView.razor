@@ -11,6 +11,7 @@
         <Column>
             <Tooltip Text="@Helper.SizeToString(model.Size)" Placement="Placement.Right" IsFade="true" IsInline="true">
                 <Badge Color="Color.Light">@model.Name</Badge>
+                <CloseButton Clicked="() => Remove(model)" />
             </Tooltip>
         </Column>
         <Column>
@@ -30,6 +31,14 @@
 
 @code {
     List<AttachmentModel> models = new List<AttachmentModel>();
+    List<AttachmentModel> oldModels = new List<AttachmentModel>();
+
+    public void LoadAttachments(IEnumerable<Attachment> attachments)
+    {
+        models = attachments.Select(attachment => new AttachmentModel(attachment.Name, attachment.Size)).OrderBy(model => model.Name).ToList();
+        oldModels = models.ToList();
+        StateHasChanged();
+    }
 
     public void Dispose()
     {
@@ -49,12 +58,17 @@
         }
     }
 
-    public bool AllAttachmentsUploaded => models.Where(model => !model.SizeExceedsQuota).All(model => model.Uploaded);
+    private void Remove(AttachmentModel model)
+    {
+        models.Remove(model);
+    }
+
+    public bool AllAttachmentsUploaded => models.Except(oldModels).Where(model => !model.SizeExceedsQuota).All(model => model.Uploaded);
 
     public IEnumerable<T> CreateAttachments<T>()
         where T : Attachment, new()
     {
-        foreach (var model in models.Where(model => !model.SizeExceedsQuota && model.Uploaded))
+        foreach (var model in models.Except(oldModels).Where(model => !model.SizeExceedsQuota && model.Uploaded))
         {
             var attachment = new T();
             attachment.Name = model.Name;
@@ -64,4 +78,6 @@
             yield return attachment;
         }
     }
+
+    public IEnumerable<AttachmentModel> RemovedModels => oldModels.Except(models);
 }

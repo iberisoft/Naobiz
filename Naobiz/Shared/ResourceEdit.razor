@@ -78,6 +78,7 @@
         title = resource.Title;
         description = resource.Description;
         url = resource.Url;
+        attachmentView.LoadAttachments(await Service.ResourceAttachments.Where(attachment => attachment.Resource == resource).ToListAsync());
 
         modal.Show();
     }
@@ -122,4 +123,6 @@
     }
 
     public IEnumerable<ResourceAttachment> CreateAttachments() => attachmentView.CreateAttachments<ResourceAttachment>();
+
+    public IEnumerable<AttachmentModel> RemovedModels => attachmentView.RemovedModels;
 }
