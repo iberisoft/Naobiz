@@ -39,10 +39,7 @@ namespace Naobiz.Models
 
         public async Task UploadAsync(Action onUploading)
         {
-            if (Data == null)
-            {
-                Data = new MemoryStream();
-            }
+            Data ??= new MemoryStream();
             m_Source.OnDataRead += (_, e) => onUploading?.Invoke();
             await m_Source.Data.CopyToAsync(Data);
             Uploaded = true;
