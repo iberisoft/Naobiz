@@ -1,5 +1,6 @@
 ﻿@inherits OwningComponentBase<AppDbContext>
 @inject UserService UserService
+@inject Settings Settings
 
 <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark" Margin="Margin.Is3.FromBottom">
     <Container>
@@ -9,8 +10,10 @@
                 <AuthorizeView>
                     <Authorized>
                         <BarLink To="">Home</BarLink>
-                        <BarLink To="forum" Match="Match.Prefix">Forum</BarLink>
-                        <BarLink To="resources" Match="Match.Prefix">Resources</BarLink>
+                        @foreach (var item in Settings.Dashboard)
+                        {
+                            <BarLink To="@item.LinkUrl" Match="Match.Prefix">@item.Name</BarLink>
+                        }
                         <BarLink To="activities">Activities</BarLink>
                         <BarLink To="account">Account</BarLink>
                         @if (user != null && user.Admin)
