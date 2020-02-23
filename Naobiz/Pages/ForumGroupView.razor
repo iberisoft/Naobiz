@@ -11,14 +11,14 @@
 
 <Heading Size="HeadingSize.Is1">@group.Name</Heading>
 
-<Row Margin="Margin.Is1.FromBottom">
-    <Column ColumnSize="ColumnSize.Is10">
+<Addons Margin="Margin.Is1.FromBottom">
+    <Addon AddonType="AddonType.Body">
         <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-    </Column>
-    <Column ColumnSize="ColumnSize.Is2">
+    </Addon>
+    <Addon AddonType="AddonType.End">
         <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
-    </Column>
-</Row>
+    </Addon>
+</Addons>
 
 @foreach (var topic in topics)
 {

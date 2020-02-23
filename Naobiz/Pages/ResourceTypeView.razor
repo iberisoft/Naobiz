@@ -29,17 +29,17 @@
         </Field>
     </Column>
 </Row>
-<Row Margin="Margin.Is1.FromBottom">
-    <Column ColumnSize="ColumnSize.Is10">
+<Addons Margin="Margin.Is1.FromBottom">
+    <Addon AddonType="AddonType.Body">
         <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-    </Column>
-    <Column ColumnSize="ColumnSize.Is2">
+    </Addon>
+    <Addon AddonType="AddonType.End">
         @if (user.Admin)
         {
             <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateResource">New Resource</Button>
         }
-    </Column>
-</Row>
+    </Addon>
+</Addons>
 
 @foreach (var resource in resources)
 {
