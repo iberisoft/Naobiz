@@ -1,0 +1,142 @@
+﻿@page "/chat"
+
+@inherits AuthorizedBase
+@inject UserService UserService
+
+<Heading Size="HeadingSize.Is1">Chat</Heading>
+
+@if (conversations == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is3">
+        <Addons Margin="Margin.Is1.FromBottom">
+            <Addon AddonType="AddonType.Body">
+                <TextEdit @bind-Text="conversationFilter" />
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Primary" Clicked="UpdateConversations">Search</Button>
+            </Addon>
+        </Addons>
+        @foreach (var conversation in conversations)
+        {
+            <Card Margin="Margin.Is1.FromBottom">
+                <CardBody>
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is8">
+                            <UserInfo User="conversation" />
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is4">
+                            <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await StartConversation(conversation)">Chat</Button>
+                        </Column>
+                    </Row>
+                </CardBody>
+            </Card>
+        }
+    </Column>
+    @if (messages != null)
+    {
+        <Column ColumnSize="ColumnSize.Is9">
+            <Addons Margin="Margin.Is3.FromBottom">
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @ref="newMessageTextEdit" MaxLength="100" @bind-Text="newMessageText" />
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <Button Color="Color.Primary" Clicked="SendMessage">Send</Button>
+                </Addon>
+            </Addons>
+            @foreach (var message in messages)
+            {
+                <Row>
+                    <Column>
+                        <UserInfo User="message.Creator" />
+                        <Badge Color="Color.Light" Float="Float.Right">@message.CreationDateTime</Badge>
+                    </Column>
+                </Row>
+                <Row>
+                    <Column>
+                        <Alert Color="Color.Info" IsShow="true">@message.Text</Alert>
+                    </Column>
+                </Row>
+            }
+        </Column>
+    }
+</Row>
+
+@code {
+    User user;
+    string conversationFilter;
+    List<User> conversations;
+    User currentConversation;
+    List<ChatMessage> messages;
+    string newMessageText;
+    TextEdit newMessageTextEdit;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        user = await UserService.GetCurrentAsync(Service);
+        if (user == null)
+        {
+            return;
+        }
+
+        await UpdateConversations();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        newMessageTextEdit?.Focus();
+    }
+
+    private async Task UpdateConversations()
+    {
+        var recipientQuery = Service.ChatMessages.Where(message => message.Creator == user).Select(message => message.Recipient).Distinct();
+        var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == user).Select(message => message.Creator).Distinct();
+        var conversationQuery = recipientQuery.Union(creatorQuery);
+        if (!string.IsNullOrWhiteSpace(conversationFilter))
+        {
+            conversationQuery = conversationQuery.Union(Service.Users.Where(user => user.Name.Contains(conversationFilter)));
+        }
+        conversations = await conversationQuery.ToListAsync();
+        conversations.Remove(user);
+    }
+
+    private async Task StartConversation(User conversation)
+    {
+        currentConversation = conversation;
+        await UpdateMessages();
+    }
+
+    private async Task UpdateMessages()
+    {
+        messages = await Service.ChatMessages
+            .Where(message => message.Creator == user && message.Recipient == currentConversation || message.Creator == currentConversation && message.Recipient == user)
+            .OrderByDescending(message => message.CreationDateTime)
+            .ToListAsync();
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(newMessageText))
+        {
+            return;
+        }
+
+        var message = new ChatMessage();
+        message.Initialize(user, currentConversation);
+        message.Text = newMessageText.Trim();
+        Service.ChatMessages.Add(message);
+
+        await Service.SaveChangesAsync();
+
+        newMessageText = null;
+        await UpdateMessages();
+
+        newMessageTextEdit.Focus();
+    }
+}

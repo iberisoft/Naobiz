@@ -32,6 +32,15 @@ namespace Naobiz.Data
 
             modelBuilder.Entity<Activity>().HasData(LoadArray<Activity>(Path.Combine(m_Environment.WebRootPath, "activities.json")));
 
+            modelBuilder.Entity<ChatMessage>()
+                .HasIndex(entity => entity.Text);
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(entity => entity.Creator)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(entity => entity.Recipient)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ForumGroup>().HasData(LoadArray<ForumGroup>(Path.Combine(m_Environment.WebRootPath, "forum-groups.json")));
 
             modelBuilder.Entity<ForumTopic>()
@@ -39,6 +48,9 @@ namespace Naobiz.Data
 
             modelBuilder.Entity<ForumMessage>()
                 .HasIndex(entity => entity.Text);
+            modelBuilder.Entity<ForumMessage>()
+                .HasOne(entity => entity.Creator)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ForumAttachment>()
                 .HasIndex(entity => new { entity.MessageId, entity.Name })
@@ -50,6 +62,9 @@ namespace Naobiz.Data
                 .HasIndex(entity => entity.Title);
             modelBuilder.Entity<Resource>()
                 .HasIndex(entity => entity.Description);
+            modelBuilder.Entity<Resource>()
+                .HasOne(entity => entity.Owner)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ResourceAttachment>()
                 .HasIndex(entity => new { entity.ResourceId, entity.Name })
@@ -79,6 +94,8 @@ namespace Naobiz.Data
 
         public async Task RemovevUserActivityAsync(User user, Activity activity) =>
             UserActivityLinks.Remove(await UserActivityLinks.SingleOrDefaultAsync(link => link.User == user && link.Activity == activity));
+
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
         public DbSet<ForumGroup> ForumGroups { get; set; }
 
