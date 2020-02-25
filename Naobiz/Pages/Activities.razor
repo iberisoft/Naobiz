@@ -51,7 +51,7 @@
             return;
         }
 
-        selectedActivities = await Service.GetUserActivities(user).ToListAsync();
+        selectedActivities = await Service.GetActivities(user).ToListAsync();
         activities = SelectedValue<Activity>.Create(await Service.Activities.ToListAsync(), selectedActivities).ToList();
     }
 
@@ -63,14 +63,14 @@
             {
                 if (!selectedActivities.Contains(activity.Value))
                 {
-                    Service.AddUserActivity(user, activity.Value);
+                    Service.AddActivity(user, activity.Value);
                 }
             }
             else
             {
                 if (selectedActivities.Contains(activity.Value))
                 {
-                    await Service.RemovevUserActivityAsync(user, activity.Value);
+                    await Service.RemovevActivityAsync(user, activity.Value);
                 }
             }
         }

@@ -34,7 +34,7 @@
             return;
         }
 
-        if (!await Service.GetUserActivities(user).AnyAsync())
+        if (!await Service.GetActivities(user).AnyAsync())
         {
             NavigationManager.NavigateTo("activities");
         }

@@ -95,7 +95,7 @@
         activity = activities.FirstOrDefault();
     }
 
-    private async Task<List<Activity>> GetActivities() => await Service.GetUserActivities(owner).OrderBy(activity => activity.Name).ToListAsync();
+    private async Task<List<Activity>> GetActivities() => await Service.GetActivities(owner).OrderBy(activity => activity.Name).ToListAsync();
 
     public void Get(Resource resource)
     {

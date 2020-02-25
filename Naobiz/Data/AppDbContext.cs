@@ -27,13 +27,14 @@ namespace Naobiz.Data
             modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.Name);
 
-            modelBuilder.Entity<UserActivityLink>()
-                .HasKey(entity => new { entity.UserId, entity.ActivityId });
-
             modelBuilder.Entity<Activity>()
                 .HasIndex(entity => entity.Name)
                 .IsUnique();
-            modelBuilder.Entity<Activity>().HasData(LoadArray<Activity>(Path.Combine(m_Environment.WebRootPath, "activities.json")));
+            modelBuilder.Entity<Activity>()
+                .HasData(LoadArray<Activity>(Path.Combine(m_Environment.WebRootPath, "activities.json")));
+
+            modelBuilder.Entity<UserActivityLink>()
+                .HasKey(entity => new { entity.UserId, entity.ActivityId });
 
             modelBuilder.Entity<ChatMessage>()
                 .HasIndex(entity => entity.Text);
@@ -47,7 +48,8 @@ namespace Naobiz.Data
             modelBuilder.Entity<ForumGroup>()
                 .HasIndex(entity => entity.Name)
                 .IsUnique();
-            modelBuilder.Entity<ForumGroup>().HasData(LoadArray<ForumGroup>(Path.Combine(m_Environment.WebRootPath, "forum-groups.json")));
+            modelBuilder.Entity<ForumGroup>()
+                .HasData(LoadArray<ForumGroup>(Path.Combine(m_Environment.WebRootPath, "forum-groups.json")));
 
             modelBuilder.Entity<ForumTopic>()
                 .HasIndex(entity => entity.Title);
@@ -65,7 +67,8 @@ namespace Naobiz.Data
             modelBuilder.Entity<ResourceType>()
                 .HasIndex(entity => entity.Name)
                 .IsUnique();
-            modelBuilder.Entity<ResourceType>().HasData(LoadArray<ResourceType>(Path.Combine(m_Environment.WebRootPath, "resource-types.json")));
+            modelBuilder.Entity<ResourceType>()
+                .HasData(LoadArray<ResourceType>(Path.Combine(m_Environment.WebRootPath, "resource-types.json")));
 
             modelBuilder.Entity<Resource>()
                 .HasIndex(entity => entity.Title);
@@ -97,11 +100,11 @@ namespace Naobiz.Data
 
         public DbSet<UserActivityLink> UserActivityLinks { get; set; }
 
-        public IQueryable<Activity> GetUserActivities(User user) => UserActivityLinks.Where(link => link.User == user).Select(link => link.Activity);
+        public IQueryable<Activity> GetActivities(User user) => UserActivityLinks.Where(link => link.User == user).Select(link => link.Activity);
 
-        public void AddUserActivity(User user, Activity activity) => UserActivityLinks.Add(new UserActivityLink { User = user, Activity = activity });
+        public void AddActivity(User user, Activity activity) => UserActivityLinks.Add(new UserActivityLink { User = user, Activity = activity });
 
-        public async Task RemovevUserActivityAsync(User user, Activity activity) =>
+        public async Task RemovevActivityAsync(User user, Activity activity) =>
             UserActivityLinks.Remove(await UserActivityLinks.SingleOrDefaultAsync(link => link.User == user && link.Activity == activity));
 
         public DbSet<ChatMessage> ChatMessages { get; set; }
