@@ -30,6 +30,9 @@ namespace Naobiz.Data
             modelBuilder.Entity<UserActivityLink>()
                 .HasKey(entity => new { entity.UserId, entity.ActivityId });
 
+            modelBuilder.Entity<Activity>()
+                .HasIndex(entity => entity.Name)
+                .IsUnique();
             modelBuilder.Entity<Activity>().HasData(LoadArray<Activity>(Path.Combine(m_Environment.WebRootPath, "activities.json")));
 
             modelBuilder.Entity<ChatMessage>()
@@ -41,6 +44,9 @@ namespace Naobiz.Data
                 .HasOne(entity => entity.Recipient)
                 .WithMany().OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<ForumGroup>()
+                .HasIndex(entity => entity.Name)
+                .IsUnique();
             modelBuilder.Entity<ForumGroup>().HasData(LoadArray<ForumGroup>(Path.Combine(m_Environment.WebRootPath, "forum-groups.json")));
 
             modelBuilder.Entity<ForumTopic>()
@@ -56,6 +62,9 @@ namespace Naobiz.Data
                 .HasIndex(entity => new { entity.MessageId, entity.Name })
                 .IsUnique();
 
+            modelBuilder.Entity<ResourceType>()
+                .HasIndex(entity => entity.Name)
+                .IsUnique();
             modelBuilder.Entity<ResourceType>().HasData(LoadArray<ResourceType>(Path.Combine(m_Environment.WebRootPath, "resource-types.json")));
 
             modelBuilder.Entity<Resource>()
