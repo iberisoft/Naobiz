@@ -17,21 +17,19 @@
         <TableHeader ThemeContrast="ThemeContrast.Light">
             <TableRow>
                 <TableHeaderCell>Email</TableHeaderCell>
-                <TableHeaderCell>Registration Date</TableHeaderCell>
-                <TableHeaderCell>Registration Time</TableHeaderCell>
-                <TableHeaderCell>Tax ID</TableHeaderCell>
+                <TableHeaderCell>Registered</TableHeaderCell>
                 <TableHeaderCell>Name</TableHeaderCell>
+                <TableHeaderCell>Tax ID</TableHeaderCell>
                 <TableHeaderCell>Phone</TableHeaderCell>
                 <TableHeaderCell>Address</TableHeaderCell>
-                <TableHeaderCell>Country</TableHeaderCell>
-                <TableHeaderCell>Province</TableHeaderCell>
-                <TableHeaderCell>City</TableHeaderCell>
                 <TableHeaderCell>ZIP Code</TableHeaderCell>
+                <TableHeaderCell>City</TableHeaderCell>
+                <TableHeaderCell>Province</TableHeaderCell>
+                <TableHeaderCell>Country</TableHeaderCell>
                 <TableHeaderCell>Info Requested</TableHeaderCell>
+                <TableHeaderCell>Last Login</TableHeaderCell>
+                <TableHeaderCell>IP Address</TableHeaderCell>
                 <TableHeaderCell>Admin</TableHeaderCell>
-                <TableHeaderCell>Login Date</TableHeaderCell>
-                <TableHeaderCell>Login Time</TableHeaderCell>
-                <TableHeaderCell>Login IP</TableHeaderCell>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,20 +38,28 @@
                 <TableRow>
                     <TableRowCell>@user.Email</TableRowCell>
                     <TableRowCell>@user.RegistrationDateTime.ToShortDateString()</TableRowCell>
-                    <TableRowCell>@user.RegistrationDateTime.ToShortTimeString()</TableRowCell>
-                    <TableRowCell>@user.TaxId</TableRowCell>
                     <TableRowCell>@user.Name</TableRowCell>
+                    <TableRowCell>@user.TaxId</TableRowCell>
                     <TableRowCell>@user.Phone</TableRowCell>
                     <TableRowCell>@user.Address</TableRowCell>
-                    <TableRowCell>@TerritoryService.GetCountryName(user.Country)</TableRowCell>
-                    <TableRowCell>@TerritoryService.GetProvinceName(user.Province)</TableRowCell>
-                    <TableRowCell>@user.City</TableRowCell>
                     <TableRowCell>@user.ZipCode</TableRowCell>
-                    <TableRowCell>@(user.InfoRequested ? "X" : "")</TableRowCell>
-                    <TableRowCell>@(user.Admin ? "X" : "")</TableRowCell>
-                    <TableRowCell>@user.LoginDateTime?.ToShortDateString()</TableRowCell>
-                    <TableRowCell>@user.LoginDateTime?.ToShortTimeString()</TableRowCell>
+                    <TableRowCell>@user.City</TableRowCell>
+                    <TableRowCell>@TerritoryService.GetProvinceName(user.Province)</TableRowCell>
+                    <TableRowCell>@TerritoryService.GetCountryName(user.Country)</TableRowCell>
+                    <TableRowCell>
+                        @if (user.InfoRequested)
+                        {
+                            <Icon Name="IconNameEx.Check" />
+                        }
+                    </TableRowCell>
+                    <TableRowCell>@user.LoginDateTime</TableRowCell>
                     <TableRowCell>@user.LoginIpAddress</TableRowCell>
+                    <TableRowCell>
+                        @if (user.Admin)
+                        {
+                            <Icon Name="IconNameEx.Check" />
+                        }
+                    </TableRowCell>
                 </TableRow>
             }
         </TableBody>
