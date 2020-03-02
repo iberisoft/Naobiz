@@ -3,8 +3,18 @@
 <Tooltip Text="@User.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
     <Badge Color="Color.Info">@User.Name</Badge>
 </Tooltip>
-<Badge Color="Color.Light">@User.City</Badge>
-<Badge Color="Color.Light">@TerritoryService.GetProvinceName(User.Province)</Badge>
+@if (User.City != null)
+{
+    <Badge Color="Color.Light">@User.City</Badge>
+}
+@if (User.Province != null)
+{
+    <Badge Color="Color.Light">@TerritoryService.GetProvinceName(User.Province)</Badge>
+}
+@if (User.Country != null && User.Country != AccountModel.DefaultCountry)
+{
+    <Badge Color="Color.Light">@TerritoryService.GetCountryName(User.Country)</Badge>
+}
 
 @code {
     [Parameter]
