@@ -43,6 +43,12 @@
         </Column>
         <Column>
             <Field>
+                <FieldLabel>Name:</FieldLabel>
+                <Validation Validator="Helper.IsTrimmedNotEmpty">
+                    <TextEdit MaxLength="100" @bind-Text="model.Name" />
+                </Validation>
+            </Field>
+            <Field>
                 <FieldLabel>Tax ID:</FieldLabel>
                 <Validation UsePattern="true">
                     <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
@@ -50,12 +56,6 @@
                             <ValidationError>Must be 9 digits or empty string</ValidationError>
                         </Feedback>
                     </TextEdit>
-                </Validation>
-            </Field>
-            <Field>
-                <FieldLabel>Name:</FieldLabel>
-                <Validation Validator="Helper.IsTrimmedNotEmpty">
-                    <TextEdit MaxLength="100" @bind-Text="model.Name" />
                 </Validation>
             </Field>
             <Field>
@@ -75,24 +75,6 @@
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Country:</FieldLabel>
-                <SelectEdit @bind-SelectedValue="model.Country">
-                    <TerritoryList Territories="TerritoryService.Countries" />
-                </SelectEdit>
-            </Field>
-            <Field>
-                <FieldLabel>Province:</FieldLabel>
-                <SelectEdit @bind-SelectedValue="model.Province">
-                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-                </SelectEdit>
-            </Field>
-            <Field>
-                <FieldLabel>City:</FieldLabel>
-                <Validation Validator="Helper.IsAny">
-                    <TextEdit MaxLength="100" @bind-Text="model.City" />
-                </Validation>
-            </Field>
-            <Field>
                 <FieldLabel>ZIP Code:</FieldLabel>
                 <Validation UsePattern="true">
                     <TextEdit MaxLength="5" Pattern="^(|\d{5})$" @bind-Text="model.ZipCode">
@@ -101,6 +83,24 @@
                         </Feedback>
                     </TextEdit>
                 </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>City:</FieldLabel>
+                <Validation Validator="Helper.IsAny">
+                    <TextEdit MaxLength="100" @bind-Text="model.City" />
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Province:</FieldLabel>
+                <SelectEdit @bind-SelectedValue="model.Province">
+                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
+                </SelectEdit>
+            </Field>
+            <Field>
+                <FieldLabel>Country:</FieldLabel>
+                <SelectEdit @bind-SelectedValue="model.Country">
+                    <TerritoryList Territories="TerritoryService.Countries" />
+                </SelectEdit>
             </Field>
         </Column>
     </Row>
