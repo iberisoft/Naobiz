@@ -4,13 +4,56 @@
 @inject UserService UserService
 @inject TerritoryService TerritoryService
 
-<Heading Size="HeadingSize.Is1">Users</Heading>
+<Heading Size="HeadingSize.Is1">Users: @users?.Count</Heading>
 
 @if (users == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
+
+<Row>
+    <Column>
+        <Field>
+            <FieldLabel>Email:</FieldLabel>
+            <TextEdit @ref="@emailFilterEdit" Text="@emailFilter" TextChanged="ChangeEmailFilter" />
+        </Field>
+    </Column>
+    <Column>
+        <Field>
+            <FieldLabel>Name:</FieldLabel>
+            <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
+        </Field>
+    </Column>
+    <Column>
+        <Field>
+            <FieldLabel>Tax ID:</FieldLabel>
+            <TextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
+        </Field>
+    </Column>
+</Row>
+<Row>
+    <Column>
+        <Field>
+            <FieldLabel>Phone:</FieldLabel>
+            <TextEdit Text="@phoneFilter" TextChanged="ChangePhoneFilter" />
+        </Field>
+    </Column>
+    <Column>
+        <Field>
+            <FieldLabel>Address/ZIP Code/City:</FieldLabel>
+            <TextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
+        </Field>
+    </Column>
+    <Column>
+        <Field>
+            <FieldLabel>Province:</FieldLabel>
+            <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
+            </SelectEdit>
+        </Field>
+    </Column>
+</Row>
 
 <Panel Class="overflow-auto" Margin="Margin.Is0.OnX">
     <Table IsStriped="true">
@@ -68,6 +111,13 @@
 
 @code {
     List<User> users;
+    string emailFilter;
+    TextEdit emailFilterEdit;
+    string nameFilter;
+    string taxIdFilter;
+    string phoneFilter;
+    string addressFilter;
+    string provinceFilter;
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,6 +129,78 @@
             return;
         }
 
-        users = await Service.Users.OrderBy(user => user.Name).ToListAsync();
+        await UpdateUsers();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        emailFilterEdit?.Focus();
+    }
+
+    private async Task UpdateUsers()
+    {
+        var userQuery = Service.Users.AsQueryable();
+        if (!string.IsNullOrEmpty(emailFilter))
+        {
+            userQuery = userQuery.Where(user => user.Email.Contains(emailFilter));
+        }
+        if (!string.IsNullOrEmpty(nameFilter))
+        {
+            userQuery = userQuery.Where(user => user.Name.Contains(nameFilter));
+        }
+        if (!string.IsNullOrEmpty(taxIdFilter))
+        {
+            userQuery = userQuery.Where(user => user.TaxId.Contains(taxIdFilter));
+        }
+        if (!string.IsNullOrEmpty(phoneFilter))
+        {
+            userQuery = userQuery.Where(user => user.Phone.Contains(phoneFilter));
+        }
+        if (!string.IsNullOrEmpty(addressFilter))
+        {
+            userQuery = userQuery.Where(user => user.Address.Contains(addressFilter) || user.ZipCode.Contains(addressFilter) || user.City.Contains(addressFilter));
+        }
+        if (!string.IsNullOrEmpty(provinceFilter))
+        {
+            userQuery = userQuery.Where(user => user.Province == provinceFilter);
+        }
+        userQuery = userQuery.OrderBy(user => user.Name);
+        users = await userQuery.ToListAsync();
+    }
+
+    private async Task ChangeEmailFilter(string value)
+    {
+        emailFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeNameFilter(string value)
+    {
+        nameFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeTaxIdFilter(string value)
+    {
+        taxIdFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangePhoneFilter(string value)
+    {
+        phoneFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeAddressFilter(string value)
+    {
+        addressFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeProvinceFilter(string value)
+    {
+        provinceFilter = value;
+        await UpdateUsers();
     }
 }

@@ -25,7 +25,21 @@ namespace Naobiz.Data
                 .HasIndex(entity => entity.Email)
                 .IsUnique();
             modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.TaxId);
+            modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.Name);
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Phone);
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Address);
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Country);
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Province);
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.City);
+            modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.ZipCode);
 
             modelBuilder.Entity<Activity>()
                 .HasIndex(entity => entity.Name)
