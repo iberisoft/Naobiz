@@ -98,7 +98,8 @@
         var recipientQuery = Service.ChatMessages.Where(message => message.Creator == user).Select(message => message.Recipient).Distinct();
         var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == user).Select(message => message.Creator).Distinct();
         var conversationQuery = recipientQuery.Union(creatorQuery);
-        if (!string.IsNullOrWhiteSpace(conversationFilter))
+        conversationFilter = conversationFilter?.Trim();
+        if (!string.IsNullOrEmpty(conversationFilter))
         {
             conversationQuery = conversationQuery.Union(Service.Users.Where(user => user.Name.Contains(conversationFilter)));
         }
