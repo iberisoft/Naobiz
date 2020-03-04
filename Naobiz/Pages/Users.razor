@@ -4,15 +4,22 @@
 @inject UserService UserService
 @inject TerritoryService TerritoryService
 
-<Heading Size="HeadingSize.Is1">Users: @users?.Count</Heading>
+<Heading Size="HeadingSize.Is1">Users: @models?.Count</Heading>
 
-@if (users == null)
+@if (models == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
 
 <Row>
+    <Column>
+        <Field>
+            <FieldLabel>Group:</FieldLabel>
+            <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" SelectedItem="groupFilter" SelectedItemChanged="ChangeGroupFilter"
+                         IsNullable="true" />
+        </Field>
+    </Column>
     <Column>
         <Field>
             <FieldLabel>Email:</FieldLabel>
@@ -25,14 +32,14 @@
             <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
         </Field>
     </Column>
+</Row>
+<Row>
     <Column>
         <Field>
             <FieldLabel>Tax ID:</FieldLabel>
             <TextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
         </Field>
     </Column>
-</Row>
-<Row>
     <Column>
         <Field>
             <FieldLabel>Phone:</FieldLabel>
@@ -59,6 +66,22 @@
     <Table IsStriped="true">
         <TableHeader ThemeContrast="ThemeContrast.Light">
             <TableRow>
+                <TableHeaderCell></TableHeaderCell>
+                <TableHeaderCell>
+                    <Dropdown>
+                        <DropdownToggle>
+                            <strong>Group</strong>
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            @foreach (var group in groups)
+                            {
+                                <DropdownItem Clicked="() => SetGroupToSelectedUsers(group)">@group.Name</DropdownItem>
+                            }
+                            <DropdownDivider />
+                            <DropdownItem Clicked="() => SetGroupToSelectedUsers(null)">None</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </TableHeaderCell>
                 <TableHeaderCell>Email</TableHeaderCell>
                 <TableHeaderCell>Registered</TableHeaderCell>
                 <TableHeaderCell>Name</TableHeaderCell>
@@ -76,9 +99,14 @@
             </TableRow>
         </TableHeader>
         <TableBody>
-            @foreach (var user in users)
+            @foreach (var model in models)
             {
+                var user = model.Value;
                 <TableRow>
+                    <TableRowCell>
+                        <CheckEdit @bind-Checked="model.Selected" />
+                    </TableRowCell>
+                    <TableRowCell>@user.Group?.Name</TableRowCell>
                     <TableRowCell>@user.Email</TableRowCell>
                     <TableRowCell>@user.RegistrationDateTime.ToShortDateString()</TableRowCell>
                     <TableRowCell>@user.Name</TableRowCell>
@@ -110,14 +138,16 @@
 </Panel>
 
 @code {
-        List<User> users;
-        string emailFilter;
-        TextEdit emailFilterEdit;
-        string nameFilter;
-        string taxIdFilter;
-        string phoneFilter;
-        string addressFilter;
-        string provinceFilter;
+    List<SelectedValue<User>> models;
+    List<UserGroup> groups;
+    UserGroup groupFilter;
+    string emailFilter;
+    TextEdit emailFilterEdit;
+    string nameFilter;
+    string taxIdFilter;
+    string phoneFilter;
+    string addressFilter;
+    string provinceFilter;
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,6 +159,7 @@
             return;
         }
 
+        groups = await Service.UserGroups.OrderBy(group => group.Name).ToListAsync();
         await UpdateUsers();
     }
 
@@ -143,6 +174,10 @@
     private async Task UpdateUsers()
     {
         var userQuery = Service.Users.AsQueryable();
+        if (groupFilter != null)
+        {
+            userQuery = userQuery.Where(user => user.Group == groupFilter);
+        }
         if (!string.IsNullOrEmpty(emailFilter))
         {
             userQuery = userQuery.Where(user => user.Email.Contains(emailFilter));
@@ -163,12 +198,18 @@
         {
             userQuery = userQuery.Where(user => user.Address.Contains(addressFilter) || user.ZipCode.Contains(addressFilter) || user.City.Contains(addressFilter));
         }
-        if (!string.IsNullOrEmpty(provinceFilter))
+        if (provinceFilter != null)
         {
             userQuery = userQuery.Where(user => user.Province == provinceFilter);
         }
-        userQuery = userQuery.OrderBy(user => user.Name);
-        users = await userQuery.ToListAsync();
+        userQuery = userQuery.OrderBy(user => user.Group).ThenBy(user => user.Email);
+        models = SelectedValue<User>.Create(await userQuery.ToListAsync(), SelectedUsers).ToList();
+    }
+
+    private async Task ChangeGroupFilter(UserGroup value)
+    {
+        groupFilter = value;
+        await UpdateUsers();
     }
 
     private async Task ChangeEmailFilter(string value)
@@ -205,5 +246,16 @@
     {
         provinceFilter = value;
         await UpdateUsers();
+    }
+
+    private IEnumerable<User> SelectedUsers => SelectedValue<User>.GetSelectedValues(models);
+
+    private async Task SetGroupToSelectedUsers(UserGroup group)
+    {
+        foreach (var user in SelectedUsers)
+        {
+            user.Group = group;
+        }
+        await Service.SaveChangesAsync();
     }
 }

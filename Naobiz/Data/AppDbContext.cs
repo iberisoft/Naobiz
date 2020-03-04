@@ -41,6 +41,10 @@ namespace Naobiz.Data
             modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.ZipCode);
 
+            modelBuilder.Entity<UserGroup>()
+                .HasIndex(entity => entity.Name)
+                .IsUnique();
+
             modelBuilder.Entity<Activity>()
                 .HasIndex(entity => entity.Name)
                 .IsUnique();
@@ -110,6 +114,8 @@ namespace Naobiz.Data
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<UserGroup> UserGroups { get; set; }
+
         public DbSet<Activity> Activities { get; set; }
 
         public DbSet<UserActivityLink> UserActivityLinks { get; set; }
@@ -125,6 +131,8 @@ namespace Naobiz.Data
 
         public DbSet<ForumGroup> ForumGroups { get; set; }
 
+        public IQueryable<ForumGroup> GetForumGroups(User user) => user.Admin ? ForumGroups : ForumGroups.Where(group => group.UserGroup == null || group.UserGroup == user.Group);
+
         public DbSet<ForumTopic> ForumTopics { get; set; }
 
         public DbSet<ForumMessage> ForumMessages { get; set; }
@@ -132,6 +140,8 @@ namespace Naobiz.Data
         public DbSet<ForumAttachment> ForumAttachments { get; set; }
 
         public DbSet<ResourceType> ResourceTypes { get; set; }
+
+        public IQueryable<ResourceType> GetResourceTypes(User user) => user.Admin ? ResourceTypes : ResourceTypes.Where(type => type.UserGroup == null || type.UserGroup == user.Group);
 
         public DbSet<Resource> Resources { get; set; }
 

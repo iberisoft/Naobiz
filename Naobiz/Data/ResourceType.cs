@@ -12,5 +12,7 @@ namespace Naobiz.Data
 
         [MaxLength(1000)]
         public string ImageSource { get; set; }
+
+        public virtual UserGroup UserGroup { get; set; }
     }
 }

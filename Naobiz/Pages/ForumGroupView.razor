@@ -49,7 +49,7 @@
             return;
         }
 
-        group = await Service.ForumGroups.SingleAsync(group => group.Id == GroupId);
+        group = await Service.GetForumGroups(user).SingleAsync(group => group.Id == GroupId);
         await UpdateTopics();
     }
 

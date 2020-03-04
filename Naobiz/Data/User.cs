@@ -58,6 +58,8 @@ namespace Naobiz.Data
 
         public bool InfoRequested { get; set; }
 
+        public virtual UserGroup Group { get; set; }
+
         public void Initialize(bool activated)
         {
             RegistrationDateTime = DateTime.Now;

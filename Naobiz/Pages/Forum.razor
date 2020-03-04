@@ -19,7 +19,13 @@
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.FromBottom">
                 <CardHeader>
-                    <CardSubtitle>@group.Name</CardSubtitle>
+                    <CardSubtitle>
+                        @group.Name
+                        @if (group.UserGroup != null)
+                        {
+                            <Icon Name="IconName.Lock" />
+                        }
+                    </CardSubtitle>
                 </CardHeader>
                 @if (group.ImageSource != null)
                 {
@@ -48,6 +54,6 @@
             return;
         }
 
-        groups = await Service.ForumGroups.OrderBy(group => group.Name).ToListAsync();
+        groups = await Service.GetForumGroups(user).OrderBy(group => group.Name).ToListAsync();
     }
 }

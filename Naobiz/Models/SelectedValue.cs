@@ -12,7 +12,11 @@ namespace Naobiz.Models
 
         public bool Selected { get; set; }
 
-        public static IEnumerable<SelectedValue<T>> Create(IEnumerable<T> items, IEnumerable<T> selectedItems) => items
-            .Select(item => new SelectedValue<T>(item) { Selected = selectedItems.Contains(item) });
+        public static IEnumerable<SelectedValue<T>> Create(IEnumerable<T> items, IEnumerable<T> selectedItems = null) => items
+            ?.Select(item => new SelectedValue<T>(item) { Selected = selectedItems?.Contains(item) ?? false });
+
+        public static IEnumerable<T> GetSelectedValues(IEnumerable<SelectedValue<T>> items) => items
+            ?.Where(item => item.Selected)
+            ?.Select(item => item.Value);
     }
 }

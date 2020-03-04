@@ -19,7 +19,13 @@
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.FromBottom">
                 <CardHeader>
-                    <CardSubtitle>@type.Name</CardSubtitle>
+                    <CardSubtitle>
+                        @type.Name
+                        @if (type.UserGroup != null)
+                        {
+                            <Icon Name="IconName.Lock" />
+                        }
+                    </CardSubtitle>
                 </CardHeader>
                 @if (type.ImageSource != null)
                 {
@@ -48,6 +54,6 @@
             return;
         }
 
-        types = await Service.ResourceTypes.OrderBy(type => type.Name).ToListAsync();
+        types = await Service.GetResourceTypes(user).OrderBy(type => type.Name).ToListAsync();
     }
 }
