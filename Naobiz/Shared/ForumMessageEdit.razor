@@ -50,13 +50,16 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (IsTitleVisible)
+        if (firstRender)
         {
-            titleEdit?.Focus();
-        }
-        else
-        {
-            textEdit?.Focus();
+            if (IsTitleVisible)
+            {
+                titleEdit?.Focus();
+            }
+            else
+            {
+                textEdit?.Focus();
+            }
         }
     }
 

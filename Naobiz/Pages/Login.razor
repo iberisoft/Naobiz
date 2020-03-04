@@ -43,7 +43,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        enterButton?.Focus();
+        if (firstRender)
+        {
+            enterButton?.Focus();
+        }
     }
 
     private async Task LoginAccount()

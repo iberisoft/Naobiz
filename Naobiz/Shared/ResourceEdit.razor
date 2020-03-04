@@ -85,7 +85,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        titleEdit?.Focus();
+        if (firstRender)
+        {
+            titleEdit?.Focus();
+        }
     }
 
     private async Task ChangeOwner(User value)

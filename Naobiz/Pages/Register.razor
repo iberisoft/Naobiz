@@ -137,7 +137,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        emailEdit?.Focus();
+        if (firstRender)
+        {
+            emailEdit?.Focus();
+        }
     }
 
     private async Task SubmitChanges()

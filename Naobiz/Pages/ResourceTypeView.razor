@@ -80,7 +80,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        keywordFilterEdit?.Focus();
+        if (firstRender)
+        {
+            keywordFilterEdit?.Focus();
+        }
     }
 
     private async Task UpdateResources()

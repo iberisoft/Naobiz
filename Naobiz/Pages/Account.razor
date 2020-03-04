@@ -119,7 +119,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        nameEdit?.Focus();
+        if (firstRender)
+        {
+            nameEdit?.Focus();
+        }
     }
 
     private async Task SubmitChanges()

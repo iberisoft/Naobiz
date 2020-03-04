@@ -110,14 +110,14 @@
 </Panel>
 
 @code {
-    List<User> users;
-    string emailFilter;
-    TextEdit emailFilterEdit;
-    string nameFilter;
-    string taxIdFilter;
-    string phoneFilter;
-    string addressFilter;
-    string provinceFilter;
+        List<User> users;
+        string emailFilter;
+        TextEdit emailFilterEdit;
+        string nameFilter;
+        string taxIdFilter;
+        string phoneFilter;
+        string addressFilter;
+        string provinceFilter;
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,7 +134,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        emailFilterEdit?.Focus();
+        if (firstRender)
+        {
+            emailFilterEdit?.Focus();
+        }
     }
 
     private async Task UpdateUsers()
