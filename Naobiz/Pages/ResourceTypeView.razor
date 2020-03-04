@@ -13,7 +13,7 @@
 <Heading Size="HeadingSize.Is1">@type.Name: @resources?.Count</Heading>
 
 <Row>
-    <Column>
+    <Column ColumnSize="ColumnSize.IsQuarter">
         <Field>
             <FieldLabel>Province:</FieldLabel>
             <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
@@ -21,7 +21,7 @@
             </SelectEdit>
         </Field>
     </Column>
-    <Column>
+    <Column ColumnSize="ColumnSize.IsHalf">
         <Field>
             <FieldLabel>Activity:</FieldLabel>
             <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
