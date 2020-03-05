@@ -6,7 +6,7 @@
 
 <Heading Size="HeadingSize.Is1">Activities</Heading>
 
-@if (activities == null)
+@if (models == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
@@ -14,18 +14,18 @@
 
 <Row>
     <Column>
-        @foreach (var activity in activities.Take(activities.Count / 2))
+        @foreach (var model in models.Take(models.Count / 2))
         {
             <Field>
-                <CheckEdit @bind-Checked="activity.Selected">@activity.Value.Name</CheckEdit>
+                <CheckEdit @bind-Checked="model.Selected">@model.Value.Name</CheckEdit>
             </Field>
         }
     </Column>
     <Column>
-        @foreach (var activity in activities.Skip(activities.Count / 2))
+        @foreach (var model in models.Skip(models.Count / 2))
         {
             <Field>
-                <CheckEdit @bind-Checked="activity.Selected">@activity.Value.Name</CheckEdit>
+                <CheckEdit @bind-Checked="model.Selected">@model.Value.Name</CheckEdit>
             </Field>
         }
     </Column>
@@ -38,7 +38,7 @@
 
 @code {
     User user;
-    List<SelectedValue<Activity>> activities;
+    List<SelectedValue<Activity>> models;
     List<Activity> selectedActivities;
 
     protected override async Task OnInitializedAsync()
@@ -52,25 +52,25 @@
         }
 
         selectedActivities = await Service.GetActivities(user).ToListAsync();
-        activities = SelectedValue<Activity>.Create(await Service.Activities.ToListAsync(), selectedActivities).ToList();
+        models = SelectedValue<Activity>.Create(await Service.Activities.ToListAsync(), selectedActivities).ToList();
     }
 
     private async Task SubmitChanges()
     {
-        foreach (var activity in activities)
+        foreach (var model in models)
         {
-            if (activity.Selected)
+            if (model.Selected)
             {
-                if (!selectedActivities.Contains(activity.Value))
+                if (!selectedActivities.Contains(model.Value))
                 {
-                    Service.AddActivity(user, activity.Value);
+                    Service.AddActivity(user, model.Value);
                 }
             }
             else
             {
-                if (selectedActivities.Contains(activity.Value))
+                if (selectedActivities.Contains(model.Value))
                 {
-                    await Service.RemovevActivityAsync(user, activity.Value);
+                    await Service.RemovevActivityAsync(user, model.Value);
                 }
             }
         }
