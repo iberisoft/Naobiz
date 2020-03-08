@@ -2,7 +2,7 @@
 
 namespace Naobiz.Data
 {
-    public class Attachment
+    public abstract class Attachment
     {
         public int Id { get; set; }
 
