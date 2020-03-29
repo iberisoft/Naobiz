@@ -15,7 +15,6 @@
     @foreach (var group in groups)
     {
         var linkUrl = "forum/" + group.Id;
-        var topicCount = Service.ForumTopics.Count(topic => topic.Group == group);
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.FromBottom">
                 <CardHeader>
@@ -34,26 +33,104 @@
                     </CardLink>
                 }
                 <CardBody>
-                    <CardLink Source="@linkUrl">Topics: @topicCount</CardLink>
+                    <CardLink Source="@linkUrl">Topics: @topicCount[group]</CardLink>
+                    @if (user.Admin)
+                    {
+                        <Panel Float="Float.Right">
+                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Edit</Button>
+                            @if (topicCount[group] == 0)
+                            {
+                                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteGroup(group)">Delete</Button>
+                            }
+                        </Panel>
+                    }
                 </CardBody>
             </Card>
         </Column>
     }
+    <Column ColumnSize="ColumnSize.IsQuarter">
+        @if (user.Admin)
+        {
+            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="CreateGroup">New</Button>
+        }
+    </Column>
 </Row>
 
+@if (user.Admin)
+{
+    <ForumGroupEdit @ref="groupEdit" Service="Service" Submitted="SubmitGroup" />
+
+    <Confirm @ref="deleteGroupConfirm" Text="Delete forum group?" Confirmed="DeleteGroup" />
+}
+
 @code {
+    User user;
     List<ForumGroup> groups;
+    Dictionary<ForumGroup, int> topicCount;
+    ForumGroup activeGroup;
+    ForumGroupEdit groupEdit;
+    Confirm deleteGroupConfirm;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        var user = await UserService.GetCurrentAsync(Service);
+        user = await UserService.GetCurrentAsync(Service);
         if (user == null)
         {
             return;
         }
 
+        await UpdateGroups();
+    }
+
+    private async Task UpdateGroups()
+    {
         groups = await Service.GetForumGroups(user).OrderBy(group => group.Name).ToListAsync();
+        topicCount = new Dictionary<ForumGroup, int>();
+        foreach (var group in groups)
+        {
+            topicCount[group] = await Service.ForumTopics.CountAsync(topic => topic.Group == group);
+        }
+    }
+
+    private async Task CreateGroup()
+    {
+        activeGroup = new ForumGroup();
+        await groupEdit.Show(activeGroup);
+    }
+
+    private async Task EditGroup(ForumGroup group)
+    {
+        activeGroup = group;
+        await groupEdit.Show(activeGroup);
+    }
+
+    private void DeleteGroup(ForumGroup group)
+    {
+        activeGroup = group;
+        deleteGroupConfirm.Show();
+    }
+
+    private async Task SubmitGroup()
+    {
+        groupEdit.Get(activeGroup);
+        if (activeGroup.Id == 0)
+        {
+            Service.ForumGroups.Add(activeGroup);
+        }
+
+        await Service.SaveChangesAsync();
+
+        await UpdateGroups();
+    }
+
+    private async Task DeleteGroup()
+    {
+        Service.ForumGroups.Remove(activeGroup);
+
+        await Service.SaveChangesAsync();
+
+        await UpdateGroups();
     }
 }

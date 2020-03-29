@@ -15,7 +15,6 @@
     @foreach (var type in types)
     {
         var linkUrl = "resources/" + type.Id;
-        var resourceCount = Service.Resources.Count(resource => resource.Type == type);
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.FromBottom">
                 <CardHeader>
@@ -34,26 +33,104 @@
                     </CardLink>
                 }
                 <CardBody>
-                    <CardLink Source="@linkUrl">Resources: @resourceCount</CardLink>
+                    <CardLink Source="@linkUrl">Resources: @resourceCount[type]</CardLink>
+                    @if (user.Admin)
+                    {
+                        <Panel Float="Float.Right">
+                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditType(type)">Edit</Button>
+                            @if (resourceCount[type] == 0)
+                            {
+                                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteType(type)">Delete</Button>
+                            }
+                        </Panel>
+                    }
                 </CardBody>
             </Card>
         </Column>
     }
+    <Column ColumnSize="ColumnSize.IsQuarter">
+        @if (user.Admin)
+        {
+            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="CreateType">New</Button>
+        }
+    </Column>
 </Row>
 
+@if (user.Admin)
+{
+    <ResourceTypeEdit @ref="typeEdit" Service="Service" Submitted="SubmitType" />
+
+    <Confirm @ref="deleteTypeConfirm" Text="Delete resource type?" Confirmed="DeleteType" />
+}
+
 @code {
+    User user;
     List<ResourceType> types;
+    Dictionary<ResourceType, int> resourceCount;
+    ResourceType activeType;
+    ResourceTypeEdit typeEdit;
+    Confirm deleteTypeConfirm;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        var user = await UserService.GetCurrentAsync(Service);
+        user = await UserService.GetCurrentAsync(Service);
         if (user == null)
         {
             return;
         }
 
+        await UpdateTypes();
+    }
+
+    private async Task UpdateTypes()
+    {
         types = await Service.GetResourceTypes(user).OrderBy(type => type.Name).ToListAsync();
+        resourceCount = new Dictionary<ResourceType, int>();
+        foreach (var type in types)
+        {
+            resourceCount[type] = await Service.Resources.CountAsync(resource => resource.Type == type);
+        }
+    }
+
+    private async Task CreateType()
+    {
+        activeType = new ResourceType();
+        await typeEdit.Show(activeType);
+    }
+
+    private async Task EditType(ResourceType type)
+    {
+        activeType = type;
+        await typeEdit.Show(activeType);
+    }
+
+    private void DeleteType(ResourceType type)
+    {
+        activeType = type;
+        deleteTypeConfirm.Show();
+    }
+
+    private async Task SubmitType()
+    {
+        typeEdit.Get(activeType);
+        if (activeType.Id == 0)
+        {
+            Service.ResourceTypes.Add(activeType);
+        }
+
+        await Service.SaveChangesAsync();
+
+        await UpdateTypes();
+    }
+
+    private async Task DeleteType()
+    {
+        Service.ResourceTypes.Remove(activeType);
+
+        await Service.SaveChangesAsync();
+
+        await UpdateTypes();
     }
 }

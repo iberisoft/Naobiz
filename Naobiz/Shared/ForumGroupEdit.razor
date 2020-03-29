@@ -1,0 +1,81 @@
+﻿<Modal @ref="modal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Forum Group</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Validations @ref="validations" Mode="ValidationMode.Manual">
+                <Field>
+                    <FieldLabel>Name:</FieldLabel>
+                    <Validation Validator="Helper.IsTrimmedNotEmpty">
+                        <TextEdit @ref="nameEdit" MaxLength="100" @bind-Text="name" />
+                    </Validation>
+                </Field>
+                <Field>
+                    <FieldLabel>Image URL:</FieldLabel>
+                    <TextEdit MaxLength="1000" @bind-Text="imageSource" />
+                </Field>
+                <Field>
+                    <FieldLabel>User Group:</FieldLabel>
+                    <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="userGroups" @bind-SelectedItem="userGroup" IsNullable="true" />
+                </Field>
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="Submit">Submit</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public AppDbContext Service { get; set; }
+
+    [Parameter]
+    public EventCallback Submitted { get; set; }
+
+    string name;
+    TextEdit nameEdit;
+    string imageSource;
+    List<UserGroup> userGroups;
+    UserGroup userGroup;
+    Modal modal;
+    Validations validations;
+
+    public async Task Show(ForumGroup group)
+    {
+        name = group.Name;
+        imageSource = group.ImageSource;
+        userGroups = await Service.UserGroups.OrderBy(userGroup => userGroup.Name).ToListAsync();
+        userGroup = group.UserGroup;
+
+        modal.Show();
+
+        nameEdit.Focus();
+    }
+
+    public void Get(ForumGroup group)
+    {
+        group.Name = name;
+        group.ImageSource = imageSource;
+        group.UserGroup = userGroup;
+    }
+
+    private async Task Submit()
+    {
+        if (!validations.ValidateAll())
+        {
+            return;
+        }
+
+        modal.Hide();
+        await Submitted.InvokeAsync(null);
+    }
+
+    private void Close()
+    {
+        modal.Hide();
+    }
+}
