@@ -165,9 +165,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender)
+        if (emailFilterEdit != null)
         {
-            emailFilterEdit?.Focus();
+            emailFilterEdit.Focus();
+            emailFilterEdit = null;
         }
     }
 

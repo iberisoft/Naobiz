@@ -55,9 +55,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender)
+        if (keywordFilterEdit != null)
         {
-            keywordFilterEdit?.Focus();
+            keywordFilterEdit.Focus();
+            keywordFilterEdit = null;
         }
     }
 
@@ -75,13 +76,13 @@
         topics = await topicQuery.ToListAsync();
     }
 
-    private void CreateTopic()
+    private async Task CreateTopic()
     {
         newTopic = new ForumTopic();
         newTopic.Group = group;
         newTopic.Message = new ForumMessage();
         newTopic.Message.Initialize(user);
-        newTopicEdit.Show();
+        await newTopicEdit.Show();
     }
 
     private async Task SendTopic()

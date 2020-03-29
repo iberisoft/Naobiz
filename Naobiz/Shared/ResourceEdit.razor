@@ -81,14 +81,8 @@
         attachmentView.LoadAttachments(await Service.ResourceAttachments.Where(attachment => attachment.Resource == resource).ToListAsync());
 
         modal.Show();
-    }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            titleEdit?.Focus();
-        }
+        titleEdit.Focus();
     }
 
     private async Task ChangeOwner(User value)

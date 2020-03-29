@@ -90,10 +90,7 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender)
-        {
-            newMessageTextEdit?.Focus();
-        }
+        newMessageTextEdit?.Focus();
     }
 
     private async Task UpdateConversations()

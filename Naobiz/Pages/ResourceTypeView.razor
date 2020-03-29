@@ -80,9 +80,10 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender)
+        if (keywordFilterEdit != null)
         {
-            keywordFilterEdit?.Focus();
+            keywordFilterEdit.Focus();
+            keywordFilterEdit = null;
         }
     }
 

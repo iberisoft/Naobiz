@@ -93,12 +93,12 @@
         childMessageCount = childMessages.Count;
     }
 
-    private void CreateMessage()
+    private async Task CreateMessage()
     {
         newMessage = new ForumMessage();
         newMessage.Initialize(user);
         newMessage.ParentMessage = message;
-        newMessageEdit.Show();
+        await newMessageEdit.Show();
     }
 
     private async Task SendMessage()
