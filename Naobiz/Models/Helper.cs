@@ -7,6 +7,15 @@ namespace Naobiz.Models
     {
         public static string SizeToString(long value) => $"{value / (float)0x100000:f2} MB";
 
+        public static string AgeToString(int value, string unit)
+        {
+            if (value > 1)
+            {
+                unit += "s";
+            }
+            return $"{value} {unit} ago";
+        }
+
         public static void IsAny(ValidatorEventArgs e) => e.Status = ValidationStatus.Success;
 
         public static void IsTrue(ValidatorEventArgs e) => e.Status = (bool)e.Value ? ValidationStatus.Success : ValidationStatus.Error;

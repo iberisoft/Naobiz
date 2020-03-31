@@ -1,0 +1,48 @@
+﻿@inherits BaseComponent
+
+<Tooltip Text="@(DateString + " " + TimeString)" IsFade="true" IsInline="true" Float="Float">
+    <Badge Color="Color.Light">@AgeString</Badge>
+</Tooltip>
+
+@code {
+    [Parameter]
+    public DateTime DateTime { get; set; }
+
+    private string DateString => DateTime.ToString("d");
+
+    private string TimeString => DateTime.ToString("t");
+
+    private string AgeString
+    {
+        get
+        {
+            var age = DateTime.Now - DateTime;
+            if (age < TimeSpan.Zero)
+            {
+                age = TimeSpan.Zero;
+            }
+
+            if (age.TotalSeconds < 6)
+            {
+                return "now";
+            }
+            if (age.TotalMinutes < 1)
+            {
+                return Helper.AgeToString((int)age.TotalSeconds, "second");
+            }
+            if (age.TotalHours < 1)
+            {
+                return Helper.AgeToString((int)age.TotalMinutes, "minute");
+            }
+            if (age.TotalDays < 1)
+            {
+                return Helper.AgeToString((int)age.TotalHours, "hour");
+            }
+            if (age.TotalDays < 30)
+            {
+                return Helper.AgeToString((int)age.TotalDays, "day");
+            }
+            return DateString;
+        }
+    }
+}
