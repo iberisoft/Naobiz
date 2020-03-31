@@ -81,12 +81,12 @@
         newTopic = new ForumTopic();
         newTopic.Group = group;
         newTopic.Message = new ForumMessage();
-        newTopic.Message.Initialize(user);
         await newTopicEdit.Show();
     }
 
     private async Task SendTopic()
     {
+        newTopic.Message.Initialize(user);
         newTopicEdit.Get(newTopic);
         Service.ForumTopics.Add(newTopic);
         Service.ForumMessages.Add(newTopic.Message);

@@ -95,13 +95,13 @@
     private async Task CreateMessage()
     {
         newMessage = new ForumMessage();
-        newMessage.Initialize(user);
         newMessage.ParentMessage = message;
         await newMessageEdit.Show();
     }
 
     private async Task SendMessage()
     {
+        newMessage.Initialize(user);
         newMessageEdit.Get(newMessage);
         Service.ForumMessages.Add(newMessage);
 

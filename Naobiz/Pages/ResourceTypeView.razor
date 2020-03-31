@@ -113,12 +113,12 @@
     {
         newResource = new Resource();
         newResource.Type = type;
-        newResource.Initialize();
         await newResourceEdit.Show(newResource);
     }
 
     private async Task SubmitResource()
     {
+        newResource.Initialize();
         newResourceEdit.Get(newResource);
         Service.Resources.Add(newResource);
 
