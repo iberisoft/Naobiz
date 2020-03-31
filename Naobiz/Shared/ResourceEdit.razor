@@ -82,6 +82,7 @@
         url = resource.Url;
         attachmentView.LoadAttachments(await Service.ResourceAttachments.Where(attachment => attachment.Resource == resource).ToListAsync());
 
+        validations.ClearAll();
         modal.Show();
 
         titleEdit.Focus();

@@ -51,6 +51,7 @@
         userGroups = await Service.UserGroups.OrderBy(userGroup => userGroup.Name).ToListAsync();
         userGroup = group.UserGroup;
 
+        validations.ClearAll();
         modal.Show();
 
         nameEdit.Focus();
