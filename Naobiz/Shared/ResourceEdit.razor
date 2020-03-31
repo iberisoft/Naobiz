@@ -16,7 +16,9 @@
                     <Column>
                         <Field>
                             <FieldLabel>Activity:</FieldLabel>
-                            <SelectEdit2 KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
+                            <Validation Validator="e => e.Status = activity != null ? ValidationStatus.Success : ValidationStatus.Error">
+                                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
+                            </Validation>
                         </Field>
                     </Column>
                 </Row>
@@ -105,7 +107,7 @@
 
     private async Task Submit()
     {
-        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded || owner == null || activity == null)
+        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded || owner == null)
         {
             return;
         }
