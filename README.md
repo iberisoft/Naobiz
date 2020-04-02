@@ -6,7 +6,7 @@ E-commerce platform for Spain.
 
 ## Configuration
 
-The tool is configured in file `appsettings.json` and a special secret file.
+The tool is configured in file `appsettings.json`.
 
 ### Database
 
@@ -21,18 +21,14 @@ Setting       | Default Value          | Description
 SiteUrl       | http://localhost:5000/ | Site reference
 SiteEmail     | negocios@naobiz.com    | Email address
 
-The SMTP server is defined in file `%APPDATA%\Microsoft\UserSecrets\4bda5a93-807f-4a5d-8d59-f69eee33054b\secrets.json`:
+The SMTP server is defined in the Smtp setting:
 
-```
-{
-  "Smtp": {
-    "Host": "c25702.sgvps.net",
-    "Port": "587",
-    "User": "negocios@naobiz.com",
-    "Password": "NaveNegocios19"
-  }
-}
-```
+Setting       | Default Value          | Description
+--------------|------------------------|------------
+Host          | c25702.sgvps.net       | Server host
+Port          | 587                    | Server port
+User          | negocios@naobiz.com    | Username to access the server
+Password      | NaveNegocios19         | User password
 
 ### Dashboard
 
