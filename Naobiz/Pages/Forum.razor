@@ -16,7 +16,7 @@
     {
         var linkUrl = "forum/" + group.Id;
         <Column ColumnSize="ColumnSize.IsQuarter">
-            <Card Margin="Margin.Is4.FromBottom">
+            <Card Margin="Margin.Is4.OnY">
                 <CardHeader>
                     <CardSubtitle>
                         @group.Name
@@ -51,7 +51,7 @@
     <Column ColumnSize="ColumnSize.IsQuarter">
         @if (user.Admin)
         {
-            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="CreateGroup">New</Button>
+            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">New</Button>
         }
     </Column>
 </Row>
