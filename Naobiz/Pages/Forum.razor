@@ -17,15 +17,6 @@
         var linkUrl = "forum/" + group.Id;
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.OnY">
-                <CardHeader>
-                    <CardSubtitle>
-                        @group.Name
-                        @if (group.UserGroup != null)
-                        {
-                            <Icon Name="IconName.Lock" />
-                        }
-                    </CardSubtitle>
-                </CardHeader>
                 @if (group.ImageSource != null)
                 {
                     <CardLink Source="@linkUrl">
@@ -33,6 +24,13 @@
                     </CardLink>
                 }
                 <CardBody>
+                    <CardTitle Size="5">
+                        @group.Name
+                        @if (group.UserGroup != null)
+                        {
+                            <Icon Name="IconName.Lock" />
+                        }
+                    </CardTitle>
                     <CardLink Source="@linkUrl">Topics: @topicCount[group]</CardLink>
                     @if (user.Admin)
                     {

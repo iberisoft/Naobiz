@@ -17,15 +17,6 @@
         var linkUrl = "resources/" + type.Id;
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.OnY">
-                <CardHeader>
-                    <CardSubtitle>
-                        @type.Name
-                        @if (type.UserGroup != null)
-                        {
-                            <Icon Name="IconName.Lock" />
-                        }
-                    </CardSubtitle>
-                </CardHeader>
                 @if (type.ImageSource != null)
                 {
                     <CardLink Source="@linkUrl">
@@ -33,6 +24,13 @@
                     </CardLink>
                 }
                 <CardBody>
+                    <CardTitle Size="5">
+                        @type.Name
+                        @if (type.UserGroup != null)
+                        {
+                            <Icon Name="IconName.Lock" />
+                        }
+                    </CardTitle>
                     <CardLink Source="@linkUrl">Resources: @resourceCount[type]</CardLink>
                     @if (user.Admin)
                     {

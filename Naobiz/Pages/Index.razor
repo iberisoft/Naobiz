@@ -12,12 +12,12 @@
     {
         <Column ColumnSize="ColumnSize.IsQuarter">
             <Card Margin="Margin.Is4.OnY">
-                <CardHeader>
-                    <CardSubtitle>@item.Name</CardSubtitle>
-                </CardHeader>
                 <CardLink Source="@item.LinkUrl">
                     <CardImage Source="@item.ImageSource" />
                 </CardLink>
+                <CardBody>
+                    <CardTitle Size="5">@item.Name</CardTitle>
+                </CardBody>
             </Card>
         </Column>
     }
