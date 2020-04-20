@@ -10,7 +10,7 @@ The tool is configured in file `appsettings.json`.
 
 ### Database
 
-The DbConnection setting should be `Server=(local)\\SQLEXPRESS;Database=Naobiz;Trusted_Connection=True;MultipleActiveResultSets=true`.
+The `DbConnection` setting should be `Server=(local)\\SQLEXPRESS;Database=Naobiz;Trusted_Connection=True;MultipleActiveResultSets=true`.
 
 ### Emails
 
@@ -21,7 +21,7 @@ Setting       | Default Value          | Description
 SiteUrl       | http://localhost:5000/ | Site reference
 SiteEmail     | negocios@naobiz.com    | Email address
 
-The SMTP server is defined in the Smtp setting:
+The SMTP server is defined in the `Smtp` setting:
 
 Setting       | Default Value          | Description
 --------------|------------------------|------------
@@ -32,7 +32,7 @@ Password      | NaveNegocios19         | User password
 
 ### Dashboard
 
-The Dashboard setting consist of sections, each section includes the following settings:
+The `Dashboard` setting consist of sections, each section includes the following settings:
 
 Setting       | Description
 --------------|------------
