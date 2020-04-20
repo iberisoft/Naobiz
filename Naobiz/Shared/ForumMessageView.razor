@@ -8,13 +8,13 @@
     return;
 }
 
-<Row>
+<Row Class="message-creator">
     <Column>
         <UserInfo User="message.Creator" />
         <Timestamp DateTime="message.CreationDateTime" Float="Float.Right" />
     </Column>
 </Row>
-<Row Margin="Margin.Is1.FromBottom">
+<Row Class="message-text" Margin="Margin.Is1.FromBottom">
     <Column ColumnSize="ColumnSize.Is11">
         <Alert Color="Color.Info" IsShow="true">
             <MultilineText Text="@message.Text" />
@@ -35,7 +35,7 @@
 @foreach (var attachment in attachments)
 {
     <Tooltip Text="@Helper.SizeToString(attachment.Size)" IsFade="true">
-        <Button Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
+        <Button Class="message-attachment" Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
     </Tooltip>
 }
 

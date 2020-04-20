@@ -9,20 +9,20 @@
 }
 
 <Card Margin="Margin.Is1.FromBottom">
-    <CardHeader>
+    <CardHeader Class="resource-title">
         <CardSubtitle>
             <Paragraph>@resource.Title</Paragraph>
             <Badge Color="Color.Secondary">@resource.Activity.Name</Badge>
         </CardSubtitle>
     </CardHeader>
-    <CardBody>
-        <Row>
+    <CardBody Class="resource-body">
+        <Row Class="resource-owner">
             <Column>
                 <UserInfo User="resource.Owner" />
                 <Timestamp DateTime="resource.CreationDateTime" Float="Float.Right" />
             </Column>
         </Row>
-        <Row Margin="Margin.Is1.FromBottom">
+        <Row Class="resource-description" Margin="Margin.Is1.FromBottom">
             <Column ColumnSize="ColumnSize.Is11">
                 <Alert Color="Color.Info" IsShow="true">
                     <MultilineText Text="@resource.Description" />
@@ -46,7 +46,7 @@
         </Row>
         @if (resource.Url != null)
         {
-            <Row>
+            <Row Class="resource-url">
                 <Column>
                     <Button Color="Color.Link" Size="ButtonSize.Small" Clicked="NavigateToUrl">@resource.Url</Button>
                 </Column>
@@ -56,7 +56,7 @@
         @foreach (var attachment in attachments)
         {
             <Tooltip Text="@Helper.SizeToString(attachment.Size)" IsFade="true">
-                <Button Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
+                <Button Class="resource-attachment" Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
             </Tooltip>
         }
     </CardBody>

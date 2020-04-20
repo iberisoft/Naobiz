@@ -7,10 +7,10 @@
 }
 
 <Card Margin="Margin.Is1.FromBottom">
-    <CardHeader>
+    <CardHeader Class="message-title">
         <CardSubtitle>@topic.Title</CardSubtitle>
     </CardHeader>
-    <CardBody>
+    <CardBody Class="message-body">
         <ForumMessageView MessageId="topic.Message.Id" MessageDeleted="OnMessageDeleted" />
     </CardBody>
 </Card>
