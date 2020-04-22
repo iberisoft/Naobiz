@@ -15,8 +15,6 @@ namespace Naobiz.Data
             : base(options)
         {
             m_Environment = environment;
-
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
