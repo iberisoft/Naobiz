@@ -1,9 +1,40 @@
 ﻿@foreach (var line in Text.Split('\n'))
 {
-    <Paragraph>@line</Paragraph>
+    <Paragraph>
+        @foreach (var text in line.Split())
+        {
+            if (IsUrl(text))
+            {
+                if (spanTexts.Count > 0)
+                {
+                    <span>@JoinSpanTexts()</span>
+                }
+                <a href="@text">@text</a>
+            }
+            else
+            {
+                spanTexts.Add(text);
+            }
+        }
+        @if (spanTexts.Count > 0)
+        {
+            <span>@JoinSpanTexts()</span>
+        }
+    </Paragraph>
 }
 
 @code {
     [Parameter]
     public string Text { get; set; }
+
+    List<string> spanTexts = new List<string>();
+
+    private string JoinSpanTexts()
+    {
+        var spanText = string.Join(' ', spanTexts);
+        spanTexts.Clear();
+        return spanText;
+    }
+
+    private static bool IsUrl(string text) => Uri.TryCreate(text, UriKind.Absolute, out Uri _);
 }
