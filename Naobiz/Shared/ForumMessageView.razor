@@ -21,11 +21,11 @@
         </Alert>
     </Column>
     <Column ColumnSize="ColumnSize.Is1">
-        @if (message.Creator == user)
+        @if (message.Creator == user || user.Admin)
         {
-            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
+            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
         }
-        else
+        @if (message.Creator != user)
         {
             <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Reply</Button>
         }
