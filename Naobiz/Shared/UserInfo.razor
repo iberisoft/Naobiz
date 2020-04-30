@@ -1,8 +1,6 @@
 ﻿@inject TerritoryService TerritoryService
 
-<Tooltip Text="@User.Email" Placement="Placement.Right" IsFade="true" IsInline="true">
-    <Badge Color="Color.Info">@User.Name</Badge>
-</Tooltip>
+<Badge Color="Color.Info">@User.Name</Badge>
 @if (User.City != null)
 {
     <Badge Color="Color.Light">@User.City</Badge>
