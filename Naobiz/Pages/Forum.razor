@@ -3,62 +3,64 @@
 @inherits AuthorizedBase
 @inject UserService UserService
 
-<Heading Size="HeadingSize.Is1">Forum</Heading>
-
 @if (groups == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
 
-<Row>
-    @foreach (var group in groups)
-    {
-        var linkUrl = "forum/" + group.Id;
-        <Column ColumnSize="ColumnSize.IsQuarter">
-            <Card Margin="Margin.Is4.OnY">
-                @if (group.ImageSource != null)
-                {
-                    <CardLink Source="@linkUrl">
-                        <CardImage Source="@group.ImageSource" />
-                    </CardLink>
-                }
-                <CardBody>
-                    <CardTitle Size="5">
-                        @group.Name
-                        @if (group.UserGroup != null)
-                        {
-                            <Icon Name="IconName.Lock" />
-                        }
-                    </CardTitle>
-                    <CardLink Source="@linkUrl">Topics: @topicCount[group]</CardLink>
-                    @if (user.Admin)
-                    {
-                        <Panel Float="Float.Right">
-                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Edit</Button>
-                            @if (topicCount[group] == 0)
-                            {
-                                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteGroup(group)">Delete</Button>
-                            }
-                        </Panel>
-                    }
-                </CardBody>
-            </Card>
-        </Column>
-    }
-    <Column ColumnSize="ColumnSize.IsQuarter">
-        @if (user.Admin)
-        {
-            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">New</Button>
-        }
-    </Column>
-</Row>
+<Panel Class="page-forum">
+    <Heading Size="HeadingSize.Is1">Forum</Heading>
 
-@if (user.Admin)
-{
-    <ForumGroupEdit @ref="groupEdit" Service="Service" Submitted="SubmitGroup" />
-    <Confirm @ref="deleteGroupConfirm" Text="Delete forum group?" Confirmed="DeleteGroup" />
-}
+    <Row>
+        @foreach (var group in groups)
+        {
+            var linkUrl = "forum/" + group.Id;
+            <Column ColumnSize="ColumnSize.IsQuarter">
+                <Card Margin="Margin.Is4.OnY">
+                    @if (group.ImageSource != null)
+                    {
+                        <CardLink Source="@linkUrl">
+                            <CardImage Source="@group.ImageSource" />
+                        </CardLink>
+                    }
+                    <CardBody>
+                        <CardTitle Size="5">
+                            @group.Name
+                            @if (group.UserGroup != null)
+                            {
+                                <Icon Name="IconName.Lock" />
+                            }
+                        </CardTitle>
+                        <CardLink Source="@linkUrl">Topics: @topicCount[group]</CardLink>
+                        @if (user.Admin)
+                        {
+                            <Panel Float="Float.Right">
+                                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Edit</Button>
+                                @if (topicCount[group] == 0)
+                                {
+                                    <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteGroup(group)">Delete</Button>
+                                }
+                            </Panel>
+                        }
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+        <Column ColumnSize="ColumnSize.IsQuarter">
+            @if (user.Admin)
+            {
+                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">New</Button>
+            }
+        </Column>
+    </Row>
+
+    @if (user.Admin)
+    {
+        <ForumGroupEdit @ref="groupEdit" Service="Service" Submitted="SubmitGroup" />
+        <Confirm @ref="deleteGroupConfirm" Text="Delete forum group?" Confirmed="DeleteGroup" />
+    }
+</Panel>
 
 @code {
     User user;

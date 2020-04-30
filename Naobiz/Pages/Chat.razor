@@ -3,68 +3,70 @@
 @inherits AuthorizedBase
 @inject UserService UserService
 
-<Heading Size="HeadingSize.Is1">Chat</Heading>
-
 @if (conversations == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
 
-<Row>
-    <Column ColumnSize="ColumnSize.Is3">
-        <Addons Margin="Margin.Is1.FromBottom">
-            <Addon AddonType="AddonType.Body">
-                <TextEdit @bind-Text="conversationFilter" />
-            </Addon>
-            <Addon AddonType="AddonType.End">
-                <Button Color="Color.Primary" Clicked="UpdateConversations">Search</Button>
-            </Addon>
-        </Addons>
-        @foreach (var conversation in conversations)
-        {
-            <Card Margin="Margin.Is1.FromBottom">
-                <CardBody>
-                    <Row>
-                        <Column ColumnSize="ColumnSize.Is8">
-                            <UserInfo User="conversation" />
-                        </Column>
-                        <Column ColumnSize="ColumnSize.Is4">
-                            <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await StartConversation(conversation)">Chat</Button>
-                        </Column>
-                    </Row>
-                </CardBody>
-            </Card>
-        }
-    </Column>
-    @if (messages != null)
-    {
-        <Column ColumnSize="ColumnSize.Is9">
-            <Addons Margin="Margin.Is3.FromBottom">
+<Panel Class="page-chat">
+    <Heading Size="HeadingSize.Is1">Chat</Heading>
+
+    <Row>
+        <Column ColumnSize="ColumnSize.Is3">
+            <Addons Margin="Margin.Is1.FromBottom">
                 <Addon AddonType="AddonType.Body">
-                    <TextEdit @ref="newMessageTextEdit" MaxLength="100" @bind-Text="newMessageText" />
+                    <TextEdit @bind-Text="conversationFilter" />
                 </Addon>
                 <Addon AddonType="AddonType.End">
-                    <Button Color="Color.Primary" Clicked="SendMessage">Send</Button>
+                    <Button Color="Color.Primary" Clicked="UpdateConversations">Search</Button>
                 </Addon>
             </Addons>
-            @foreach (var message in messages)
+            @foreach (var conversation in conversations)
             {
-                <Row>
-                    <Column>
-                        <UserInfo User="message.Creator" />
-                        <Timestamp DateTime="message.CreationDateTime" Float="Float.Right" />
-                    </Column>
-                </Row>
-                <Row>
-                    <Column>
-                        <Alert Color="Color.Info" IsShow="true">@message.Text</Alert>
-                    </Column>
-                </Row>
+                <Card Margin="Margin.Is1.FromBottom">
+                    <CardBody>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is8">
+                                <UserInfo User="conversation" />
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is4">
+                                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await StartConversation(conversation)">Chat</Button>
+                            </Column>
+                        </Row>
+                    </CardBody>
+                </Card>
             }
         </Column>
-    }
-</Row>
+        @if (messages != null)
+        {
+            <Column ColumnSize="ColumnSize.Is9">
+                <Addons Margin="Margin.Is3.FromBottom">
+                    <Addon AddonType="AddonType.Body">
+                        <TextEdit @ref="newMessageTextEdit" MaxLength="100" @bind-Text="newMessageText" />
+                    </Addon>
+                    <Addon AddonType="AddonType.End">
+                        <Button Color="Color.Primary" Clicked="SendMessage">Send</Button>
+                    </Addon>
+                </Addons>
+                @foreach (var message in messages)
+                {
+                    <Row>
+                        <Column>
+                            <UserInfo User="message.Creator" />
+                            <Timestamp DateTime="message.CreationDateTime" Float="Float.Right" />
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column>
+                            <Alert Color="Color.Info" IsShow="true">@message.Text</Alert>
+                        </Column>
+                    </Row>
+                }
+            </Column>
+        }
+    </Row>
+</Panel>
 
 @code {
     User user;

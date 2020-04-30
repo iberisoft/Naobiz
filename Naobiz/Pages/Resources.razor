@@ -3,62 +3,64 @@
 @inherits AuthorizedBase
 @inject UserService UserService
 
-<Heading Size="HeadingSize.Is1">Resources</Heading>
-
 @if (types == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
 
-<Row>
-    @foreach (var type in types)
-    {
-        var linkUrl = "resources/" + type.Id;
-        <Column ColumnSize="ColumnSize.IsQuarter">
-            <Card Margin="Margin.Is4.OnY">
-                @if (type.ImageSource != null)
-                {
-                    <CardLink Source="@linkUrl">
-                        <CardImage Source="@type.ImageSource" />
-                    </CardLink>
-                }
-                <CardBody>
-                    <CardTitle Size="5">
-                        @type.Name
-                        @if (type.UserGroup != null)
-                        {
-                            <Icon Name="IconName.Lock" />
-                        }
-                    </CardTitle>
-                    <CardLink Source="@linkUrl">Resources: @resourceCount[type]</CardLink>
-                    @if (user.Admin)
-                    {
-                        <Panel Float="Float.Right">
-                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditType(type)">Edit</Button>
-                            @if (resourceCount[type] == 0)
-                            {
-                                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteType(type)">Delete</Button>
-                            }
-                        </Panel>
-                    }
-                </CardBody>
-            </Card>
-        </Column>
-    }
-    <Column ColumnSize="ColumnSize.IsQuarter">
-        @if (user.Admin)
-        {
-            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateType">New</Button>
-        }
-    </Column>
-</Row>
+<Panel Class="page-resources">
+    <Heading Size="HeadingSize.Is1">Resources</Heading>
 
-@if (user.Admin)
-{
-    <ResourceTypeEdit @ref="typeEdit" Service="Service" Submitted="SubmitType" />
-    <Confirm @ref="deleteTypeConfirm" Text="Delete resource type?" Confirmed="DeleteType" />
-}
+    <Row>
+        @foreach (var type in types)
+        {
+            var linkUrl = "resources/" + type.Id;
+            <Column ColumnSize="ColumnSize.IsQuarter">
+                <Card Margin="Margin.Is4.OnY">
+                    @if (type.ImageSource != null)
+                    {
+                        <CardLink Source="@linkUrl">
+                            <CardImage Source="@type.ImageSource" />
+                        </CardLink>
+                    }
+                    <CardBody>
+                        <CardTitle Size="5">
+                            @type.Name
+                            @if (type.UserGroup != null)
+                            {
+                                <Icon Name="IconName.Lock" />
+                            }
+                        </CardTitle>
+                        <CardLink Source="@linkUrl">Resources: @resourceCount[type]</CardLink>
+                        @if (user.Admin)
+                        {
+                            <Panel Float="Float.Right">
+                                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditType(type)">Edit</Button>
+                                @if (resourceCount[type] == 0)
+                                {
+                                    <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteType(type)">Delete</Button>
+                                }
+                            </Panel>
+                        }
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+        <Column ColumnSize="ColumnSize.IsQuarter">
+            @if (user.Admin)
+            {
+                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateType">New</Button>
+            }
+        </Column>
+    </Row>
+
+    @if (user.Admin)
+    {
+        <ResourceTypeEdit @ref="typeEdit" Service="Service" Submitted="SubmitType" />
+        <Confirm @ref="deleteTypeConfirm" Text="Delete resource type?" Confirmed="DeleteType" />
+    }
+</Panel>
 
 @code {
     User user;

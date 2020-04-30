@@ -4,137 +4,139 @@
 @inject UserService UserService
 @inject TerritoryService TerritoryService
 
-<Heading Size="HeadingSize.Is1">Users: @models?.Count</Heading>
-
 @if (models == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
 
-<Row>
-    <Column>
-        <Field>
-            <FieldLabel>Group:</FieldLabel>
-            <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" SelectedItem="groupFilter" SelectedItemChanged="ChangeGroupFilter"
-                         IsNullable="true" />
-        </Field>
-    </Column>
-    <Column>
-        <Field>
-            <FieldLabel>Email:</FieldLabel>
-            <TextEdit @ref="@emailFilterEdit" Text="@emailFilter" TextChanged="ChangeEmailFilter" />
-        </Field>
-    </Column>
-    <Column>
-        <Field>
-            <FieldLabel>Name:</FieldLabel>
-            <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
-        </Field>
-    </Column>
-</Row>
-<Row>
-    <Column>
-        <Field>
-            <FieldLabel>Tax ID:</FieldLabel>
-            <TextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
-        </Field>
-    </Column>
-    <Column>
-        <Field>
-            <FieldLabel>Phone:</FieldLabel>
-            <TextEdit Text="@phoneFilter" TextChanged="ChangePhoneFilter" />
-        </Field>
-    </Column>
-    <Column>
-        <Field>
-            <FieldLabel>Address/ZIP Code/City:</FieldLabel>
-            <TextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
-        </Field>
-    </Column>
-    <Column>
-        <Field>
-            <FieldLabel>Province:</FieldLabel>
-            <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
-                <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-            </SelectEdit>
-        </Field>
-    </Column>
-</Row>
+<Panel Class="page-users">
+    <Heading Size="HeadingSize.Is1">Users: @models?.Count</Heading>
 
-<Panel Class="overflow-auto" Margin="Margin.Is0.OnX">
-    <Table IsStriped="true">
-        <TableHeader ThemeContrast="ThemeContrast.Light">
-            <TableRow>
-                <TableHeaderCell></TableHeaderCell>
-                <TableHeaderCell>
-                    <Dropdown>
-                        <DropdownToggle>
-                            <strong>Group</strong>
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            @foreach (var group in groups)
-                            {
-                                <DropdownItem Clicked="() => SetGroupToSelectedUsers(group)">@group.Name</DropdownItem>
-                            }
-                            <DropdownDivider />
-                            <DropdownItem Clicked="() => SetGroupToSelectedUsers(null)">None</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </TableHeaderCell>
-                <TableHeaderCell>Email</TableHeaderCell>
-                <TableHeaderCell>Registered</TableHeaderCell>
-                <TableHeaderCell>Name</TableHeaderCell>
-                <TableHeaderCell>Tax ID</TableHeaderCell>
-                <TableHeaderCell>Phone</TableHeaderCell>
-                <TableHeaderCell>Address</TableHeaderCell>
-                <TableHeaderCell>ZIP Code</TableHeaderCell>
-                <TableHeaderCell>City</TableHeaderCell>
-                <TableHeaderCell>Province</TableHeaderCell>
-                <TableHeaderCell>Country</TableHeaderCell>
-                <TableHeaderCell>Info Requested</TableHeaderCell>
-                <TableHeaderCell>Last Login</TableHeaderCell>
-                <TableHeaderCell>IP Address</TableHeaderCell>
-                <TableHeaderCell>Admin</TableHeaderCell>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
-            @foreach (var model in models)
-            {
-                var user = model.Value;
+    <Row>
+        <Column>
+            <Field>
+                <FieldLabel>Group:</FieldLabel>
+                <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" SelectedItem="groupFilter" SelectedItemChanged="ChangeGroupFilter"
+                             IsNullable="true" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Email:</FieldLabel>
+                <TextEdit @ref="@emailFilterEdit" Text="@emailFilter" TextChanged="ChangeEmailFilter" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Name:</FieldLabel>
+                <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
+            </Field>
+        </Column>
+    </Row>
+    <Row>
+        <Column>
+            <Field>
+                <FieldLabel>Tax ID:</FieldLabel>
+                <TextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Phone:</FieldLabel>
+                <TextEdit Text="@phoneFilter" TextChanged="ChangePhoneFilter" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Address/ZIP Code/City:</FieldLabel>
+                <TextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Province:</FieldLabel>
+                <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
+                </SelectEdit>
+            </Field>
+        </Column>
+    </Row>
+
+    <Panel Class="overflow-auto" Margin="Margin.Is0.OnX">
+        <Table IsStriped="true">
+            <TableHeader ThemeContrast="ThemeContrast.Light">
                 <TableRow>
-                    <TableRowCell>
-                        <CheckEdit @bind-Checked="model.Selected" />
-                    </TableRowCell>
-                    <TableRowCell>@user.Group?.Name</TableRowCell>
-                    <TableRowCell>@user.Email</TableRowCell>
-                    <TableRowCell>@user.RegistrationDateTime.ToShortDateString()</TableRowCell>
-                    <TableRowCell>@user.Name</TableRowCell>
-                    <TableRowCell>@user.TaxId</TableRowCell>
-                    <TableRowCell>@user.Phone</TableRowCell>
-                    <TableRowCell>@user.Address</TableRowCell>
-                    <TableRowCell>@user.ZipCode</TableRowCell>
-                    <TableRowCell>@user.City</TableRowCell>
-                    <TableRowCell>@TerritoryService.GetProvinceName(user.Province)</TableRowCell>
-                    <TableRowCell>@TerritoryService.GetCountryName(user.Country)</TableRowCell>
-                    <TableRowCell>
-                        @if (user.InfoRequested)
-                        {
-                            <Icon Name="IconNameEx.Check" />
-                        }
-                    </TableRowCell>
-                    <TableRowCell>@user.LoginDateTime</TableRowCell>
-                    <TableRowCell>@user.LoginIpAddress</TableRowCell>
-                    <TableRowCell>
-                        @if (user.Admin)
-                        {
-                            <Icon Name="IconNameEx.Check" />
-                        }
-                    </TableRowCell>
+                    <TableHeaderCell></TableHeaderCell>
+                    <TableHeaderCell>
+                        <Dropdown>
+                            <DropdownToggle>
+                                <strong>Group</strong>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                @foreach (var group in groups)
+                                {
+                                    <DropdownItem Clicked="() => SetGroupToSelectedUsers(group)">@group.Name</DropdownItem>
+                                }
+                                <DropdownDivider />
+                                <DropdownItem Clicked="() => SetGroupToSelectedUsers(null)">None</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </TableHeaderCell>
+                    <TableHeaderCell>Email</TableHeaderCell>
+                    <TableHeaderCell>Registered</TableHeaderCell>
+                    <TableHeaderCell>Name</TableHeaderCell>
+                    <TableHeaderCell>Tax ID</TableHeaderCell>
+                    <TableHeaderCell>Phone</TableHeaderCell>
+                    <TableHeaderCell>Address</TableHeaderCell>
+                    <TableHeaderCell>ZIP Code</TableHeaderCell>
+                    <TableHeaderCell>City</TableHeaderCell>
+                    <TableHeaderCell>Province</TableHeaderCell>
+                    <TableHeaderCell>Country</TableHeaderCell>
+                    <TableHeaderCell>Info Requested</TableHeaderCell>
+                    <TableHeaderCell>Last Login</TableHeaderCell>
+                    <TableHeaderCell>IP Address</TableHeaderCell>
+                    <TableHeaderCell>Admin</TableHeaderCell>
                 </TableRow>
-            }
-        </TableBody>
-    </Table>
+            </TableHeader>
+            <TableBody>
+                @foreach (var model in models)
+                {
+                    var user = model.Value;
+                    <TableRow>
+                        <TableRowCell>
+                            <CheckEdit @bind-Checked="model.Selected" />
+                        </TableRowCell>
+                        <TableRowCell>@user.Group?.Name</TableRowCell>
+                        <TableRowCell>@user.Email</TableRowCell>
+                        <TableRowCell>@user.RegistrationDateTime.ToShortDateString()</TableRowCell>
+                        <TableRowCell>@user.Name</TableRowCell>
+                        <TableRowCell>@user.TaxId</TableRowCell>
+                        <TableRowCell>@user.Phone</TableRowCell>
+                        <TableRowCell>@user.Address</TableRowCell>
+                        <TableRowCell>@user.ZipCode</TableRowCell>
+                        <TableRowCell>@user.City</TableRowCell>
+                        <TableRowCell>@TerritoryService.GetProvinceName(user.Province)</TableRowCell>
+                        <TableRowCell>@TerritoryService.GetCountryName(user.Country)</TableRowCell>
+                        <TableRowCell>
+                            @if (user.InfoRequested)
+                            {
+                                <Icon Name="IconNameEx.Check" />
+                            }
+                        </TableRowCell>
+                        <TableRowCell>@user.LoginDateTime</TableRowCell>
+                        <TableRowCell>@user.LoginIpAddress</TableRowCell>
+                        <TableRowCell>
+                            @if (user.Admin)
+                            {
+                                <Icon Name="IconNameEx.Check" />
+                            }
+                        </TableRowCell>
+                    </TableRow>
+                }
+            </TableBody>
+        </Table>
+    </Panel>
 </Panel>
 
 @code {

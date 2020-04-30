@@ -10,43 +10,45 @@
     return;
 }
 
-<Heading Size="HeadingSize.Is1">@type.Name: @resources?.Count</Heading>
+<Panel Class="page-resource-type">
+    <Heading Size="HeadingSize.Is1">@type.Name: @resources?.Count</Heading>
 
-<Row>
-    <Column ColumnSize="ColumnSize.IsQuarter">
-        <Field>
-            <FieldLabel>Province:</FieldLabel>
-            <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
-                <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-            </SelectEdit>
-        </Field>
-    </Column>
-    <Column ColumnSize="ColumnSize.IsHalf">
-        <Field>
-            <FieldLabel>Activity:</FieldLabel>
-            <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
-                         IsNullable="true" />
-        </Field>
-    </Column>
-</Row>
-<Addons Margin="Margin.Is1.FromBottom">
-    <Addon AddonType="AddonType.Body">
-        <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-    </Addon>
-    <Addon AddonType="AddonType.End">
-        @if (user.Admin)
-        {
-            <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateResource">New Resource</Button>
-        }
-    </Addon>
-</Addons>
+    <Row>
+        <Column ColumnSize="ColumnSize.IsQuarter">
+            <Field>
+                <FieldLabel>Province:</FieldLabel>
+                <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
+                </SelectEdit>
+            </Field>
+        </Column>
+        <Column ColumnSize="ColumnSize.IsHalf">
+            <Field>
+                <FieldLabel>Activity:</FieldLabel>
+                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                             IsNullable="true" />
+            </Field>
+        </Column>
+    </Row>
+    <Addons Margin="Margin.Is1.FromBottom">
+        <Addon AddonType="AddonType.Body">
+            <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+        </Addon>
+        <Addon AddonType="AddonType.End">
+            @if (user.Admin)
+            {
+                <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateResource">New Resource</Button>
+            }
+        </Addon>
+    </Addons>
 
-@foreach (var resource in resources)
-{
-    <ResourceView @key="resource.Id" ResourceId="resource.Id" ResourceDeleted="OnResourceDeleted" />
-}
+    @foreach (var resource in resources)
+    {
+        <ResourceView @key="resource.Id" ResourceId="resource.Id" ResourceDeleted="OnResourceDeleted" />
+    }
 
-<ResourceEdit @ref="newResourceEdit" Service="Service" Submitted="SubmitResource" />
+    <ResourceEdit @ref="newResourceEdit" Service="Service" Submitted="SubmitResource" />
+</Panel>
 
 @code {
     [Parameter]

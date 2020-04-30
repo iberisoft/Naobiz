@@ -9,23 +9,25 @@
     return;
 }
 
-<Heading Size="HeadingSize.Is1">@group.Name: @topics?.Count</Heading>
+<Panel Class="page-forum-group">
+    <Heading Size="HeadingSize.Is1">@group.Name: @topics?.Count</Heading>
 
-<Addons Margin="Margin.Is1.FromBottom">
-    <Addon AddonType="AddonType.Body">
-        <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-    </Addon>
-    <Addon AddonType="AddonType.End">
-        <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
-    </Addon>
-</Addons>
+    <Addons Margin="Margin.Is1.FromBottom">
+        <Addon AddonType="AddonType.Body">
+            <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+        </Addon>
+        <Addon AddonType="AddonType.End">
+            <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
+        </Addon>
+    </Addons>
 
-@foreach (var topic in topics)
-{
-    <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
-}
+    @foreach (var topic in topics)
+    {
+        <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
+    }
 
-<ForumMessageEdit @ref="newTopicEdit" IsTitleVisible="true" Submitted="SendTopic" />
+    <ForumMessageEdit @ref="newTopicEdit" IsTitleVisible="true" Submitted="SendTopic" />
+</Panel>
 
 @code {
     [Parameter]
