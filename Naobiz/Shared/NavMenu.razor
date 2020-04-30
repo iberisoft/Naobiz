@@ -34,7 +34,7 @@
             <BarEnd>
                 <AuthorizeView>
                     <Authorized>
-                        <Text Color="TextColor.White50" Margin="Margin.Is2">Hello @user?.Name!</Text>
+                        <Text Color="TextColor.White50" Margin="Margin.Is2">Hello @user?.Name?.Split()[0]!</Text>
                         <BarLink To="_logout">Logout</BarLink>
                     </Authorized>
                 </AuthorizeView>
