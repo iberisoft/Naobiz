@@ -5,23 +5,25 @@
 @inject UserService UserService
 @inject Settings Settings
 
-<Heading Size="HeadingSize.Is1">Home</Heading>
+<Panel Class="page-index">
+    <Heading Size="HeadingSize.Is1">Home</Heading>
 
-<Row>
-    @foreach (var item in Settings.GetDashboard(user))
-    {
-        <Column ColumnSize="ColumnSize.IsQuarter">
-            <Card Margin="Margin.Is4.OnY">
-                <CardLink Source="@item.LinkUrl">
-                    <CardImage Source="@item.ImageSource" />
-                </CardLink>
-                <CardBody>
-                    <CardTitle Size="5">@item.Name</CardTitle>
-                </CardBody>
-            </Card>
-        </Column>
-    }
-</Row>
+    <Row>
+        @foreach (var item in Settings.GetDashboard(user))
+        {
+            <Column ColumnSize="ColumnSize.IsQuarter">
+                <Card Margin="Margin.Is4.OnY">
+                    <CardLink Source="@item.LinkUrl">
+                        <CardImage Source="@item.ImageSource" />
+                    </CardLink>
+                    <CardBody>
+                        <CardTitle Size="5">@item.Name</CardTitle>
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+    </Row>
+</Panel>
 
 @code {
     User user;
