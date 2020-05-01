@@ -76,7 +76,7 @@
         }
 
         type = await Service.GetResourceTypes(user).SingleAsync(type => type.Id == TypeId);
-        activities = await Service.Activities.OrderBy(activity => activity.Name).ToListAsync();
+        activities = await Service.Activities.ToListAsync();
         await UpdateResources();
     }
 
