@@ -29,7 +29,7 @@
                 </Alert>
             </Column>
             <Column ColumnSize="ColumnSize.Is1">
-                @if (user.Admin)
+                @if (user.Paid && resource.Owner == user || user.Admin)
                 {
                     <Row Margin="Margin.Is1.FromBottom">
                         <Column>

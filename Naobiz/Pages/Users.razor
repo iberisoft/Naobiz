@@ -97,6 +97,7 @@
                     <TableHeaderCell>Last Login</TableHeaderCell>
                     <TableHeaderCell>IP Address</TableHeaderCell>
                     <TableHeaderCell>Admin</TableHeaderCell>
+                    <TableHeaderCell>Paid</TableHeaderCell>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -128,6 +129,12 @@
                         <TableRowCell>@user.LoginIpAddress</TableRowCell>
                         <TableRowCell>
                             @if (user.Admin)
+                            {
+                                <Icon Name="IconNameEx.Check" />
+                            }
+                        </TableRowCell>
+                        <TableRowCell>
+                            @if (user.Paid)
                             {
                                 <Icon Name="IconNameEx.Check" />
                             }

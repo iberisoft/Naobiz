@@ -35,7 +35,7 @@
             <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
         </Addon>
         <Addon AddonType="AddonType.End">
-            @if (user.Admin)
+            @if (user.Paid || user.Admin)
             {
                 <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateResource">New Resource</Button>
             }

@@ -16,7 +16,9 @@ namespace Naobiz
 
         public DashboardItemSettings[] Dashboard { get; set; }
 
-        public IEnumerable<DashboardItemSettings> GetDashboard(User user) => user != null ? Dashboard : Dashboard.Where(item => !item.Authorized);
+        public IEnumerable<DashboardItemSettings> GetDashboard(User user) => user != null ?
+            user.Paid || user.Admin ? Dashboard : Dashboard.Where(item => item.PaidOnly != true) :
+            Dashboard.Where(item => item.PaidOnly == null);
     }
 
     class SmtpSettings
@@ -38,6 +40,6 @@ namespace Naobiz
 
         public string ImageSource { get; set; }
 
-        public bool Authorized { get; set; }
+        public bool? PaidOnly { get; set; }
     }
 }

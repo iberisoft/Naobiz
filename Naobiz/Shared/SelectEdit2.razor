@@ -1,6 +1,6 @@
 ﻿@typeparam TItem
 
-<SelectEdit TValue="int?" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
+<SelectEdit TValue="int?" IsDisabled="IsDisabled" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
     @if (IsNullable)
     {
         <SelectItem TValue="int?"></SelectItem>
@@ -32,6 +32,9 @@
 
     [Parameter]
     public bool IsNullable { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
 
     private int? GetKey(TItem item) => (item != null ? KeyGetter?.Invoke(item) : null) ?? 0;
 

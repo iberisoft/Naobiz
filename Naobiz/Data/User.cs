@@ -10,6 +10,8 @@ namespace Naobiz.Data
 
         public bool Admin { get; set; }
 
+        public bool Paid { get; set; }
+
         public DateTime RegistrationDateTime { get; set; }
 
         public DateTime? LoginDateTime { get; set; }
