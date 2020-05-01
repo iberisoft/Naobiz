@@ -10,15 +10,13 @@
                     <Column>
                         <Field>
                             <FieldLabel>Owner:</FieldLabel>
-                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" SelectedItem="owner" SelectedItemChanged="ChangeOwner" />
+                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" @bind-SelectedItem="owner" />
                         </Field>
                     </Column>
                     <Column>
                         <Field>
                             <FieldLabel>Activity:</FieldLabel>
-                            <Validation Validator="e => e.Status = activity != null ? ValidationStatus.Success : ValidationStatus.Error">
-                                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
-                            </Validation>
+                            <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
                         </Field>
                     </Column>
                 </Row>
@@ -75,8 +73,8 @@
     {
         owners = await Service.Users.OrderBy(user => user.Name).ToListAsync();
         owner = resource.Owner ?? owners.First();
-        activities = await GetActivities();
-        activity = resource.Activity ?? activities.FirstOrDefault();
+        activities = await Service.Activities.ToListAsync();
+        activity = resource.Activity ?? activities.First();
         title = resource.Title;
         description = resource.Description;
         url = resource.Url;
@@ -87,15 +85,6 @@
 
         titleEdit.Focus();
     }
-
-    private async Task ChangeOwner(User value)
-    {
-        owner = value;
-        activities = await GetActivities();
-        activity = activities.FirstOrDefault();
-    }
-
-    private async Task<List<Activity>> GetActivities() => await Service.GetActivities(owner).OrderBy(activity => activity.Name).ToListAsync();
 
     public void Get(Resource resource)
     {
@@ -108,7 +97,7 @@
 
     private async Task Submit()
     {
-        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded || owner == null)
+        if (!validations.ValidateAll() || !attachmentView.AllAttachmentsUploaded)
         {
             return;
         }
