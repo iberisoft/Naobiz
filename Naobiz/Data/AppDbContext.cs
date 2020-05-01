@@ -120,6 +120,8 @@ namespace Naobiz.Data
 
         public IQueryable<Activity> GetActivities(User user) => UserActivityLinks.Where(link => link.User == user).Select(link => link.Activity);
 
+        public IQueryable<User> GetUsers(Activity activity) => UserActivityLinks.Where(link => link.Activity == activity).Select(link => link.User);
+
         public void AddActivity(User user, Activity activity) => UserActivityLinks.Add(new UserActivityLink { User = user, Activity = activity });
 
         public async Task RemovevActivityAsync(User user, Activity activity) =>

@@ -33,6 +33,13 @@
                 <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
             </Field>
         </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Activity:</FieldLabel>
+                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                             IsNullable="true" />
+            </Field>
+        </Column>
     </Row>
     <Row>
         <Column>
@@ -153,6 +160,8 @@
     string emailFilter;
     TextEdit emailFilterEdit;
     string nameFilter;
+    List<Activity> activities;
+    Activity activityFilter;
     string taxIdFilter;
     string phoneFilter;
     string addressFilter;
@@ -169,6 +178,7 @@
         }
 
         groups = await Service.UserGroups.OrderBy(group => group.Name).ToListAsync();
+        activities = await Service.Activities.ToListAsync();
         await UpdateUsers();
     }
 
@@ -195,6 +205,10 @@
         if (!string.IsNullOrEmpty(nameFilter))
         {
             userQuery = userQuery.Where(user => user.Name.Contains(nameFilter));
+        }
+        if (activityFilter != null)
+        {
+            userQuery = userQuery.Where(user => Service.GetUsers(activityFilter).Contains(user));
         }
         if (!string.IsNullOrEmpty(taxIdFilter))
         {
@@ -231,6 +245,12 @@
     private async Task ChangeNameFilter(string value)
     {
         nameFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeActivityFilter(Activity value)
+    {
+        activityFilter = value;
         await UpdateUsers();
     }
 
