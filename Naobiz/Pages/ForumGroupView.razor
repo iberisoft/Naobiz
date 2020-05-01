@@ -12,17 +12,31 @@
 <Panel Class="page-forum-group">
     <Heading Size="HeadingSize.Is1">@group.Name: @topics?.Count</Heading>
 
-    <Addons Margin="Margin.Is1.FromBottom">
-        <Addon AddonType="AddonType.Body">
-            <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-        </Addon>
-        <Addon AddonType="AddonType.End">
+    <Row>
+        <Column>
+            <Field>
+                <FieldLabel>Title/Message:</FieldLabel>
+                <Addons>
+                    <Addon AddonType="AddonType.Body">
+                        <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+                    </Addon>
+                    <Addon AddonType="AddonType.End">
+                        <Button Color="Color.Primary" IsOutline="true">
+                            <Icon Name="IconNameEx.Search" />
+                        </Button>
+                    </Addon>
+                </Addons>
+            </Field>
+        </Column>
+    </Row>
+    <Row Margin="Margin.Is1.FromBottom">
+        <Column>
             @if (user != null)
             {
-                <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
+                <Button Color="Color.Primary" Clicked="CreateTopic">New Topic</Button>
             }
-        </Addon>
-    </Addons>
+        </Column>
+    </Row>
 
     @foreach (var topic in topics)
     {

@@ -14,7 +14,7 @@
     <Heading Size="HeadingSize.Is1">@type.Name: @resources?.Count</Heading>
 
     <Row>
-        <Column ColumnSize="ColumnSize.IsQuarter">
+        <Column ColumnSize="ColumnSize.Is3">
             <Field>
                 <FieldLabel>Province:</FieldLabel>
                 <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
@@ -22,25 +22,37 @@
                 </SelectEdit>
             </Field>
         </Column>
-        <Column ColumnSize="ColumnSize.IsHalf">
+        <Column ColumnSize="ColumnSize.Is4">
             <Field>
                 <FieldLabel>Activity:</FieldLabel>
                 <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
                              IsNullable="true" />
             </Field>
         </Column>
+        <Column ColumnSize="ColumnSize.Is5">
+            <Field>
+                <FieldLabel>Title/Description/Owner/City:</FieldLabel>
+                <Addons>
+                    <Addon AddonType="AddonType.Body">
+                        <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
+                    </Addon>
+                    <Addon AddonType="AddonType.End">
+                        <Button Color="Color.Primary" IsOutline="true">
+                            <Icon Name="IconNameEx.Search" />
+                        </Button>
+                    </Addon>
+                </Addons>
+            </Field>
+        </Column>
     </Row>
-    <Addons Margin="Margin.Is1.FromBottom">
-        <Addon AddonType="AddonType.Body">
-            <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-        </Addon>
-        <Addon AddonType="AddonType.End">
+    <Row Margin="Margin.Is1.FromBottom">
+        <Column>
             @if (user.Paid || user.Admin)
             {
-                <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateResource">New Resource</Button>
+                <Button Color="Color.Primary" Clicked="CreateResource">New Resource</Button>
             }
-        </Addon>
-    </Addons>
+        </Column>
+    </Row>
 
     @foreach (var resource in resources)
     {
@@ -104,7 +116,8 @@
         {
             foreach (var keyword in keywordFilter.Split((char[])null, StringSplitOptions.RemoveEmptyEntries))
             {
-                resourceQuery = resourceQuery.Where(resource => resource.Title.Contains(keyword) || resource.Description.Contains(keyword) || resource.Owner.Name.Contains(keyword));
+                resourceQuery = resourceQuery.Where(resource => resource.Title.Contains(keyword) || resource.Description.Contains(keyword) || resource.Owner.Name.Contains(keyword) ||
+                    resource.Owner.City.Contains(keyword));
             }
         }
         resourceQuery = resourceQuery.OrderByDescending(resource => resource.CreationDateTime);
