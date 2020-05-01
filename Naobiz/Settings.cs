@@ -1,4 +1,8 @@
-﻿namespace Naobiz
+﻿using Naobiz.Data;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Naobiz
 {
     class Settings
     {
@@ -11,6 +15,8 @@
         public SmtpSettings Smtp { get; set; }
 
         public DashboardItemSettings[] Dashboard { get; set; }
+
+        public IEnumerable<DashboardItemSettings> GetDashboard(User user) => user != null ? Dashboard : Dashboard.Where(item => !item.Authorized);
     }
 
     class SmtpSettings
@@ -31,5 +37,7 @@
         public string LinkUrl { get; set; }
 
         public string ImageSource { get; set; }
+
+        public bool Authorized { get; set; }
     }
 }

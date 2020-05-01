@@ -1,6 +1,6 @@
 ﻿@page "/forum"
 
-@inherits AuthorizedBase
+@inherits OwningComponentBase<AppDbContext>
 @inject UserService UserService
 
 @if (groups == null)
@@ -33,7 +33,7 @@
                             }
                         </CardTitle>
                         <CardLink Source="@linkUrl">Topics: @topicCount[group]</CardLink>
-                        @if (user.Admin)
+                        @if (user?.Admin == true)
                         {
                             <Panel Float="Float.Right">
                                 <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Edit</Button>
@@ -48,14 +48,14 @@
             </Column>
         }
         <Column ColumnSize="ColumnSize.IsQuarter">
-            @if (user.Admin)
+            @if (user?.Admin == true)
             {
                 <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">New</Button>
             }
         </Column>
     </Row>
 
-    @if (user.Admin)
+    @if (user?.Admin == true)
     {
         <ForumGroupEdit @ref="groupEdit" Service="Service" Submitted="SubmitGroup" />
         <Confirm @ref="deleteGroupConfirm" Text="Delete forum group?" Confirmed="DeleteGroup" />
@@ -72,13 +72,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
-        {
-            return;
-        }
 
         await UpdateGroups();
     }

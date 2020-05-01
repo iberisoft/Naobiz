@@ -1,6 +1,6 @@
 ﻿@page "/forum/{groupid:int}"
 
-@inherits AuthorizedBase
+@inherits OwningComponentBase<AppDbContext>
 @inject UserService UserService
 
 @if (group == null)
@@ -17,7 +17,10 @@
             <TextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
         </Addon>
         <Addon AddonType="AddonType.End">
-            <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
+            @if (user != null)
+            {
+                <Button Color="Color.Primary" Float="Float.Right" Clicked="CreateTopic">New Topic</Button>
+            }
         </Addon>
     </Addons>
 
@@ -26,7 +29,10 @@
         <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
     }
 
-    <ForumMessageEdit @ref="newTopicEdit" IsTitleVisible="true" Submitted="SendTopic" />
+    @if (user != null)
+    {
+        <ForumMessageEdit @ref="newTopicEdit" IsTitleVisible="true" Submitted="SendTopic" />
+    }
 </Panel>
 
 @code {
@@ -43,13 +49,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
-        {
-            return;
-        }
 
         group = await Service.GetForumGroups(user).SingleAsync(group => group.Id == GroupId);
         await UpdateTopics();

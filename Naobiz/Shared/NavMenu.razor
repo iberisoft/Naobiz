@@ -12,32 +12,32 @@
                 </Figure>
             </BarBrand>
             <BarStart>
-                <AuthorizeView>
-                    <Authorized>
-                        <BarLink To="">Home</BarLink>
-                        @foreach (var item in Settings.Dashboard)
-                        {
-                            <BarLink To="@item.LinkUrl" Match="Match.Prefix">@item.Name</BarLink>
-                        }
-                        <BarLink To="activities">Activities</BarLink>
-                        <BarLink To="account">Account</BarLink>
-                        @if (user != null && user.Admin)
-                        {
-                            <BarLink To="users">Users</BarLink>
-                        }
-                    </Authorized>
-                    <NotAuthorized>
-                        <BarLink To="login">Home</BarLink>
-                    </NotAuthorized>
-                </AuthorizeView>
+                <BarLink To="">Home</BarLink>
+                @foreach (var item in Settings.GetDashboard(user))
+                {
+                    <BarLink To="@item.LinkUrl" Match="Match.Prefix">@item.Name</BarLink>
+                }
+                @if (user != null)
+                {
+                    <BarLink To="activities">Activities</BarLink>
+                    <BarLink To="account">Account</BarLink>
+                    @if (user.Admin)
+                    {
+                        <BarLink To="users">Users</BarLink>
+                    }
+
+                }
+                else
+                {
+                    <BarLink To="login">Login</BarLink>
+                }
             </BarStart>
             <BarEnd>
-                <AuthorizeView>
-                    <Authorized>
-                        <Text Color="TextColor.White50" Margin="Margin.Is2">Hello @user?.Name?.Split()[0]!</Text>
-                        <BarLink To="_logout">Logout</BarLink>
-                    </Authorized>
-                </AuthorizeView>
+                @if (user != null)
+                {
+                    <Blazorise.Text Color="TextColor.White50" Margin="Margin.Is2">Hello @user?.Name?.Split()[0]!</Blazorise.Text>
+                    <BarLink To="_logout">Logout</BarLink>
+                }
             </BarEnd>
         </BarMenu>
     </Container>

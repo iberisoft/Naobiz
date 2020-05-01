@@ -21,13 +21,16 @@
         </Alert>
     </Column>
     <Column ColumnSize="ColumnSize.Is1">
-        @if (message.Creator == user || user.Admin)
+        @if (user != null)
         {
-            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
-        }
-        @if (message.Creator != user)
-        {
-            <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Reply</Button>
+            if (message.Creator == user || user.Admin)
+            {
+                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
+            }
+            if (message.Creator != user)
+            {
+                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Reply</Button>
+            }
         }
     </Column>
 </Row>
@@ -58,8 +61,11 @@
     </Row>
 }
 
-<ForumMessageEdit @ref="newMessageEdit" Submitted="SendMessage" />
-<Confirm @ref="deleteMessageConfirm" Text="Delete message?" Confirmed="DeleteMessage" />
+@if (user != null)
+{
+    <ForumMessageEdit @ref="newMessageEdit" Submitted="SendMessage" />
+    <Confirm @ref="deleteMessageConfirm" Text="Delete message?" Confirmed="DeleteMessage" />
+}
 
 @code {
     [Parameter]

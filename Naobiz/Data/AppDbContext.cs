@@ -129,7 +129,9 @@ namespace Naobiz.Data
 
         public DbSet<ForumGroup> ForumGroups { get; set; }
 
-        public IQueryable<ForumGroup> GetForumGroups(User user) => user.Admin ? ForumGroups : ForumGroups.Where(group => group.UserGroup == null || group.UserGroup == user.Group);
+        public IQueryable<ForumGroup> GetForumGroups(User user) => user != null ?
+            user.Admin ? ForumGroups : ForumGroups.Where(group => group.UserGroup == null || group.UserGroup == user.Group) :
+            ForumGroups.Where(group => group.UserGroup == null);
 
         public DbSet<ForumTopic> ForumTopics { get; set; }
 
