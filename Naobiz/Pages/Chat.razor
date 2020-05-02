@@ -2,8 +2,9 @@
 
 @inherits AuthorizedBase
 @inject UserService UserService
+@inject TerritoryService TerritoryService
 
-@if (conversations == null)
+@if (users == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
@@ -13,25 +14,49 @@
     <Heading Size="HeadingSize.Is1">Chat</Heading>
 
     <Row>
+        <Column>
+            <Field>
+                <FieldLabel>Name:</FieldLabel>
+                <SearchTextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Activity:</FieldLabel>
+                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                             IsNullable="true" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>City:</FieldLabel>
+                <SearchTextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
+            </Field>
+        </Column>
+        <Column>
+            <Field>
+                <FieldLabel>Province:</FieldLabel>
+                <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
+                </SelectEdit>
+            </Field>
+        </Column>
+    </Row>
+
+    <Row>
         <Column ColumnSize="ColumnSize.Is3">
-            <Addons Margin="Margin.Is1.FromBottom">
-                <Addon AddonType="AddonType.Body">
-                    <TextEdit @bind-Text="conversationFilter" />
-                </Addon>
-                <Addon AddonType="AddonType.End">
-                    <Button Color="Color.Primary" Clicked="UpdateConversations">Search</Button>
-                </Addon>
-            </Addons>
-            @foreach (var conversation in conversations)
+            @foreach (var user in users)
             {
                 <Card Margin="Margin.Is1.FromBottom">
                     <CardBody>
                         <Row>
                             <Column ColumnSize="ColumnSize.Is8">
-                                <UserInfo User="conversation" />
+                                <UserInfo User="user" />
                             </Column>
                             <Column ColumnSize="ColumnSize.Is4">
-                                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await StartConversation(conversation)">Chat</Button>
+                                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await StartChat(user)">
+                                    <Icon Name="IconNameEx.Comments" />
+                                </Button>
                             </Column>
                         </Row>
                     </CardBody>
@@ -70,9 +95,13 @@
 
 @code {
     User user;
-    string conversationFilter;
-    List<User> conversations;
-    User currentConversation;
+    string nameFilter;
+    List<Activity> activities;
+    Activity activityFilter;
+    string addressFilter;
+    string provinceFilter;
+    List<User> users;
+    User chattingUser;
     List<ChatMessage> messages;
     string newMessageText;
     TextEdit newMessageTextEdit;
@@ -87,7 +116,8 @@
             return;
         }
 
-        await UpdateConversations();
+        activities = await Service.Activities.ToListAsync();
+        await UpdateUsers();
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -95,32 +125,74 @@
         newMessageTextEdit?.Focus();
     }
 
-    private async Task UpdateConversations()
+    private async Task UpdateUsers()
     {
-        var recipientQuery = Service.ChatMessages.Where(message => message.Creator == user).Select(message => message.Recipient).Distinct();
-        var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == user).Select(message => message.Creator).Distinct();
-        var conversationQuery = recipientQuery.Union(creatorQuery);
-        conversationFilter = conversationFilter?.Trim();
-        if (!string.IsNullOrEmpty(conversationFilter))
+        var userQuery = Service.Users.AsQueryable();
+        if (!string.IsNullOrEmpty(nameFilter))
         {
-            conversationQuery = conversationQuery.Union(Service.Users.Where(user => user.Name.Contains(conversationFilter)));
+            userQuery = userQuery.Where(user => user.Name.Contains(nameFilter));
         }
-        conversations = await conversationQuery.ToListAsync();
-        conversations.Remove(user);
+        if (activityFilter != null)
+        {
+            userQuery = userQuery.Where(user => Service.GetUsers(activityFilter).Contains(user));
+        }
+        if (!string.IsNullOrEmpty(addressFilter))
+        {
+            userQuery = userQuery.Where(user => user.City.Contains(addressFilter));
+        }
+        if (provinceFilter != null)
+        {
+            userQuery = userQuery.Where(user => user.Province == provinceFilter);
+        }
+        if (userQuery is DbSet<User>)
+        {
+            var recipientQuery = Service.ChatMessages.Where(message => message.Creator == user).Select(message => message.Recipient).Distinct();
+            var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == user).Select(message => message.Creator).Distinct();
+            userQuery = recipientQuery.Union(creatorQuery);
+        }
+        userQuery = userQuery.OrderBy(user => user.Name);
+        users = await userQuery.ToListAsync();
+        users.Remove(user);
+
+        await StartChat(null);
     }
 
-    private async Task StartConversation(User conversation)
+    private async Task ChangeNameFilter(string value)
     {
-        currentConversation = conversation;
+        nameFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeActivityFilter(Activity value)
+    {
+        activityFilter = value;
+        await UpdateUsers();
+    }
+
+    private async Task ChangeAddressFilter(string value)
+    {
+        addressFilter = value?.Trim();
+        await UpdateUsers();
+    }
+
+    private async Task ChangeProvinceFilter(string value)
+    {
+        provinceFilter = value;
+        await UpdateUsers();
+    }
+
+    private async Task StartChat(User user)
+    {
+        chattingUser = user;
         await UpdateMessages();
     }
 
     private async Task UpdateMessages()
     {
-        messages = await Service.ChatMessages
-            .Where(message => message.Creator == user && message.Recipient == currentConversation || message.Creator == currentConversation && message.Recipient == user)
+        messages = chattingUser != null ? await Service.ChatMessages
+            .Where(message => message.Creator == user && message.Recipient == chattingUser || message.Creator == chattingUser && message.Recipient == user)
             .OrderByDescending(message => message.CreationDateTime)
-            .ToListAsync();
+            .ToListAsync() : null;
     }
 
     private async Task SendMessage()
@@ -131,7 +203,7 @@
         }
 
         var message = new ChatMessage();
-        message.Initialize(user, currentConversation);
+        message.Initialize(user, chattingUser);
         message.Text = newMessageText.Trim();
         Service.ChatMessages.Add(message);
 
