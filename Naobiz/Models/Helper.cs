@@ -1,5 +1,6 @@
 ﻿using Blazorise;
 using System;
+using System.Linq;
 
 namespace Naobiz.Models
 {
@@ -21,6 +22,12 @@ namespace Naobiz.Models
         public static void IsTrue(ValidatorEventArgs e) => e.Status = (bool)e.Value ? ValidationStatus.Success : ValidationStatus.Error;
 
         public static void IsTrimmedNotEmpty(ValidatorEventArgs e) => e.Status = ((string)e.Value)?.Trim()?.Length > 0 ? ValidationStatus.Success : ValidationStatus.Error;
+
+        public static void IsPasswordValid(ValidatorEventArgs e) => e.Status = IsPasswordValid((string)e.Value) ? ValidationStatus.Success : ValidationStatus.Error;
+
+        public static bool IsPasswordValid(string password) => password?.Length >= 8 && password.Any(c => char.IsUpper(c)) && password.Any(c => char.IsDigit(c));
+
+        public static string PasswordRuleDescription => "8 symbols min including one uppercase letter and one digit";
 
         public static void IsPasswordConfirmed(ValidatorEventArgs e, string password) => e.Status = password != null ? (string)e.Value == password ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
 
