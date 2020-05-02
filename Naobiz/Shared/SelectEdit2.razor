@@ -1,6 +1,6 @@
 ﻿@typeparam TItem
 
-<SelectEdit TValue="int?" IsDisabled="IsDisabled" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
+<SelectEdit @ref="selectEdit" TValue="int?" IsDisabled="IsDisabled" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
     @if (IsNullable)
     {
         <SelectItem TValue="int?"></SelectItem>
@@ -35,6 +35,13 @@
 
     [Parameter]
     public bool IsDisabled { get; set; }
+
+    SelectEdit<int?> selectEdit;
+
+    public void Focus(bool scrollToElement = true)
+    {
+        selectEdit?.Focus(scrollToElement);
+    }
 
     private int? GetKey(TItem item) => (item != null ? KeyGetter?.Invoke(item) : null) ?? 0;
 
