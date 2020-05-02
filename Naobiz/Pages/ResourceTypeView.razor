@@ -32,16 +32,7 @@
         <Column ColumnSize="ColumnSize.Is5">
             <Field>
                 <FieldLabel>Title/Description/Owner/City:</FieldLabel>
-                <Addons>
-                    <Addon AddonType="AddonType.Body">
-                        <TextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
-                    </Addon>
-                    <Addon AddonType="AddonType.End">
-                        <Button Color="Color.Primary" IsOutline="true">
-                            <Icon Name="IconNameEx.Search" />
-                        </Button>
-                    </Addon>
-                </Addons>
+                <SearchTextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
             </Field>
         </Column>
     </Row>
@@ -72,7 +63,7 @@
     List<Activity> activities;
     Activity activityFilter;
     string keywordFilter;
-    TextEdit keywordFilterEdit;
+    SearchTextEdit keywordFilterEdit;
     List<Resource> resources;
     Resource newResource;
     ResourceEdit newResourceEdit;

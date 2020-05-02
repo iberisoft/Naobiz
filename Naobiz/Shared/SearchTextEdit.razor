@@ -1,0 +1,31 @@
+﻿<Addons>
+    <Addon AddonType="AddonType.Body">
+        <TextEdit @ref="textEdit" Text="@Text" TextChanged="ChangeText" />
+    </Addon>
+    <Addon AddonType="AddonType.End">
+        <Button Color="Color.Primary" IsOutline="true">
+            <Icon Name="IconNameEx.Search" />
+        </Button>
+    </Addon>
+</Addons>
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public EventCallback<string> TextChanged { get; set; }
+
+    TextEdit textEdit;
+
+    public void Focus(bool scrollToElement = true)
+    {
+        textEdit?.Focus(scrollToElement);
+    }
+
+    private async Task ChangeText(string value)
+    {
+        Text = value;
+        await TextChanged.InvokeAsync(value);
+    }
+}
