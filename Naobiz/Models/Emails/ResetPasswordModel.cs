@@ -3,21 +3,17 @@ using Naobiz.Data;
 
 namespace Naobiz.Models.Emails
 {
-    public class ResetPasswordModel
+    public class ResetPasswordModel : BaseModel
     {
-        public ResetPasswordModel(User user, string siteUrl)
+        public string ResetUrl
         {
-            UserName = user.Name;
-            SiteUrl = siteUrl;
-            ResetUrl = SiteUrl + "reset-password";
-            ResetUrl = QueryHelpers.AddQueryString(ResetUrl, "email", user.Email);
-            ResetUrl = QueryHelpers.AddQueryString(ResetUrl, "code", user.PasswordResetCode);
+            get
+            {
+                var url = SiteUrl + "reset-password";
+                url = QueryHelpers.AddQueryString(url, "email", User.Email);
+                url = QueryHelpers.AddQueryString(url, "code", User.PasswordResetCode);
+                return url;
+            }
         }
-
-        public string UserName { get; }
-
-        public string SiteUrl { get; }
-
-        public string ResetUrl { get; }
     }
 }

@@ -3,21 +3,17 @@ using Naobiz.Data;
 
 namespace Naobiz.Models.Emails
 {
-    public class ActivateModel
+    public class ActivateModel : BaseModel
     {
-        public ActivateModel(User user, string siteUrl)
+        public string ActivationUrl
         {
-            UserName = user.Name;
-            SiteUrl = siteUrl;
-            ActivationUrl = SiteUrl + "activate";
-            ActivationUrl = QueryHelpers.AddQueryString(ActivationUrl, "email", user.Email);
-            ActivationUrl = QueryHelpers.AddQueryString(ActivationUrl, "code", user.ActivationCode);
+            get
+            {
+                var url = SiteUrl + "activate";
+                url = QueryHelpers.AddQueryString(url, "email", User.Email);
+                url = QueryHelpers.AddQueryString(url, "code", User.ActivationCode);
+                return url;
+            }
         }
-
-        public string UserName { get; }
-
-        public string SiteUrl { get; }
-
-        public string ActivationUrl { get; }
     }
 }
