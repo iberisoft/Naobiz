@@ -33,7 +33,7 @@
                             }
                         </CardTitle>
                         <CardLink Source="@linkUrl">Topics: @topicCount[group]</CardLink>
-                        @if (user?.Admin == true)
+                        @if (currentUser?.Admin == true)
                         {
                             <Panel Float="Float.Right">
                                 <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Edit</Button>
@@ -48,14 +48,14 @@
             </Column>
         }
         <Column ColumnSize="ColumnSize.IsQuarter">
-            @if (user?.Admin == true)
+            @if (currentUser?.Admin == true)
             {
                 <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">New</Button>
             }
         </Column>
     </Row>
 
-    @if (user?.Admin == true)
+    @if (currentUser?.Admin == true)
     {
         <ForumGroupEdit @ref="groupEdit" Service="Service" Submitted="SubmitGroup" />
         <Confirm @ref="deleteGroupConfirm" Text="Delete forum group?" Confirmed="DeleteGroup" />
@@ -63,7 +63,7 @@
 </Panel>
 
 @code {
-    User user;
+    User currentUser;
     List<ForumGroup> groups;
     Dictionary<ForumGroup, int> topicCount;
     ForumGroup activeGroup;
@@ -72,14 +72,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
 
         await UpdateGroups();
     }
 
     private async Task UpdateGroups()
     {
-        groups = await Service.GetForumGroups(user).OrderBy(group => group.Name).ToListAsync();
+        groups = await Service.GetForumGroups(currentUser).OrderBy(group => group.Name).ToListAsync();
         topicCount = new Dictionary<ForumGroup, int>();
         foreach (var group in groups)
         {

@@ -94,7 +94,7 @@
 </Panel>
 
 @code {
-    User user;
+    User currentUser;
     string nameFilter;
     List<Activity> activities;
     Activity activityFilter;
@@ -110,8 +110,8 @@
     {
         await base.OnInitializedAsync();
 
-        user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
+        currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null)
         {
             return;
         }
@@ -146,13 +146,13 @@
         }
         if (userQuery is DbSet<User>)
         {
-            var recipientQuery = Service.ChatMessages.Where(message => message.Creator == user).Select(message => message.Recipient).Distinct();
-            var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == user).Select(message => message.Creator).Distinct();
+            var recipientQuery = Service.ChatMessages.Where(message => message.Creator == currentUser).Select(message => message.Recipient).Distinct();
+            var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == currentUser).Select(message => message.Creator).Distinct();
             userQuery = recipientQuery.Union(creatorQuery);
         }
         userQuery = userQuery.OrderBy(user => user.Name);
         users = await userQuery.ToListAsync();
-        users.Remove(user);
+        users.Remove(currentUser);
 
         await StartChat(null);
     }
@@ -190,7 +190,7 @@
     private async Task UpdateMessages()
     {
         messages = chattingUser != null ? await Service.ChatMessages
-            .Where(message => message.Creator == user && message.Recipient == chattingUser || message.Creator == chattingUser && message.Recipient == user)
+            .Where(message => message.Creator == currentUser && message.Recipient == chattingUser || message.Creator == chattingUser && message.Recipient == currentUser)
             .OrderByDescending(message => message.CreationDateTime)
             .ToListAsync() : null;
     }
@@ -203,7 +203,7 @@
         }
 
         var message = new ChatMessage();
-        message.Initialize(user, chattingUser);
+        message.Initialize(currentUser, chattingUser);
         message.Text = newMessageText.Trim();
         Service.ChatMessages.Add(message);
 

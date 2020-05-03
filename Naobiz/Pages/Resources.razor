@@ -33,7 +33,7 @@
                             }
                         </CardTitle>
                         <CardLink Source="@linkUrl">Resources: @resourceCount[type]</CardLink>
-                        @if (user.Admin)
+                        @if (currentUser.Admin)
                         {
                             <Panel Float="Float.Right">
                                 <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditType(type)">Edit</Button>
@@ -48,14 +48,14 @@
             </Column>
         }
         <Column ColumnSize="ColumnSize.IsQuarter">
-            @if (user.Admin)
+            @if (currentUser.Admin)
             {
                 <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateType">New</Button>
             }
         </Column>
     </Row>
 
-    @if (user.Admin)
+    @if (currentUser.Admin)
     {
         <ResourceTypeEdit @ref="typeEdit" Service="Service" Submitted="SubmitType" />
         <Confirm @ref="deleteTypeConfirm" Text="Delete resource type?" Confirmed="DeleteType" />
@@ -63,7 +63,7 @@
 </Panel>
 
 @code {
-    User user;
+    User currentUser;
     List<ResourceType> types;
     Dictionary<ResourceType, int> resourceCount;
     ResourceType activeType;
@@ -74,8 +74,8 @@
     {
         await base.OnInitializedAsync();
 
-        user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
+        currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null)
         {
             return;
         }
@@ -85,7 +85,7 @@
 
     private async Task UpdateTypes()
     {
-        types = await Service.GetResourceTypes(user).OrderBy(type => type.Name).ToListAsync();
+        types = await Service.GetResourceTypes(currentUser).OrderBy(type => type.Name).ToListAsync();
         resourceCount = new Dictionary<ResourceType, int>();
         foreach (var type in types)
         {

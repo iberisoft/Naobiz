@@ -12,7 +12,7 @@
                     <Column>
                         <Field>
                             <FieldLabel>Owner:</FieldLabel>
-                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" @bind-SelectedItem="owner" IsDisabled="user?.Admin != true" />
+                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" @bind-SelectedItem="owner" IsDisabled="currentUser?.Admin != true" />
                         </Field>
                     </Column>
                     <Column>
@@ -59,7 +59,7 @@
     [Parameter]
     public EventCallback Submitted { get; set; }
 
-    User user;
+    User currentUser;
     List<User> owners;
     User owner;
     List<Activity> activities;
@@ -74,10 +74,10 @@
 
     public async Task Show(Resource resource)
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
 
         owners = await Service.Users.OrderBy(user => user.Name).ToListAsync();
-        owner = resource.Owner ?? user;
+        owner = resource.Owner ?? currentUser;
         activities = await Service.Activities.ToListAsync();
         activity = resource.Activity ?? activities.First();
         title = resource.Title;

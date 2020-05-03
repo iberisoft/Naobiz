@@ -29,7 +29,7 @@
                 </Alert>
             </Column>
             <Column ColumnSize="ColumnSize.Is1">
-                @if (user.Paid && resource.Owner == user || user.Admin)
+                @if (currentUser.Paid && resource.Owner == currentUser || currentUser.Admin)
                 {
                     <Row Margin="Margin.Is1.FromBottom">
                         <Column>
@@ -72,7 +72,7 @@
     [Parameter]
     public EventCallback ResourceDeleted { get; set; }
 
-    User user;
+    User currentUser;
     Resource resource;
     ResourceEdit resourceEdit;
     List<ResourceAttachment> attachments;
@@ -80,7 +80,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
 
         resource = await Service.Resources.SingleAsync(resource => resource.Id == ResourceId);
         await UpdateAttachments();

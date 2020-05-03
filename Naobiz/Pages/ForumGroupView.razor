@@ -22,7 +22,7 @@
     </Row>
     <Row Margin="Margin.Is1.FromBottom">
         <Column>
-            @if (user != null)
+            @if (currentUser != null)
             {
                 <Button Color="Color.Primary" Clicked="CreateTopic">New Topic</Button>
             }
@@ -34,7 +34,7 @@
         <ForumTopicView @key="topic.Id" TopicId="topic.Id" TopicDeleted="OnTopicDeleted" />
     }
 
-    @if (user != null)
+    @if (currentUser != null)
     {
         <ForumMessageEdit @ref="newTopicEdit" IsTitleVisible="true" Submitted="SendTopic" />
     }
@@ -44,7 +44,7 @@
     [Parameter]
     public int GroupId { get; set; }
 
-    User user;
+    User currentUser;
     ForumGroup group;
     string keywordFilter;
     SearchTextEdit keywordFilterEdit;
@@ -54,9 +54,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
 
-        group = await Service.GetForumGroups(user).SingleAsync(group => group.Id == GroupId);
+        group = await Service.GetForumGroups(currentUser).SingleAsync(group => group.Id == GroupId);
         await UpdateTopics();
     }
 
@@ -93,7 +93,7 @@
 
     private async Task SendTopic()
     {
-        newTopic.Message.Initialize(user);
+        newTopic.Message.Initialize(currentUser);
         newTopicEdit.Get(newTopic);
         Service.ForumTopics.Add(newTopic);
         Service.ForumMessages.Add(newTopic.Message);

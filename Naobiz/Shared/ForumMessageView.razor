@@ -21,13 +21,13 @@
         </Alert>
     </Column>
     <Column ColumnSize="ColumnSize.Is1">
-        @if (user != null)
+        @if (currentUser != null)
         {
-            if (message.Creator == user || user.Admin)
+            if (message.Creator == currentUser || currentUser.Admin)
             {
                 <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
             }
-            if (message.Creator != user)
+            if (message.Creator != currentUser)
             {
                 <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Reply</Button>
             }
@@ -61,7 +61,7 @@
     </Row>
 }
 
-@if (user != null)
+@if (currentUser != null)
 {
     <ForumMessageEdit @ref="newMessageEdit" Submitted="SendMessage" />
     <Confirm @ref="deleteMessageConfirm" Text="Delete message?" Confirmed="DeleteMessage" />
@@ -74,7 +74,7 @@
     [Parameter]
     public EventCallback MessageDeleted { get; set; }
 
-    User user;
+    User currentUser;
     ForumMessage message;
     List<ForumAttachment> attachments;
     int childMessageCount;
@@ -85,7 +85,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
 
         message = await Service.ForumMessages.SingleAsync(message => message.Id == MessageId);
         attachments = await Service.ForumAttachments.Where(attachment => attachment.Message == message).OrderBy(attachment => attachment.Name).ToListAsync();
@@ -107,7 +107,7 @@
 
     private async Task SendMessage()
     {
-        newMessage.Initialize(user);
+        newMessage.Initialize(currentUser);
         newMessageEdit.Get(newMessage);
         Service.ForumMessages.Add(newMessage);
 

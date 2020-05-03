@@ -171,8 +171,8 @@
     {
         await base.OnInitializedAsync();
 
-        var user = await UserService.GetCurrentAsync(Service);
-        if (user == null || !user.Admin)
+        var currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null || !currentUser.Admin)
         {
             return;
         }

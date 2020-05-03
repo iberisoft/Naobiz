@@ -37,7 +37,7 @@
 </Row>
 
 @code {
-    User user;
+    User currentUser;
     List<SelectedValue<Activity>> models;
     List<Activity> selectedActivities;
 
@@ -45,13 +45,13 @@
     {
         await base.OnInitializedAsync();
 
-        user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
+        currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null)
         {
             return;
         }
 
-        selectedActivities = await Service.GetActivities(user).ToListAsync();
+        selectedActivities = await Service.GetActivities(currentUser).ToListAsync();
         models = SelectedValue<Activity>.Create(await Service.Activities.ToListAsync(), selectedActivities).ToList();
     }
 
@@ -63,14 +63,14 @@
             {
                 if (!selectedActivities.Contains(model.Value))
                 {
-                    Service.AddActivity(user, model.Value);
+                    Service.AddActivity(currentUser, model.Value);
                 }
             }
             else
             {
                 if (selectedActivities.Contains(model.Value))
                 {
-                    await Service.RemovevActivityAsync(user, model.Value);
+                    await Service.RemovevActivityAsync(currentUser, model.Value);
                 }
             }
         }

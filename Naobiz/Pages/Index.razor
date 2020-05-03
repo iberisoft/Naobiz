@@ -9,7 +9,7 @@
     <Heading Size="HeadingSize.Is1">Home</Heading>
 
     <Row>
-        @foreach (var item in Settings.GetDashboard(user))
+        @foreach (var item in Settings.GetDashboard(currentUser))
         {
             <Column ColumnSize="ColumnSize.IsQuarter">
                 <Card Margin="Margin.Is4.OnY">
@@ -26,13 +26,13 @@
 </Panel>
 
 @code {
-    User user;
+    User currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
 
-        if (user != null && !await Service.GetActivities(user).AnyAsync())
+        if (currentUser != null && !await Service.GetActivities(currentUser).AnyAsync())
         {
             NavigationManager.NavigateTo("activities");
         }

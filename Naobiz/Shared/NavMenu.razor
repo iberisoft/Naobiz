@@ -13,15 +13,15 @@
             </BarBrand>
             <BarStart>
                 <BarLink To="">Home</BarLink>
-                @foreach (var item in Settings.GetDashboard(user))
+                @foreach (var item in Settings.GetDashboard(currentUser))
                 {
                     <BarLink To="@item.LinkUrl" Match="Match.Prefix">@item.Name</BarLink>
                 }
-                @if (user != null)
+                @if (currentUser != null)
                 {
                     <BarLink To="activities">Activities</BarLink>
                     <BarLink To="account">Account</BarLink>
-                    @if (user.Admin)
+                    @if (currentUser.Admin)
                     {
                         <BarLink To="users">Users</BarLink>
                     }
@@ -33,9 +33,9 @@
                 }
             </BarStart>
             <BarEnd>
-                @if (user != null)
+                @if (currentUser != null)
                 {
-                    <Blazorise.Text Color="TextColor.White50" Margin="Margin.Is2">Hello @user?.Name?.Split()[0]!</Blazorise.Text>
+                    <Blazorise.Text Color="TextColor.White50" Margin="Margin.Is2">Hello @currentUser?.Name?.Split()[0]!</Blazorise.Text>
                     <BarLink To="_logout">Logout</BarLink>
                 }
             </BarEnd>
@@ -44,10 +44,10 @@
 </Bar>
 
 @code {
-    User user;
+    User currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserService.GetCurrentAsync(Service);
+        currentUser = await UserService.GetCurrentAsync(Service);
     }
 }

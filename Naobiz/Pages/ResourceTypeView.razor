@@ -38,7 +38,7 @@
     </Row>
     <Row Margin="Margin.Is1.FromBottom">
         <Column>
-            @if (user.Paid || user.Admin)
+            @if (currentUser.Paid || currentUser.Admin)
             {
                 <Button Color="Color.Primary" Clicked="CreateResource">New Resource</Button>
             }
@@ -57,7 +57,7 @@
     [Parameter]
     public int TypeId { get; set; }
 
-    User user;
+    User currentUser;
     ResourceType type;
     string provinceFilter;
     List<Activity> activities;
@@ -72,13 +72,13 @@
     {
         await base.OnInitializedAsync();
 
-        user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
+        currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null)
         {
             return;
         }
 
-        type = await Service.GetResourceTypes(user).SingleAsync(type => type.Id == TypeId);
+        type = await Service.GetResourceTypes(currentUser).SingleAsync(type => type.Id == TypeId);
         activities = await Service.Activities.ToListAsync();
         await UpdateResources();
     }

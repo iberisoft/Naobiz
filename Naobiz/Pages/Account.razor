@@ -98,7 +98,7 @@
 </Row>
 
 @code {
-    User user;
+    User currentUser;
     AccountModel model;
     Validations validations;
     TextEdit nameEdit;
@@ -107,14 +107,14 @@
     {
         await base.OnInitializedAsync();
 
-        user = await UserService.GetCurrentAsync(Service);
-        if (user == null)
+        currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null)
         {
             return;
         }
 
         model = new AccountModel();
-        model.CopyFrom(user);
+        model.CopyFrom(currentUser);
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -133,7 +133,7 @@
             return;
         }
 
-        model.CopyTo(user);
+        model.CopyTo(currentUser);
         await Service.SaveChangesAsync();
 
         NavigationManager.NavigateTo("");
