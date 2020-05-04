@@ -3,7 +3,7 @@
 @inherits OwningComponentBase<AppDbContext>
 @inject NavigationManager NavigationManager
 
-<Heading Size="HeadingSize.Is1">Login</Heading>
+<Heading Size="HeadingSize.Is1">Iniciar sesión</Heading>
 
 <Row>
     <Column ColumnSize="ColumnSize.IsThird.IsThird.WithOffset">
@@ -12,15 +12,15 @@
             <TextEdit @bind-Text="email" />
         </Field>
         <Field>
-            <FieldLabel>Password:</FieldLabel>
+            <FieldLabel>Contraseña:</FieldLabel>
             <TextEdit Role="TextRole.Password" @bind-Text="password" />
         </Field>
         <Field>
-            <Button @ref="enterButton" Color="Color.Primary" Clicked="LoginAccount">Enter</Button>
-            <Button Color="Color.Link" Float="Float.Right" Clicked="RegisterAccount">Register</Button>
+            <Button @ref="enterButton" Color="Color.Primary" Clicked="LoginAccount">Entrar</Button>
+            <Button Color="Color.Link" Float="Float.Right" Clicked="RegisterAccount">Darse de alta</Button>
         </Field>
         <Field>
-            <Button Color="Color.Link" Clicked="RecoverPassword">Recover Password</Button>
+            <Button Color="Color.Link" Clicked="RecoverPassword">Recuperar contraseña</Button>
         </Field>
         <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
     </Column>
@@ -65,12 +65,12 @@
             }
             else
             {
-                alertMessage = "Please activate your account.";
+                alertMessage = "Por favor active su cuenta";
             }
         }
         else
         {
-            alertMessage = "Wrong email or password.";
+            alertMessage = "Email o contraseña inválido";
         }
     }
 

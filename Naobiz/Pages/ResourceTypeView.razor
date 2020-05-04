@@ -16,7 +16,7 @@
     <Row>
         <Column ColumnSize="ColumnSize.Is3">
             <Field>
-                <FieldLabel>Province:</FieldLabel>
+                <FieldLabel>Provincia:</FieldLabel>
                 <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
                     <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                 </SelectEdit>
@@ -24,14 +24,14 @@
         </Column>
         <Column ColumnSize="ColumnSize.Is4">
             <Field>
-                <FieldLabel>Activity:</FieldLabel>
+                <FieldLabel>Actividad:</FieldLabel>
                 <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
                              IsNullable="true" />
             </Field>
         </Column>
         <Column ColumnSize="ColumnSize.Is5">
             <Field>
-                <FieldLabel>Title/Description/Owner/City:</FieldLabel>
+                <FieldLabel>Título/descripción/proprietario/municipio:</FieldLabel>
                 <SearchTextEdit @ref="@keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
             </Field>
         </Column>
@@ -40,7 +40,7 @@
         <Column>
             @if (currentUser.Paid || currentUser.Admin)
             {
-                <Button Color="Color.Primary" Clicked="CreateResource">New Resource</Button>
+                <Button Color="Color.Primary" Clicked="CreateResource">Nuevo recurso</Button>
             }
         </Column>
     </Row>

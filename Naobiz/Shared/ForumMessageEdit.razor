@@ -2,33 +2,33 @@
     <ModalBackdrop />
     <ModalContent IsCentered="true" Size="ModalSize.Large">
         <ModalHeader>
-            <ModalTitle>Message</ModalTitle>
+            <ModalTitle>Mensaje</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Validations @ref="validations" Mode="ValidationMode.Manual">
                 @if (IsTitleVisible)
                 {
                     <Field>
-                        <FieldLabel>Title:</FieldLabel>
+                        <FieldLabel>Título:</FieldLabel>
                         <Validation Validator="Helper.IsTrimmedNotEmpty">
                             <TextEdit @ref="titleEdit" MaxLength="100" @bind-Text="title" />
                         </Validation>
-                        <FieldHelp>100 symbols max</FieldHelp>
+                        <FieldHelp>100 símbolos máximo</FieldHelp>
                     </Field>
                 }
                 <Field>
-                    <FieldLabel>Message:</FieldLabel>
+                    <FieldLabel>Mensaje:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
                         <MemoEdit @ref="textEdit" MaxLength="1000" Rows="10" @bind-Text="text" />
                     </Validation>
-                    <FieldHelp>1000 symbols max</FieldHelp>
+                    <FieldHelp>1000 símbolos máximo</FieldHelp>
                 </Field>
                 <AttachmentView @ref="attachmentView" />
             </Validations>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary" Clicked="Submit">Send</Button>
-            <Button Color="Color.Secondary" Clicked="Close">Close</Button>
+            <Button Color="Color.Primary" Clicked="Submit">Enviar</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Cerrar</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>

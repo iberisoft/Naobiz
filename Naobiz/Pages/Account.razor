@@ -5,7 +5,7 @@
 @inject UserService UserService
 @inject TerritoryService TerritoryService
 
-<Heading Size="HeadingSize.Is1">Account</Heading>
+<Heading Size="HeadingSize.Is1">Mi cuenta</Heading>
 
 @if (model == null)
 {
@@ -22,31 +22,31 @@
             <Row>
                 <Column>
                     <Field>
-                        <FieldLabel>Name:</FieldLabel>
+                        <FieldLabel>Nombre:</FieldLabel>
                         <Validation Validator="Helper.IsTrimmedNotEmpty">
                             <TextEdit @ref="nameEdit" MaxLength="100" @bind-Text="model.Name" />
                         </Validation>
                     </Field>
                     <Field>
-                        <FieldLabel>Tax ID:</FieldLabel>
+                        <FieldLabel>NIF:</FieldLabel>
                         <Validation UsePattern="true">
                             <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
                                 <Feedback>
-                                    <ValidationError>Must be 9 digits or empty string</ValidationError>
+                                    <ValidationError>Debe ser 9 letras/números o vacío</ValidationError>
                                 </Feedback>
                             </TextEdit>
                         </Validation>
                     </Field>
                     <Field>
-                        <FieldLabel>Phone:</FieldLabel>
+                        <FieldLabel>Teléfono:</FieldLabel>
                         <Validation UsePattern="true">
                             <TextEdit MaxLength="20" Pattern="^\+?(\d|\s)*$" @bind-Text="model.Phone">
-                                <ValidationError>Must be digits and spaces with optional leading +</ValidationError>
+                                <ValidationError>Debe ser números/espacios (se puede poner + al principio)</ValidationError>
                             </TextEdit>
                         </Validation>
                     </Field>
                     <Field>
-                        <FieldLabel>Address:</FieldLabel>
+                        <FieldLabel>Dirección:</FieldLabel>
                         <Validation Validator="Helper.IsAny">
                             <TextEdit MaxLength="100" @bind-Text="model.Address" />
                         </Validation>
@@ -54,29 +54,29 @@
                 </Column>
                 <Column>
                     <Field>
-                        <FieldLabel>ZIP Code:</FieldLabel>
+                        <FieldLabel>Código postal:</FieldLabel>
                         <Validation UsePattern="true">
                             <TextEdit MaxLength="5" Pattern="^(|\d{5})$" @bind-Text="model.ZipCode">
                                 <Feedback>
-                                    <ValidationError>Must be 5 digits or empty string</ValidationError>
+                                    <ValidationError>Debe ser 5 números o vacío</ValidationError>
                                 </Feedback>
                             </TextEdit>
                         </Validation>
                     </Field>
                     <Field>
-                        <FieldLabel>City:</FieldLabel>
+                        <FieldLabel>Municipio:</FieldLabel>
                         <Validation Validator="Helper.IsAny">
                             <TextEdit MaxLength="100" @bind-Text="model.City" />
                         </Validation>
                     </Field>
                     <Field>
-                        <FieldLabel>Province:</FieldLabel>
+                        <FieldLabel>Provincia:</FieldLabel>
                         <SelectEdit @bind-SelectedValue="model.Province">
                             <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                         </SelectEdit>
                     </Field>
                     <Field>
-                        <FieldLabel>Country:</FieldLabel>
+                        <FieldLabel>País:</FieldLabel>
                         <SelectEdit @bind-SelectedValue="model.Country">
                             <TerritoryList Territories="TerritoryService.Countries" />
                         </SelectEdit>
@@ -86,10 +86,10 @@
             <Row>
                 <Column>
                     <Field>
-                        <CheckEdit @bind-Checked="model.InfoRequested">I agree to receive information about Naobiz via email</CheckEdit>
+                        <CheckEdit @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</CheckEdit>
                     </Field>
                     <Field>
-                        <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+                        <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>
                     </Field>
                 </Column>
             </Row>

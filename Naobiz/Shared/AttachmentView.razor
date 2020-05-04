@@ -2,7 +2,7 @@
 
 <Field>
     <InputFile multiple OnChange="UploadFiles" />
-    <FieldHelp>@AttachmentModel.SizeQuota MB each max</FieldHelp>
+    <FieldHelp>Cuota máxima es @AttachmentModel.SizeQuota MB por cada archivo</FieldHelp>
 </Field>
 
 @foreach (var model in models)
@@ -17,7 +17,7 @@
         <Column>
             @if (model.SizeExceedsQuota)
             {
-                <Badge Color="Color.Warning">Max quota exceeded</Badge>
+            <Badge Color="Color.Warning">Cuota máxima excedida</Badge>
             }
             else
             {

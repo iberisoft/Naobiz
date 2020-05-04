@@ -2,29 +2,29 @@
     <ModalBackdrop />
     <ModalContent IsCentered="true" Size="ModalSize.Large">
         <ModalHeader>
-            <ModalTitle>Resource Type</ModalTitle>
+            <ModalTitle>Tipo de recursos</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Validations @ref="validations" Mode="ValidationMode.Manual">
                 <Field>
-                    <FieldLabel>Name:</FieldLabel>
+                    <FieldLabel>Nombre:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
                         <TextEdit @ref="nameEdit" MaxLength="100" @bind-Text="name" />
                     </Validation>
                 </Field>
                 <Field>
-                    <FieldLabel>Image URL:</FieldLabel>
+                    <FieldLabel>URL de imagen:</FieldLabel>
                     <TextEdit MaxLength="1000" @bind-Text="imageSource" />
                 </Field>
                 <Field>
-                    <FieldLabel>User Group:</FieldLabel>
+                    <FieldLabel>Grupo de usuarios:</FieldLabel>
                     <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="userGroups" @bind-SelectedItem="userGroup" IsNullable="true" />
                 </Field>
             </Validations>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary" Clicked="Submit">Submit</Button>
-            <Button Color="Color.Secondary" Clicked="Close">Close</Button>
+            <Button Color="Color.Primary" Clicked="Submit">Enviar</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Cerrar</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>

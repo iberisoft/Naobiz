@@ -33,12 +33,12 @@
                 {
                     <Row Margin="Margin.Is1.FromBottom">
                         <Column>
-                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="EditResource">Edit</Button>
+                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="EditResource">Editar</Button>
                         </Column>
                     </Row>
                     <Row>
                         <Column>
-                            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Delete</Button>
+                            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Eliminar</Button>
                         </Column>
                     </Row>
                 }
@@ -63,7 +63,7 @@
 </Card>
 
 <ResourceEdit @ref="resourceEdit" Service="Service" Submitted="SubmitResource" />
-<Confirm @ref="deleteResourceConfirm" Text="Delete resource?" Confirmed="DeleteResource" />
+<Confirm @ref="deleteResourceConfirm" Text="Eliminar el recurso?" Confirmed="DeleteResource" />
 
 @code {
     [Parameter]

@@ -14,7 +14,7 @@ namespace Naobiz.Models
             {
                 unit += "s";
             }
-            return $"{value} {unit} ago";
+            return $"Hace {value} {unit}";
         }
 
         public static void IsAny(ValidatorEventArgs e) => e.Status = ValidationStatus.Success;
@@ -27,7 +27,7 @@ namespace Naobiz.Models
 
         public static bool IsPasswordValid(string password) => password?.Length >= 8 && password.Any(c => char.IsUpper(c)) && password.Any(c => char.IsDigit(c));
 
-        public static string PasswordRuleDescription => "8 symbols min including one uppercase letter and one digit";
+        public static string PasswordRuleDescription => "8 símbolos mínimo incluyendo una letra mayúscula y un número";
 
         public static void IsPasswordConfirmed(ValidatorEventArgs e, string password) => e.Status = password != null ? (string)e.Value == password ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
 

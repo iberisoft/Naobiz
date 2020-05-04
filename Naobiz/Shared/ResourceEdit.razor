@@ -4,37 +4,37 @@
     <ModalBackdrop />
     <ModalContent IsCentered="true" Size="ModalSize.Large">
         <ModalHeader>
-            <ModalTitle>Resource</ModalTitle>
+            <ModalTitle>Recurso</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Validations @ref="validations" Mode="ValidationMode.Manual">
                 <Row>
                     <Column>
                         <Field>
-                            <FieldLabel>Owner:</FieldLabel>
+                            <FieldLabel>Proprietario:</FieldLabel>
                             <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" @bind-SelectedItem="owner" IsDisabled="currentUser?.Admin != true" />
                         </Field>
                     </Column>
                     <Column>
                         <Field>
-                            <FieldLabel>Activity:</FieldLabel>
+                            <FieldLabel>Actividad:</FieldLabel>
                             <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
                         </Field>
                     </Column>
                 </Row>
                 <Field>
-                    <FieldLabel>Title:</FieldLabel>
+                    <FieldLabel>Título:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
                         <TextEdit @ref="titleEdit" MaxLength="100" @bind-Text="title" />
                     </Validation>
-                    <FieldHelp>100 symbols max</FieldHelp>
+                    <FieldHelp>100 símbolos máximo</FieldHelp>
                 </Field>
                 <Field>
-                    <FieldLabel>Description:</FieldLabel>
+                    <FieldLabel>Descripción:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
                         <MemoEdit MaxLength="1000" Rows="4" @bind-Text="description" />
                     </Validation>
-                    <FieldHelp>1000 symbols max</FieldHelp>
+                    <FieldHelp>1000 símbolos máximo</FieldHelp>
                 </Field>
                 <Field>
                     <FieldLabel>Website:</FieldLabel>
@@ -46,8 +46,8 @@
             </Validations>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary" Clicked="Submit">Submit</Button>
-            <Button Color="Color.Secondary" Clicked="Close">Close</Button>
+            <Button Color="Color.Primary" Clicked="Submit">Enviar</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Cerrar</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>

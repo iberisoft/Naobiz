@@ -12,31 +12,31 @@
                 </Figure>
             </BarBrand>
             <BarStart>
-                <BarLink To="">Home</BarLink>
+                <BarLink To="">Inicio</BarLink>
                 @foreach (var item in Settings.GetDashboard(currentUser))
                 {
                     <BarLink To="@item.LinkUrl" Match="Match.Prefix">@item.Name</BarLink>
                 }
                 @if (currentUser != null)
                 {
-                    <BarLink To="activities">Activities</BarLink>
-                    <BarLink To="account">Account</BarLink>
+                    <BarLink To="activities">Actividades</BarLink>
+                    <BarLink To="account">Mi cuenta</BarLink>
                     @if (currentUser.Admin)
                     {
-                        <BarLink To="users">Users</BarLink>
+                        <BarLink To="users">Usuarios</BarLink>
                     }
 
                 }
                 else
                 {
-                    <BarLink To="login">Login</BarLink>
+                    <BarLink To="login">Iniciar sesión</BarLink>
                 }
             </BarStart>
             <BarEnd>
                 @if (currentUser != null)
                 {
-                    <Blazorise.Text Color="TextColor.White50" Margin="Margin.Is2">Hello @currentUser.Name.Split()[0]!</Blazorise.Text>
-                    <BarLink To="_logout">Logout</BarLink>
+                    <Blazorise.Text Color="TextColor.White50" Margin="Margin.Is2">Hola @currentUser.Name.Split()[0]</Blazorise.Text>
+                    <BarLink To="_logout">Salir</BarLink>
                 }
             </BarEnd>
         </BarMenu>

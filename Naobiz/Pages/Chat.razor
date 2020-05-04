@@ -16,26 +16,26 @@
     <Row>
         <Column>
             <Field>
-                <FieldLabel>Name:</FieldLabel>
+                <FieldLabel>Nombre:</FieldLabel>
                 <SearchTextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Activity:</FieldLabel>
+                <FieldLabel>Actividad:</FieldLabel>
                 <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
                              IsNullable="true" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>City:</FieldLabel>
+                <FieldLabel>Municipio:</FieldLabel>
                 <SearchTextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Province:</FieldLabel>
+                <FieldLabel>Provincia:</FieldLabel>
                 <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
                     <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                 </SelectEdit>
@@ -71,7 +71,7 @@
                         <TextEdit @ref="newMessageTextEdit" MaxLength="100" @bind-Text="newMessageText" />
                     </Addon>
                     <Addon AddonType="AddonType.End">
-                        <Button Color="Color.Primary" Clicked="SendMessage">Send</Button>
+                        <Button Color="Color.Primary" Clicked="SendMessage">Enviar</Button>
                     </Addon>
                 </Addons>
                 @foreach (var message in messages)

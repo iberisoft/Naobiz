@@ -15,7 +15,7 @@
     <Row>
         <Column>
             <Field>
-                <FieldLabel>Title/Message:</FieldLabel>
+                <FieldLabel>Título/mensaje:</FieldLabel>
                 <SearchTextEdit @ref="keywordFilterEdit" Text="@keywordFilter" TextChanged="ChangeKeywordFilter" />
             </Field>
         </Column>
@@ -24,7 +24,7 @@
         <Column>
             @if (currentUser != null)
             {
-                <Button Color="Color.Primary" Clicked="CreateTopic">New Topic</Button>
+                <Button Color="Color.Primary" Clicked="CreateTopic">Nueva conversación</Button>
             }
         </Column>
     </Row>

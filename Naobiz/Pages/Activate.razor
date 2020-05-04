@@ -3,7 +3,7 @@
 @inherits OwningComponentBase<AppDbContext>
 @inject NavigationManager NavigationManager
 
-<Heading Size="HeadingSize.Is1">Activate</Heading>
+<Heading Size="HeadingSize.Is1">Activar</Heading>
 
 @if (user != null)
 {
@@ -14,14 +14,14 @@
                 <TextEdit IsReadonly="true" Text="@user.Email" />
             </Field>
             <Field>
-                <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+                <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>
             </Field>
         </Column>
     </Row>
 }
 else
 {
-    <Paragraph>Account not found or already processed.</Paragraph>
+    <Paragraph>La cuenta no se ha encontrado o ya está procesada.</Paragraph>
 }
 
 @code {

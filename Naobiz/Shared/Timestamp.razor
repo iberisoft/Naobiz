@@ -24,23 +24,23 @@
 
             if (age.TotalSeconds < 6)
             {
-                return "now";
+                return "ahora";
             }
             if (age.TotalMinutes < 1)
             {
-                return Helper.AgeToString((int)age.TotalSeconds, "second");
+                return Helper.AgeToString((int)age.TotalSeconds, "segundo");
             }
             if (age.TotalHours < 1)
             {
-                return Helper.AgeToString((int)age.TotalMinutes, "minute");
+                return Helper.AgeToString((int)age.TotalMinutes, "minuto");
             }
             if (age.TotalDays < 1)
             {
-                return Helper.AgeToString((int)age.TotalHours, "hour");
+                return Helper.AgeToString((int)age.TotalHours, "hora");
             }
             if (age.TotalDays < 30)
             {
-                return Helper.AgeToString((int)age.TotalDays, "day");
+                return Helper.AgeToString((int)age.TotalDays, "día");
             }
             return DateString;
         }

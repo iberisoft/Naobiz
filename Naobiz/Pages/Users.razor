@@ -11,12 +11,12 @@
 }
 
 <Panel Class="page-users">
-    <Heading Size="HeadingSize.Is1">Users: @models.Count</Heading>
+    <Heading Size="HeadingSize.Is1">Usuarios: @models.Count</Heading>
 
     <Row>
         <Column>
             <Field>
-                <FieldLabel>Group:</FieldLabel>
+                <FieldLabel>Grupo:</FieldLabel>
                 <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" SelectedItem="groupFilter" SelectedItemChanged="ChangeGroupFilter"
                              IsNullable="true" />
             </Field>
@@ -29,13 +29,13 @@
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Name:</FieldLabel>
+                <FieldLabel>Nombre:</FieldLabel>
                 <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Activity:</FieldLabel>
+                <FieldLabel>Actividad:</FieldLabel>
                 <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
                              IsNullable="true" />
             </Field>
@@ -44,25 +44,25 @@
     <Row>
         <Column>
             <Field>
-                <FieldLabel>Tax ID:</FieldLabel>
+                <FieldLabel>NIF:</FieldLabel>
                 <TextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Phone:</FieldLabel>
+                <FieldLabel>Teléfono:</FieldLabel>
                 <TextEdit Text="@phoneFilter" TextChanged="ChangePhoneFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Address/ZIP Code/City:</FieldLabel>
+                <FieldLabel>Dirección/código postal/municipio:</FieldLabel>
                 <TextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Province:</FieldLabel>
+                <FieldLabel>Provincia:</FieldLabel>
                 <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
                     <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                 </SelectEdit>
@@ -78,7 +78,7 @@
                     <TableHeaderCell>
                         <Dropdown>
                             <DropdownToggle>
-                                <strong>Group</strong>
+                                <strong>Grupo</strong>
                             </DropdownToggle>
                             <DropdownMenu>
                                 @foreach (var group in groups)
@@ -86,25 +86,25 @@
                                     <DropdownItem Clicked="() => SetGroupToSelectedUsers(group)">@group.Name</DropdownItem>
                                 }
                                 <DropdownDivider />
-                                <DropdownItem Clicked="() => SetGroupToSelectedUsers(null)">None</DropdownItem>
+                                <DropdownItem Clicked="() => SetGroupToSelectedUsers(null)">Ninguno</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </TableHeaderCell>
                     <TableHeaderCell>Email</TableHeaderCell>
-                    <TableHeaderCell>Registered</TableHeaderCell>
-                    <TableHeaderCell>Name</TableHeaderCell>
-                    <TableHeaderCell>Tax ID</TableHeaderCell>
-                    <TableHeaderCell>Phone</TableHeaderCell>
-                    <TableHeaderCell>Address</TableHeaderCell>
-                    <TableHeaderCell>ZIP Code</TableHeaderCell>
-                    <TableHeaderCell>City</TableHeaderCell>
-                    <TableHeaderCell>Province</TableHeaderCell>
-                    <TableHeaderCell>Country</TableHeaderCell>
-                    <TableHeaderCell>Info Requested</TableHeaderCell>
-                    <TableHeaderCell>Last Login</TableHeaderCell>
-                    <TableHeaderCell>IP Address</TableHeaderCell>
+                    <TableHeaderCell>Darse de alta</TableHeaderCell>
+                    <TableHeaderCell>Nombre</TableHeaderCell>
+                    <TableHeaderCell>NIF</TableHeaderCell>
+                    <TableHeaderCell>Teléfono</TableHeaderCell>
+                    <TableHeaderCell>Dirección</TableHeaderCell>
+                    <TableHeaderCell>Código postal</TableHeaderCell>
+                    <TableHeaderCell>Municipio</TableHeaderCell>
+                    <TableHeaderCell>Provincia</TableHeaderCell>
+                    <TableHeaderCell>País</TableHeaderCell>
+                    <TableHeaderCell>Recibir información</TableHeaderCell>
+                    <TableHeaderCell>Último acceso</TableHeaderCell>
+                    <TableHeaderCell>Dirección IP</TableHeaderCell>
                     <TableHeaderCell>Admin</TableHeaderCell>
-                    <TableHeaderCell>Paid</TableHeaderCell>
+                    <TableHeaderCell>Pagado</TableHeaderCell>
                 </TableRow>
             </TableHeader>
             <TableBody>

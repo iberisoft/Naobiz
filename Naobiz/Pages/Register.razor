@@ -6,7 +6,7 @@
 @inject EmailService EmailService
 @inject TerritoryService TerritoryService
 
-<Heading Size="HeadingSize.Is1">Register</Heading>
+<Heading Size="HeadingSize.Is1">Darse de alta</Heading>
 
 @if (model == null)
 {
@@ -24,18 +24,18 @@
                 </Validation>
             </Field>
             <Field>
-                <FieldLabel>Password:</FieldLabel>
+                <FieldLabel>Contraseña:</FieldLabel>
                 <Validation Validator="Helper.IsPasswordValid">
                     <TextEdit MaxLength="100" Role="TextRole.Password" @bind-Text="password" />
                 </Validation>
                 <FieldHelp>@Helper.PasswordRuleDescription</FieldHelp>
             </Field>
             <Field>
-                <FieldLabel>Confirm Password:</FieldLabel>
+                <FieldLabel>Confirmar contraseña:</FieldLabel>
                 <Validation Validator="e => Helper.IsPasswordConfirmed(e, password)">
                     <TextEdit MaxLength="100" Role="TextRole.Password">
                         <Feedback>
-                            <ValidationError>Confirmation and password do not match.</ValidationError>
+                            <ValidationError>La contraseña y su confirmación no coinciden</ValidationError>
                         </Feedback>
                     </TextEdit>
                 </Validation>
@@ -43,31 +43,31 @@
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Name:</FieldLabel>
+                <FieldLabel>Nombre:</FieldLabel>
                 <Validation Validator="Helper.IsTrimmedNotEmpty">
                     <TextEdit MaxLength="100" @bind-Text="model.Name" />
                 </Validation>
             </Field>
             <Field>
-                <FieldLabel>Tax ID:</FieldLabel>
+                <FieldLabel>NIF:</FieldLabel>
                 <Validation UsePattern="true">
                     <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
                         <Feedback>
-                            <ValidationError>Must be 9 digits or empty string</ValidationError>
+                            <ValidationError>Debe ser 9 letras/números o vacío</ValidationError>
                         </Feedback>
                     </TextEdit>
                 </Validation>
             </Field>
             <Field>
-                <FieldLabel>Phone:</FieldLabel>
+                <FieldLabel>Teléfono:</FieldLabel>
                 <Validation UsePattern="true">
                     <TextEdit MaxLength="20" Pattern="^\+?(\d|\s)*$" @bind-Text="model.Phone">
-                        <ValidationError>Must be digits and spaces with optional leading +</ValidationError>
+                        <ValidationError>Debe ser números/espacios (se puede poner + al principio)</ValidationError>
                     </TextEdit>
                 </Validation>
             </Field>
             <Field>
-                <FieldLabel>Address:</FieldLabel>
+                <FieldLabel>Dirección:</FieldLabel>
                 <Validation Validator="Helper.IsAny">
                     <TextEdit MaxLength="100" @bind-Text="model.Address" />
                 </Validation>
@@ -75,29 +75,29 @@
         </Column>
         <Column>
             <Field>
-                <FieldLabel>ZIP Code:</FieldLabel>
+                <FieldLabel>Código postal:</FieldLabel>
                 <Validation UsePattern="true">
                     <TextEdit MaxLength="5" Pattern="^(|\d{5})$" @bind-Text="model.ZipCode">
                         <Feedback>
-                            <ValidationError>Must be 5 digits or empty string</ValidationError>
+                            <ValidationError>Debe ser 5 números o vacío</ValidationError>
                         </Feedback>
                     </TextEdit>
                 </Validation>
             </Field>
             <Field>
-                <FieldLabel>City:</FieldLabel>
+                <FieldLabel>Municipio:</FieldLabel>
                 <Validation Validator="Helper.IsAny">
                     <TextEdit MaxLength="100" @bind-Text="model.City" />
                 </Validation>
             </Field>
             <Field>
-                <FieldLabel>Province:</FieldLabel>
+                <FieldLabel>Provincia:</FieldLabel>
                 <SelectEdit @bind-SelectedValue="model.Province">
                     <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                 </SelectEdit>
             </Field>
             <Field>
-                <FieldLabel>Country:</FieldLabel>
+                <FieldLabel>País:</FieldLabel>
                 <SelectEdit @bind-SelectedValue="model.Country">
                     <TerritoryList Territories="TerritoryService.Countries" />
                 </SelectEdit>
@@ -109,18 +109,18 @@
             <Field>
                 <Validation Validator="Helper.IsTrue">
                     <CheckEdit>
-                        <ChildContent>I accept Naobiz legal terms and cookie policy</ChildContent>
+                        <ChildContent>Acepto la información legal y política de cookies de Naobiz</ChildContent>
                         <Feedback>
-                            <ValidationError>Please accept</ValidationError>
+                            <ValidationError>Por favor acepte</ValidationError>
                         </Feedback>
                     </CheckEdit>
                 </Validation>
             </Field>
             <Field>
-                <CheckEdit @bind-Checked="model.InfoRequested">I agree to receive information about Naobiz via email</CheckEdit>
+                <CheckEdit @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</CheckEdit>
             </Field>
             <Field>
-                <Button Color="Color.Primary" Clicked="SubmitChanges">Submit</Button>
+                <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>
             </Field>
             <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
         </Column>
@@ -170,24 +170,24 @@
                 return;
             }
 
-            alertMessage = "Sending email...";
+            alertMessage = "Enviando correo...";
             StateHasChanged();
 
-            if (await EmailService.SendAsync(user, "Account Activation", "activate.cshtml", new Models.Emails.ActivateModel()))
+            if (await EmailService.SendAsync(user, "Activar la cuenta", "activate.cshtml", new Models.Emails.ActivateModel()))
             {
                 Service.Users.Add(user);
                 await Service.SaveChangesAsync();
 
-                alertMessage = $"An activation email has sent to {user.Email}.";
+                alertMessage = $"El correo para activar email se ha enviado a {user.Email}";
             }
             else
             {
-                alertMessage = "An error occured when sending the activation email.";
+                alertMessage = "Hay error al enviar el correo para activar email";
             }
         }
         else
         {
-            alertMessage = "Email already exists.";
+            alertMessage = "Este email ya existe";
         }
     }
 }

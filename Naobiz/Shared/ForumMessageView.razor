@@ -25,11 +25,11 @@
         {
             if (message.Creator == currentUser || currentUser.Admin)
             {
-                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Delete</Button>
+                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Eliminar</Button>
             }
             if (message.Creator != currentUser)
             {
-                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Reply</Button>
+                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Responder</Button>
             }
         }
     </Column>
@@ -48,7 +48,7 @@
         <Column>
             @if (childMessages == null)
             {
-                <Button Color="Color.Link" Size="ButtonSize.Small" Margin="Margin.Is1.FromBottom" Clicked="UpdateChildMessages">Replies: @childMessageCount</Button>
+                <Button Color="Color.Link" Size="ButtonSize.Small" Margin="Margin.Is1.FromBottom" Clicked="UpdateChildMessages">Respuestas: @childMessageCount</Button>
             }
             else
             {
@@ -64,7 +64,7 @@
 @if (currentUser != null)
 {
     <ForumMessageEdit @ref="newMessageEdit" Submitted="SendMessage" />
-    <Confirm @ref="deleteMessageConfirm" Text="Delete message?" Confirmed="DeleteMessage" />
+    <Confirm @ref="deleteMessageConfirm" Text="Eliminar el mensaje?" Confirmed="DeleteMessage" />
 }
 
 @code {
