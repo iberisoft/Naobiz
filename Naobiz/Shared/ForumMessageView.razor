@@ -24,13 +24,13 @@
     <Column ColumnSize="ColumnSize.Is1">
         @if (currentUser != null)
         {
-            if (message.Creator == currentUser || currentUser.Admin)
-            {
-                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="() => deleteMessageConfirm.Show()">Eliminar</Button>
-            }
             if (message.Creator != currentUser)
             {
-                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="CreateMessage">Responder</Button>
+                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="CreateMessage">Responder</Button>
+            }
+            if (message.Creator == currentUser || currentUser.Admin)
+            {
+                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageConfirm.Show()">Eliminar</Button>
             }
         }
     </Column>
