@@ -95,7 +95,7 @@
 
     private async Task UpdateChildMessages()
     {
-        childMessages = await Service.ForumMessages.Where(childMessage => childMessage.ParentMessage == message).OrderBy(message => message.CreationDateTime).ToListAsync();
+        childMessages = await Service.ForumMessages.Where(childMessage => childMessage.ParentMessage == message).OrderByDescending(message => message.CreationDateTime).ToListAsync();
         childMessageCount = childMessages.Count;
     }
 
