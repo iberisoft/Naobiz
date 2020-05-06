@@ -1,7 +1,10 @@
 ﻿@page "/chat"
 
 @inherits AuthorizedBase
+@implements IDisposable
 @inject UserService UserService
+@inject ChatService ChatService
+@inject EmailService EmailService
 @inject TerritoryService TerritoryService
 
 @if (users == null)
@@ -118,6 +121,13 @@
 
         activities = await Service.Activities.ToListAsync();
         await UpdateUsers();
+
+        ChatService.MessageSent += ChartService_MessageSent;
+    }
+
+    public void Dispose()
+    {
+        ChatService.MessageSent -= ChartService_MessageSent;
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -213,5 +223,24 @@
         await UpdateMessages();
 
         newMessageTextEdit.Focus();
+
+        if (!ChatService.SendMessage(message) && currentUser.NotifyChat)
+        {
+            StateHasChanged();
+            await EmailService.SendAsync(chattingUser, "Mensaje del chat", "chat-message.cshtml", new Models.Emails.ChatMessageModel(message));
+        }
+    }
+
+    private void ChartService_MessageSent(object _, ChatService.MessageEventArgs e)
+    {
+        if (e.RecipientId == currentUser.Id && e.CreatorId == chattingUser?.Id)
+        {
+            Task.Run(async () =>
+            {
+                await UpdateMessages();
+                await InvokeAsync(StateHasChanged);
+            });
+            e.Delivered = true;
+        }
     }
 }

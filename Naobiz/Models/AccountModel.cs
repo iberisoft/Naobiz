@@ -43,6 +43,10 @@ namespace Naobiz.Models
 
         public string ZipCode { get; set; }
 
+        public bool NotifyForum { get; set; }
+
+        public bool NotifyChat { get; set; }
+
         public bool InfoRequested { get; set; }
 
         public void CopyTo(User user)
@@ -55,6 +59,8 @@ namespace Naobiz.Models
             user.Province = Province;
             user.City = City;
             user.ZipCode = ZipCode;
+            user.NotifyForum = NotifyForum;
+            user.NotifyChat = NotifyChat;
             user.InfoRequested = InfoRequested;
         }
 
@@ -68,6 +74,8 @@ namespace Naobiz.Models
             Province = user.Province;
             City = user.City;
             ZipCode = user.ZipCode;
+            NotifyForum = user.NotifyForum;
+            NotifyChat = user.NotifyChat;
             InfoRequested = user.InfoRequested;
         }
     }

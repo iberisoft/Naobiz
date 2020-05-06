@@ -86,6 +86,15 @@
             <Row>
                 <Column>
                     <Field>
+                        <FieldLabel>Notificaciones:</FieldLabel>
+                        <CheckEdit @bind-Checked="model.NotifyForum">Respuestas en foro</CheckEdit>
+                        <CheckEdit @bind-Checked="model.NotifyChat">Mensajes de chat no están recibidos</CheckEdit>
+                    </Field>
+                </Column>
+            </Row>
+            <Row>
+                <Column>
+                    <Field>
                         <CheckEdit @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</CheckEdit>
                     </Field>
                     <Field>

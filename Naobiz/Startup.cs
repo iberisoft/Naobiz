@@ -50,6 +50,7 @@ namespace Naobiz
 
             services.AddScoped<UserService>();
             services.AddScoped<EmailService>();
+            services.AddSingleton<ChatService>();
             services.AddScoped<TerritoryService>();
         }
 

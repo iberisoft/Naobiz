@@ -1,6 +1,7 @@
 ﻿@inherits OwningComponentBase<AppDbContext>
 @inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject EmailService EmailService
 
 @if (message == null)
 {
@@ -121,6 +122,12 @@
         await Service.SaveChangesAsync();
 
         await UpdateChildMessages();
+
+        if (currentUser.NotifyForum)
+        {
+            StateHasChanged();
+            await EmailService.SendAsync(message.Creator, "Respuesta al mensaje del foro", "forum-message.cshtml", new Models.Emails.ForumMessageModel(newMessage));
+        }
     }
 
     private void DownloadAttachment(ForumAttachment attachment)

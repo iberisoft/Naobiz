@@ -58,6 +58,10 @@ namespace Naobiz.Data
         [MaxLength(5)]
         public string ZipCode { get; set; }
 
+        public bool NotifyForum { get; set; }
+
+        public bool NotifyChat { get; set; }
+
         public bool InfoRequested { get; set; }
 
         public virtual UserGroup Group { get; set; }
@@ -69,6 +73,9 @@ namespace Naobiz.Data
             {
                 ActivationCode = Guid.NewGuid().ToString("N");
             }
+            Paid = true;
+            NotifyForum = true;
+            NotifyChat = true;
         }
 
         public void ResetPassword()
