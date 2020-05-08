@@ -35,7 +35,9 @@
             <BarEnd>
                 @if (currentUser != null)
                 {
-                    <Blazorise.Text Color="TextColor.White50" Margin="Margin.Is2">Hola @currentUser.Name.Split()[0]</Blazorise.Text>
+                    <Tooltip Text="@CurrentUserInfo" IsFade="true" Placement="Placement.Bottom">
+                        <Text Color="TextColor.White50" Margin="Margin.Is2">Hola @currentUser.Name.Split()[0]</Text>
+                    </Tooltip>
                     <BarLink To="_logout">Salir</BarLink>
                 }
             </BarEnd>
@@ -50,4 +52,6 @@
     {
         currentUser = await UserService.GetCurrentAsync(Service);
     }
+
+    private string CurrentUserInfo => $"{currentUser.Name} ({currentUser.Email})";
 }
