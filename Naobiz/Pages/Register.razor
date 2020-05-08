@@ -40,6 +40,10 @@
                     </TextEdit>
                 </Validation>
             </Field>
+            <Field>
+                <FieldLabel>Código de grupo:</FieldLabel>
+                <TextEdit MaxLength="20" @bind-Text="groupCode" />
+            </Field>
         </Column>
         <Column>
             <Field>
@@ -131,6 +135,7 @@
     string email;
     TextEdit emailEdit;
     string password;
+    string groupCode;
     readonly AccountModel model = new AccountModel();
     string alertMessage;
     Validations validations;
@@ -158,6 +163,7 @@
             user.Initialize(Environment.IsDevelopment());
             user.Email = email;
             user.Password = password;
+            user.Group = Service.UserGroups.SingleOrDefault(group => group.Code == groupCode);
             model.CopyTo(user);
 
             if (user.ActivationCode == null)
