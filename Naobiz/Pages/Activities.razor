@@ -4,37 +4,39 @@
 @inject NavigationManager NavigationManager
 @inject UserService UserService
 
-<Heading Size="HeadingSize.Is1">Actividades</Heading>
-
 @if (models == null)
 {
     <Paragraph>Loading...</Paragraph>
     return;
 }
 
-<Row>
-    <Column>
-        @foreach (var model in models.Take(models.Count / 2))
-        {
-            <Field>
-                <CheckEdit @bind-Checked="model.Selected">@model.Value.Name</CheckEdit>
-            </Field>
-        }
-    </Column>
-    <Column>
-        @foreach (var model in models.Skip(models.Count / 2))
-        {
-            <Field>
-                <CheckEdit @bind-Checked="model.Selected">@model.Value.Name</CheckEdit>
-            </Field>
-        }
-    </Column>
-</Row>
-<Row>
-    <Column>
-        <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>
-    </Column>
-</Row>
+<Panel Class="page-activities">
+    <Heading Size="HeadingSize.Is1">Actividades</Heading>
+
+    <Row>
+        <Column>
+            @foreach (var model in models.Take(models.Count / 2))
+            {
+                <Field>
+                    <CheckEdit @bind-Checked="model.Selected">@model.Value.Name</CheckEdit>
+                </Field>
+            }
+        </Column>
+        <Column>
+            @foreach (var model in models.Skip(models.Count / 2))
+            {
+                <Field>
+                    <CheckEdit @bind-Checked="model.Selected">@model.Value.Name</CheckEdit>
+                </Field>
+            }
+        </Column>
+    </Row>
+    <Row>
+        <Column>
+            <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>
+        </Column>
+    </Row>
+</Panel>
 
 @code {
     User currentUser;
