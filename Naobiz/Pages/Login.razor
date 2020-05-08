@@ -55,7 +55,7 @@
         var user = await Service.Users.SingleOrDefaultAsync(user => user.Email == email && user.Password == password);
         if (user != null)
         {
-            await Service.Entry<User>(user).ReloadAsync();
+            await Service.Entry(user).ReloadAsync();
             if (user.ActivationCode == null)
             {
                 var uri = "_login";
