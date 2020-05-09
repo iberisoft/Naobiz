@@ -52,6 +52,7 @@ namespace Naobiz.Data
         [MaxLength(6)]
         public string Province { get; set; }
 
+        [Required]
         [MaxLength(100)]
         public string City { get; set; }
 

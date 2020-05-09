@@ -65,7 +65,7 @@
                     </Field>
                     <Field>
                         <FieldLabel>Municipio:</FieldLabel>
-                        <Validation Validator="Helper.IsAny">
+                        <Validation Validator="Helper.IsTrimmedNotEmpty">
                             <TextEdit MaxLength="100" @bind-Text="model.City" />
                         </Validation>
                     </Field>
