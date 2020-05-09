@@ -55,7 +55,7 @@
             {
                 foreach (var childMessage in childMessages)
                 {
-                    <ForumMessageView @key="childMessage.Id" MessageId="childMessage.Id" MessageDeleted="OnChildMessageDeleted" />
+                    <ForumMessageView @key="childMessage.Id" MessageId="childMessage.Id" MessageDeleted="async () => await OnChildMessageDeleted(childMessage)" />
                 }
             }
         </Column>
@@ -156,8 +156,10 @@
         await MessageDeleted.InvokeAsync(null);
     }
 
-    private async Task OnChildMessageDeleted()
+    private async Task OnChildMessageDeleted(ForumMessage childMessage)
     {
+        Service.Entry(childMessage).State = EntityState.Detached;
+
         await UpdateChildMessages();
         StateHasChanged();
     }
