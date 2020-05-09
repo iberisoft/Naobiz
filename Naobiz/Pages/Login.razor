@@ -52,8 +52,8 @@
 
     private async Task LoginAccount()
     {
-        var user = await Service.Users.SingleOrDefaultAsync(user => user.Email == email && user.Password == password);
-        if (user != null)
+        var user = await Service.Users.SingleOrDefaultAsync(user => user.Email == email);
+        if (user?.VerifyPassword(password) == true)
         {
             await Service.Entry(user).ReloadAsync();
             if (user.ActivationCode == null)

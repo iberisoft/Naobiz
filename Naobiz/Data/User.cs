@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Naobiz.Data
 {
@@ -30,8 +33,19 @@ namespace Naobiz.Data
         public string Email { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string Password { get; set; }
+        [MaxLength(64)]
+        public string PasswordHash { get; set; }
+
+        public void SetPassword(string password) => PasswordHash = GetHash(password);
+
+        public bool VerifyPassword(string password) => PasswordHash == GetHash(password);
+
+        private static string GetHash(string password)
+        {
+            using var sha = SHA256.Create();
+            var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return string.Join(null, hash.Select(b => b.ToString("x2")));
+        }
 
         [MaxLength(9)]
         public string TaxId { get; set; }

@@ -162,7 +162,7 @@
             user = new User();
             user.Initialize(Environment.IsDevelopment());
             user.Email = email;
-            user.Password = password;
+            user.SetPassword(password);
             user.Group = Service.UserGroups.SingleOrDefault(group => group.Code == groupCode);
             model.CopyTo(user);
 
