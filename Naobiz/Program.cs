@@ -19,8 +19,7 @@ namespace Naobiz
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                        .UseUrls("http://*:5000", "https://*:5001");
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }
