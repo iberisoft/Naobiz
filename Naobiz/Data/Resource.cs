@@ -23,10 +23,10 @@ namespace Naobiz.Data
         public string Title { get; set; }
 
         [Required]
-        [MaxLength(1000)]
+        [MaxLength(800)]
         public string Description { get; set; }
 
-        [MaxLength(1000)]
+        [MaxLength(800)]
         public string Url { get; set; }
 
         public void Initialize()

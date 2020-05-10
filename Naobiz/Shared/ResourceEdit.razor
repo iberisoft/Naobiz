@@ -32,14 +32,14 @@
                 <Field>
                     <FieldLabel>Descripción:</FieldLabel>
                     <Validation Validator="Helper.IsTrimmedNotEmpty">
-                        <MemoEdit MaxLength="1000" Rows="4" @bind-Text="description" />
+                        <MemoEdit MaxLength="800" Rows="4" @bind-Text="description" />
                     </Validation>
-                    <FieldHelp>1000 símbolos máximo</FieldHelp>
+                    <FieldHelp>800 símbolos máximo</FieldHelp>
                 </Field>
                 <Field>
                     <FieldLabel>Website:</FieldLabel>
                     <Validation Validator="Helper.IsUrl">
-                        <TextEdit MaxLength="1000" @bind-Text="url" />
+                        <TextEdit MaxLength="800" @bind-Text="url" />
                     </Validation>
                 </Field>
                 <AttachmentView @ref="attachmentView" />

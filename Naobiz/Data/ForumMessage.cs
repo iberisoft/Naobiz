@@ -13,7 +13,7 @@ namespace Naobiz.Data
         public DateTime CreationDateTime { get; set; }
 
         [Required]
-        [MaxLength(1000)]
+        [MaxLength(800)]
         public string Text { get; set; }
 
         public virtual ForumMessage ParentMessage { get; set; }

@@ -10,7 +10,7 @@ namespace Naobiz.Data
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(1000)]
+        [MaxLength(800)]
         public string ImageSource { get; set; }
 
         public virtual UserGroup UserGroup { get; set; }
