@@ -32,6 +32,9 @@ namespace Naobiz.Data
         [MaxLength(254)]
         public string Email { get; set; }
 
+        [MaxLength(100)]
+        public string Password { get; set; }
+
         [Required]
         [MaxLength(64)]
         public string PasswordHash { get; set; }

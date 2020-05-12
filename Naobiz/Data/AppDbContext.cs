@@ -112,6 +112,16 @@ namespace Naobiz.Data
 
         public DbSet<User> Users { get; set; }
 
+        public void HashUserPasswords()
+        {
+            foreach (var user in Users.Where(user => user.Password != null))
+            {
+                user.SetPassword(user.Password);
+                user.Password = null;
+            }
+            SaveChanges();
+        }
+
         public DbSet<UserGroup> UserGroups { get; set; }
 
         public DbSet<Activity> Activities { get; set; }

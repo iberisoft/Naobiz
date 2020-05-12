@@ -74,6 +74,7 @@ namespace Naobiz
             app.UseStaticFiles();
 
             dbContext.Database.EnsureCreated();
+            dbContext.HashUserPasswords();
 
             app.UseRouting();
             app.UseAuthentication();
