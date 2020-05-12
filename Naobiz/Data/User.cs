@@ -36,11 +36,11 @@ namespace Naobiz.Data
         [MaxLength(64)]
         public string PasswordHash { get; set; }
 
-        public void SetPassword(string password) => PasswordHash = GetHash(password);
+        public void SetPassword(string password) => PasswordHash = GetPasswordHash(password);
 
-        public bool VerifyPassword(string password) => PasswordHash == GetHash(password);
+        public bool VerifyPassword(string password) => PasswordHash == GetPasswordHash(password);
 
-        private static string GetHash(string password)
+        private static string GetPasswordHash(string password)
         {
             using var sha = SHA256.Create();
             var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
