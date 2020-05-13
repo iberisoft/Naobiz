@@ -163,7 +163,10 @@
             user.Initialize(Environment.IsDevelopment());
             user.Email = email;
             user.SetPassword(password);
-            user.Group = Service.UserGroups.SingleOrDefault(group => group.Code == groupCode);
+            if (groupCode != null)
+            {
+                user.Group = Service.UserGroups.FirstOrDefault(group => group.Code == groupCode);
+            }
             model.CopyTo(user);
 
             if (user.ActivationCode == null)
