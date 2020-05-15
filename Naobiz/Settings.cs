@@ -8,6 +8,8 @@ namespace Naobiz
     {
         public string DbConnection { get; set; }
 
+        public string SupportUrl { get; set; }
+
         public string SiteUrl { get; set; }
 
         public string SiteEmail { get; set; }
