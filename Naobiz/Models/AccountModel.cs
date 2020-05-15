@@ -7,6 +7,8 @@ namespace Naobiz.Models
         public AccountModel()
         {
             Country = DefaultCountry;
+            NotifyForum = true;
+            NotifyChat = true;
         }
 
         public const string DefaultCountry = "ES";

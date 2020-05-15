@@ -92,8 +92,6 @@ namespace Naobiz.Data
                 ActivationCode = Guid.NewGuid().ToString("N");
             }
             Paid = true;
-            NotifyForum = true;
-            NotifyChat = true;
         }
 
         public void ResetPassword()
