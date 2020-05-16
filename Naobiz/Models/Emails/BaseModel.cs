@@ -6,6 +6,10 @@ namespace Naobiz.Models.Emails
     {
         public User User { get; set; }
 
+        public string SupportUrl { get; set; }
+
         public string SiteUrl { get; set; }
+
+        public string SiteEmail { get; set; }
     }
 }
