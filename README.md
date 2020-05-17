@@ -23,12 +23,12 @@ SiteEmail     | negocios@naobiz.com    | Email address
 
 The SMTP server is defined in the `Smtp` setting:
 
-Setting       | Default Value          | Description
---------------|------------------------|------------
-Host          | c25702.sgvps.net       | Server host
-Port          | 587                    | Server port
-User          | negocios@naobiz.com    | Username to access the server
-Password      | NaveNegocios19         | User password
+Setting       | Default Value             | Description
+--------------|---------------------------|------------
+Host          | smtp.eu.mailgun.org       | Server host
+Port          | 587                       | Server port
+User          | postmaster@app.naobiz.com | Username to access the server
+Password      |                           | User password
 
 ### Dashboard
 
