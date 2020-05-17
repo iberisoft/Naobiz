@@ -1,8 +1,8 @@
 ﻿using FluentEmail.Core;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using Naobiz.Data;
 using Naobiz.Models.Emails;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,14 +13,12 @@ namespace Naobiz.Services
     {
         readonly IFluentEmail m_Email;
         readonly IWebHostEnvironment m_Environment;
-        readonly ILogger m_Logger;
         readonly Settings m_Settings;
 
-        public EmailService(IFluentEmail email, IWebHostEnvironment environment, ILogger<EmailService> logger, Settings settings)
+        public EmailService(IFluentEmail email, IWebHostEnvironment environment, Settings settings)
         {
             m_Email = email;
             m_Environment = environment;
-            m_Logger = logger;
             m_Settings = settings;
         }
 
@@ -41,7 +39,7 @@ namespace Naobiz.Services
             }
             catch (Exception ex)
             {
-                m_Logger.LogError(ex, "Exception occurred when sending email to {Email}", user.Email);
+                Log.Error(ex, "Exception occurred when sending email to {Email}", user.Email);
                 return false;
             }
         }
