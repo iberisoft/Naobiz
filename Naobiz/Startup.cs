@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Naobiz.Data;
 using Naobiz.Services;
+using Serilog;
 
 namespace Naobiz
 {
@@ -47,9 +48,18 @@ namespace Naobiz
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
 
-            services.AddFluentEmail(settings.SiteEmail)
-                .AddRazorRenderer()
-                .AddSmtpSender(settings.Smtp.Host, settings.Smtp.Port, settings.Smtp.User, settings.Smtp.Password);
+            var emailServicesBuilder = services.AddFluentEmail(settings.SiteEmail)
+                .AddRazorRenderer();
+            if (settings.Mailgun != null)
+            {
+                emailServicesBuilder.AddMailGunSender(settings.Mailgun.DomainName, settings.Mailgun.ApiKey, settings.Mailgun.Region);
+                Log.Information("Configure emailing via Mailgun domain {DomainName}", settings.Mailgun.DomainName);
+            }
+            else
+            {
+                emailServicesBuilder.AddSmtpSender(settings.Smtp.Host, settings.Smtp.Port, settings.Smtp.User, settings.Smtp.Password);
+                Log.Information("Configure emailing via SMTP server {Host}", settings.Smtp.Host);
+            }
 
             services.AddScoped<UserService>();
             services.AddScoped<EmailService>();

@@ -1,4 +1,5 @@
-﻿using Naobiz.Data;
+﻿using FluentEmail.Mailgun;
+using Naobiz.Data;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +17,8 @@ namespace Naobiz
 
         public SmtpSettings Smtp { get; set; }
 
+        public MailgunSettings Mailgun { get; set; }
+
         public DashboardItemSettings[] Dashboard { get; set; }
 
         public IEnumerable<DashboardItemSettings> GetDashboard(User user) => user != null ?
@@ -32,6 +35,15 @@ namespace Naobiz
         public string User { get; set; }
 
         public string Password { get; set; }
+    }
+
+    class MailgunSettings
+    {
+        public string DomainName { get; set; }
+
+        public string ApiKey { get; set; }
+
+        public MailGunRegion Region { get; set; }
     }
 
     class DashboardItemSettings
