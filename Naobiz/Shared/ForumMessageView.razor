@@ -16,12 +16,12 @@
     </Column>
 </Row>
 <Row Class="message-text" Margin="Margin.Is1.FromBottom">
-    <Column ColumnSize="ColumnSize.Is11">
+    <Column ColumnSize="ColumnSize.Is11.OnFullHD.Is10.OnTablet.Is9.OnMobile">
         <Alert Color="Color.Info" IsShow="true">
             <MultilineText Text="@message.Text" />
         </Alert>
     </Column>
-    <Column ColumnSize="ColumnSize.Is1">
+    <Column ColumnSize="ColumnSize.Is1.OnFullHD.Is2.OnTablet.Is3.OnMobile">
         @if (currentUser != null)
         {
             if (message.Creator != currentUser)

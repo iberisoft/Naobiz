@@ -47,7 +47,7 @@
     </Row>
 
     <Row>
-        <Column ColumnSize="ColumnSize.Is3">
+        <Column ColumnSize="ColumnSize.Is3.OnDesktop.IsHalf.OnTablet">
             @foreach (var user in users)
             {
                 <Card Margin="Margin.Is1.FromBottom">
@@ -66,9 +66,9 @@
                 </Card>
             }
         </Column>
-        @if (messages != null)
-        {
-            <Column ColumnSize="ColumnSize.Is9">
+        <Column ColumnSize="ColumnSize.Is9.OnDesktop.IsHalf.OnTablet">
+            @if (messages != null)
+            {
                 <Addons Margin="Margin.Is3.FromBottom">
                     <Addon AddonType="AddonType.Body">
                         <TextEdit @ref="newMessageTextEdit" MaxLength="100" @bind-Text="newMessageText" />
@@ -91,8 +91,8 @@
                         </Column>
                     </Row>
                 }
-            </Column>
-        }
+            }
+        </Column>
     </Row>
 </Panel>
 
