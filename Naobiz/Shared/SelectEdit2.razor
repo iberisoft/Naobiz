@@ -43,7 +43,7 @@
         selectEdit?.Focus(scrollToElement);
     }
 
-    private int? GetKey(TItem item) => (item != null ? KeyGetter?.Invoke(item) : null) ?? 0;
+    private int? GetKey(TItem item) => item != null ? KeyGetter?.Invoke(item) : null;
 
     private string GetText(TItem item) => item != null ? TextGetter?.Invoke(item) : null;
 

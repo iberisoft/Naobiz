@@ -83,10 +83,8 @@
                             <DropdownMenu>
                                 @foreach (var group in groups)
                                 {
-                                    <DropdownItem Clicked="() => SetGroupToSelectedUsers(group)">@group.Name</DropdownItem>
+                                    <DropdownItem Clicked="() => SetGroupToSelectedUsers(group.Id != 0 ? group : null)">@group.Name</DropdownItem>
                                 }
-                                <DropdownDivider />
-                                <DropdownItem Clicked="() => SetGroupToSelectedUsers(null)">Ninguno</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </TableHeaderCell>
@@ -178,6 +176,7 @@
         }
 
         groups = await Service.UserGroups.OrderBy(group => group.Name).ToListAsync();
+        groups.Add(new UserGroup { Name = "Ninguno" });
         activities = await Service.Activities.ToListAsync();
         await UpdateUsers();
     }
@@ -196,7 +195,7 @@
         var userQuery = Service.Users.AsQueryable();
         if (groupFilter != null)
         {
-            userQuery = userQuery.Where(user => user.Group == groupFilter);
+            userQuery = userQuery.Where(user => user.Group == (groupFilter.Id != 0 ? groupFilter : null));
         }
         if (!string.IsNullOrEmpty(emailFilter))
         {
