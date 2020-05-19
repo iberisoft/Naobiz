@@ -188,11 +188,11 @@
                 Service.Users.Add(user);
                 await Service.SaveChangesAsync();
 
-                alertMessage = $"El correo para activar email se ha enviado a {user.Email}";
+                alertMessage = $"El correo para activar la cuenta se ha enviado a {user.Email}";
             }
             else
             {
-                alertMessage = "Hay error al enviar el correo para activar email";
+                alertMessage = "Hay error al enviar el correo para activar la cuenta";
             }
         }
         else
