@@ -1,0 +1,80 @@
+﻿@page "/_users"
+
+@namespace Naobiz.Pages
+@using Naobiz.Data
+@using Naobiz.Services
+@using System.IO
+@using System.Linq
+@using System.Text
+
+@inject AppDbContext DbContext
+@inject TerritoryService TerritoryService
+
+@functions {
+    public IActionResult OnGet()
+    {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            var currentUser = DbContext.Users.SingleOrDefault(user => user.Email == HttpContext.User.Identity.Name && user.ActivationCode == null);
+            if (currentUser.Admin)
+            {
+                var stream = new MemoryStream();
+                WriteUsers(stream);
+                stream.Position = 0;
+                return File(stream, "text/csv", $"{DateTime.Today:yyyy-MM-dd}.csv");
+            }
+        }
+        return new EmptyResult();
+    }
+
+    private void WriteUsers(Stream stream)
+    {
+        var writer = new StreamWriter(stream, Encoding.UTF8);
+        writer.AutoFlush = true;
+        writer.WriteLine(string.Join(',', FieldNames));
+        foreach (var user in DbContext.Users.OrderBy(user => user.Group).ThenBy(user => user.Email))
+        {
+            writer.WriteLine(string.Join(',', GetFieldValues(user)));
+        }
+    }
+
+    private static string[] FieldNames => new[]
+{
+        "Grupo",
+        "Email",
+        "Darse de alta",
+        "Nombre",
+        "NIF",
+        "Teléfono",
+        "Dirección",
+        "Código postal",
+        "Municipio",
+        "Provincia",
+        "País",
+        "Recibir información",
+        "Último acceso",
+        "Dirección IP",
+        "Admin",
+        "Pagado"
+    };
+
+    private string[] GetFieldValues(User user) => new[]
+    {
+        user.Group?.Name,
+        user.Email,
+        user.RegistrationDateTime.ToShortDateString(),
+        user.Name,
+        user.TaxId,
+        user.Phone,
+        user.Address,
+        user.ZipCode,
+        user.City,
+        TerritoryService.GetProvinceName(user.Province),
+        TerritoryService.GetCountryName(user.Country),
+        user.InfoRequested ? "X" : "",
+        user.LoginDateTime.ToString(),
+        user.LoginIpAddress,
+        user.Admin ? "X" : "",
+        user.Paid ? "X" : ""
+    };
+}

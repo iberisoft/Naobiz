@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Naobiz.Services
 {
-    class TerritoryService
+    public class TerritoryService
     {
         public TerritoryService(IWebHostEnvironment environment)
         {

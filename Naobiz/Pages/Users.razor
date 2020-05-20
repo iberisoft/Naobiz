@@ -1,7 +1,9 @@
 ﻿@page "/users"
 
 @inherits AuthorizedBase
+@inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject EmailService EmailService
 @inject TerritoryService TerritoryService
 
 @if (models == null)
@@ -24,13 +26,13 @@
         <Column>
             <Field>
                 <FieldLabel>Email:</FieldLabel>
-                <TextEdit @ref="@emailFilterEdit" Text="@emailFilter" TextChanged="ChangeEmailFilter" />
+                <SearchTextEdit @ref="@emailFilterEdit" Text="@emailFilter" TextChanged="ChangeEmailFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
                 <FieldLabel>Nombre:</FieldLabel>
-                <TextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
+                <SearchTextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
             </Field>
         </Column>
         <Column>
@@ -45,19 +47,19 @@
         <Column>
             <Field>
                 <FieldLabel>NIF:</FieldLabel>
-                <TextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
+                <SearchTextEdit Text="@taxIdFilter" TextChanged="ChangeTaxIdFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
                 <FieldLabel>Teléfono:</FieldLabel>
-                <TextEdit Text="@phoneFilter" TextChanged="ChangePhoneFilter" />
+                <SearchTextEdit Text="@phoneFilter" TextChanged="ChangePhoneFilter" />
             </Field>
         </Column>
         <Column>
             <Field>
                 <FieldLabel>Dirección/código postal/municipio:</FieldLabel>
-                <TextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
+                <SearchTextEdit Text="@addressFilter" TextChanged="ChangeAddressFilter" />
             </Field>
         </Column>
         <Column>
@@ -67,6 +69,14 @@
                     <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
                 </SelectEdit>
             </Field>
+        </Column>
+    </Row>
+    <Row>
+        <Column>
+            <Button Color="Color.Info" IsOutline="true" Margin="Margin.Is1.FromBottom" Clicked="ExportUsers">Exportar</Button>
+        </Column>
+        <Column>
+            <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
         </Column>
     </Row>
 
@@ -103,6 +113,7 @@
                     <TableHeaderCell>Dirección IP</TableHeaderCell>
                     <TableHeaderCell>Admin</TableHeaderCell>
                     <TableHeaderCell>Pagado</TableHeaderCell>
+                    <TableHeaderCell></TableHeaderCell>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -144,11 +155,26 @@
                                 <Icon Name="IconNameEx.Check" />
                             }
                         </TableRowCell>
+                        <TableRowCell>
+                            <Dropdown>
+                                <DropdownToggle>...</DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem Clicked="async () => await EditUser(user)">Editar</DropdownItem>
+                                    @if (user.ActivationCode != null)
+                                    {
+                                        <DropdownItem Clicked="() => SendActivationToUser(user)">Enviar activación</DropdownItem>
+                                    }
+                                </DropdownMenu>
+                            </Dropdown>
+                        </TableRowCell>
                     </TableRow>
                 }
             </TableBody>
         </Table>
     </Panel>
+
+    <UserEdit @ref="userEdit" Service="Service" Submitted="SubmitUser" />
+    <Confirm @ref="sendActivationToUserConfirm" Text="Enviar correo para activar la cuenta?" Confirmed="SendActivationToUser" />
 </Panel>
 
 @code {
@@ -156,7 +182,7 @@
     List<UserGroup> groups;
     UserGroup groupFilter;
     string emailFilter;
-    TextEdit emailFilterEdit;
+    SearchTextEdit emailFilterEdit;
     string nameFilter;
     List<Activity> activities;
     Activity activityFilter;
@@ -164,6 +190,10 @@
     string phoneFilter;
     string addressFilter;
     string provinceFilter;
+    User activeUser;
+    UserEdit userEdit;
+    Confirm sendActivationToUserConfirm;
+    string alertMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -287,4 +317,45 @@
         }
         await Service.SaveChangesAsync();
     }
+
+    private async Task EditUser(User user)
+    {
+        activeUser = user;
+        await userEdit.Show(activeUser);
+    }
+
+    private void SendActivationToUser(User user)
+    {
+        activeUser = user;
+        sendActivationToUserConfirm.Show();
+    }
+
+    private async Task SubmitUser()
+    {
+        userEdit.Get(activeUser);
+
+        await Service.SaveChangesAsync();
+
+        await UpdateUsers();
+    }
+
+    private void SendActivationToUser()
+    {
+        alertMessage = "Enviando correo...";
+
+        Task.Run(async () =>
+        {
+            if (await EmailService.SendAsync(activeUser, "Activar la cuenta", "activate.cshtml", new Models.Emails.ActivateModel()))
+            {
+                alertMessage = $"El correo para activar la cuenta se ha enviado a {activeUser.Email}";
+            }
+            else
+            {
+                alertMessage = "Hay error al enviar el correo para activar la cuenta";
+            }
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private void ExportUsers() => NavigationManager.NavigateTo("_users", true);
 }

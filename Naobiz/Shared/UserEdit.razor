@@ -1,0 +1,69 @@
+﻿<Modal @ref="modal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true" Size="ModalSize.Default">
+        <ModalHeader>
+            <ModalTitle>Usuario</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Grupo:</FieldLabel>
+                <SelectEdit2 @ref="groupEdit" TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" @bind-SelectedItem="group" IsNullable="true" />
+            </Field>
+            <Field>
+                <CheckEdit @bind-Checked="admin">Administrador</CheckEdit>
+            </Field>
+            <Field>
+                <CheckEdit @bind-Checked="paid">Pagado</CheckEdit>
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="Submit">Enviar</Button>
+            <Button Color="Color.Secondary" Clicked="Close">Cerrar</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public AppDbContext Service { get; set; }
+
+    [Parameter]
+    public EventCallback Submitted { get; set; }
+
+    List<UserGroup> groups;
+    UserGroup group;
+    SelectEdit2<UserGroup> groupEdit;
+    bool admin;
+    bool paid;
+    Modal modal;
+
+    public async Task Show(User user)
+    {
+        groups = await Service.UserGroups.OrderBy(userGroup => userGroup.Name).ToListAsync();
+        group = user.Group;
+        admin = user.Admin;
+        paid = user.Paid;
+
+        modal.Show();
+
+        groupEdit.Focus();
+    }
+
+    public void Get(User user)
+    {
+        user.Group = group;
+        user.Admin = admin;
+        user.Paid = paid;
+    }
+
+    private async Task Submit()
+    {
+        modal.Hide();
+        await Submitted.InvokeAsync(null);
+    }
+
+    private void Close()
+    {
+        modal.Hide();
+    }
+}
