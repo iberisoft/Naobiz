@@ -4,6 +4,34 @@
 
 E-commerce platform for Spain.
 
+## Installation
+
+### Prerequisites
+
+* Windows 7+ 64 bits, Windows Server 2012 R2+
+* SQL Server 2008+
+
+The latest freeware version of SQL Server can download [here](https://go.microsoft.com/fwlink/?linkid=866658).
+
+### Running Naobiz
+
+Naobiz can simply run as any console application.
+
+### Making Naobiz as Windows Service
+
+Install Naobiz as a service under the local system account by running:
+```
+Naobiz install --localsystem
+```
+
+Then start the service in Windows Services Manager or by running:
+```
+Naobiz start
+```
+
+It can stop in Windows Services Manager or by using `stop` command when running `Naobiz`. It can uninstall by using
+`uninstall` command. See more options by using `help` command.
+
 ## Configuration
 
 The tool is configured in file `appsettings.json`.
@@ -39,34 +67,6 @@ Setting       | Description
 Name          | Icon title
 LinkUrl       | Reference to the corresponding page
 ImageSource   | Relative or absolute path to the icon image
-
-## Installation
-
-### Prerequisites
-
-* Windows 7+ 64 bits, Windows Server 2012 R2+
-* SQL Server 2008+
-
-The latest freeware version of SQL Server can download [here](https://go.microsoft.com/fwlink/?linkid=866658).
-
-### Running Naobiz
-
-Naobiz can simply run as any console application.
-
-### Making Naobiz as Windows Service
-
-Install Naobiz as a service under the local system account by running:
-```
-Naobiz install --localsystem
-```
-
-Then start the service in Windows Services Manager or by running:
-```
-Naobiz start
-```
-
-It can stop in Windows Services Manager or by using `stop` command when running `Naobiz`. It can uninstall by using
-`uninstall` command. See more options by using `help` command.
 
 ## How to Get SSL Certificate
 
