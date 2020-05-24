@@ -8,11 +8,7 @@
 @functions {
     public IActionResult OnGet(int id)
     {
-        if (HttpContext.User.Identity.IsAuthenticated)
-        {
-            var attachment = DbContext.ForumAttachments.Single(attachment => attachment.Id == id);
-            return File(attachment.Content.Data, "application/octet-stream", attachment.Name);
-        }
-        return new EmptyResult();
+        var attachment = DbContext.ForumAttachments.Single(attachment => attachment.Id == id);
+        return File(attachment.Content.Data, "application/octet-stream", attachment.Name);
     }
 }
