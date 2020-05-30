@@ -16,7 +16,7 @@ namespace Naobiz.Data
         public virtual User Recipient { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(250)]
         public string Text { get; set; }
 
         public void Initialize(User creator, User recipient)
