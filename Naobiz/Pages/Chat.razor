@@ -87,7 +87,9 @@
                     </Row>
                     <Row>
                         <Column>
-                            <Alert Color="Color.Info" IsShow="true">@message.Text</Alert>
+                            <Alert Color="Color.Info" IsShow="true">
+                                <MultilineText Text="@message.Text" />
+                            </Alert>
                         </Column>
                     </Row>
                 }
