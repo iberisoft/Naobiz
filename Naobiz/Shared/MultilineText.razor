@@ -3,7 +3,7 @@
     <Paragraph>
         @foreach (var text in line.Split())
         {
-            if (IsUrl(text))
+            if (Helper.IsUrl(text))
             {
                 if (spanTexts.Count > 0)
                 {
@@ -35,6 +35,4 @@
         spanTexts.Clear();
         return spanText;
     }
-
-    private static bool IsUrl(string text) => Uri.TryCreate(text, UriKind.Absolute, out Uri _);
 }

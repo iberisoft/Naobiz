@@ -1,6 +1,7 @@
 ﻿using Blazorise;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Naobiz.Models
 {
@@ -31,6 +32,10 @@ namespace Naobiz.Models
 
         public static void IsPasswordConfirmed(ValidatorEventArgs e, string password) => e.Status = password != null ? (string)e.Value == password ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
 
-        public static void IsUrl(ValidatorEventArgs e) => e.Status = e.Value != null ? Uri.TryCreate((string)e.Value, UriKind.Absolute, out Uri _) ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
+        public static void IsUrl(ValidatorEventArgs e) => e.Status = e.Value != null ? IsUrl((string)e.Value) ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
+
+        static readonly Regex m_UrlRegex = new Regex("^(http|https|ftp)://", RegexOptions.IgnoreCase);
+
+        public static bool IsUrl(string text) => m_UrlRegex.IsMatch(text) && Uri.IsWellFormedUriString(text, UriKind.Absolute);
     }
 }
