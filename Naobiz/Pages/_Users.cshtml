@@ -34,12 +34,14 @@
         writer.WriteLine(string.Join(',', FieldNames));
         foreach (var user in DbContext.Users.OrderBy(user => user.Group).ThenBy(user => user.Email))
         {
-            writer.WriteLine(string.Join(',', GetFieldValues(user)));
+            writer.WriteLine(string.Join(',', GetFieldValues(user).Select(value => ExportFieldValue(value))));
         }
     }
 
+    private static string ExportFieldValue(string value) => value != null && (value.Contains(',') || value.Contains('"')) ? "\"" + value.Replace("\"", "\"\"") + "\"" : value;
+
     private static string[] FieldNames => new[]
-{
+    {
         "Grupo",
         "Email",
         "Darse de alta",
