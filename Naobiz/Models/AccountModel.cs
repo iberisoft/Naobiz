@@ -17,6 +17,8 @@ namespace Naobiz.Models
 
         public string Name { get; set; }
 
+        public string Company { get; set; }
+
         public string Phone { get; set; }
 
         public string Address { get; set; }
@@ -55,6 +57,7 @@ namespace Naobiz.Models
         {
             user.TaxId = TaxId;
             user.Name = Name;
+            user.Company = Company;
             user.Phone = Phone;
             user.Address = Address;
             user.Country = Country;
@@ -70,6 +73,7 @@ namespace Naobiz.Models
         {
             TaxId = user.TaxId;
             Name = user.Name;
+            Company = user.Company;
             Phone = user.Phone;
             Address = user.Address;
             Country = user.Country;

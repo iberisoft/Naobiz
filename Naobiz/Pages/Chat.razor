@@ -19,7 +19,7 @@
     <Row>
         <Column>
             <Field>
-                <FieldLabel>Nombre:</FieldLabel>
+                <FieldLabel>Nombre/empresa:</FieldLabel>
                 <SearchTextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
             </Field>
         </Column>
@@ -142,7 +142,7 @@
         var userQuery = Service.Users.AsQueryable();
         if (!string.IsNullOrEmpty(nameFilter))
         {
-            userQuery = userQuery.Where(user => user.Name.Contains(nameFilter));
+            userQuery = userQuery.Where(user => user.Name.Contains(nameFilter) || user.Company.Contains(nameFilter));
         }
         if (activityFilter != null)
         {
@@ -162,7 +162,7 @@
             var creatorQuery = Service.ChatMessages.Where(message => message.Recipient == currentUser).Select(message => message.Creator).Distinct();
             userQuery = recipientQuery.Union(creatorQuery);
         }
-        userQuery = userQuery.OrderBy(user => user.Name);
+        userQuery = userQuery.OrderBy(user => user.Name).ThenBy(user => user.Company);
         users = await userQuery.ToListAsync();
         users.Remove(currentUser);
 

@@ -53,5 +53,5 @@
         currentUser = await UserService.GetCurrentAsync(Service);
     }
 
-    private string CurrentUserInfo => $"{currentUser.Name} ({currentUser.Email})";
+    private string CurrentUserInfo => $"{currentUser.NameWithCompany} ({currentUser.Email})";
 }

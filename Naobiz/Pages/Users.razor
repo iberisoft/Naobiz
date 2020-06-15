@@ -31,7 +31,7 @@
         </Column>
         <Column>
             <Field>
-                <FieldLabel>Nombre:</FieldLabel>
+                <FieldLabel>Nombre/empresa:</FieldLabel>
                 <SearchTextEdit Text="@nameFilter" TextChanged="ChangeNameFilter" />
             </Field>
         </Column>
@@ -101,6 +101,7 @@
                     <TableHeaderCell>Email</TableHeaderCell>
                     <TableHeaderCell>Darse de alta</TableHeaderCell>
                     <TableHeaderCell>Nombre</TableHeaderCell>
+                    <TableHeaderCell>Empresa</TableHeaderCell>
                     <TableHeaderCell>NIF</TableHeaderCell>
                     <TableHeaderCell>Teléfono</TableHeaderCell>
                     <TableHeaderCell>Dirección</TableHeaderCell>
@@ -128,6 +129,7 @@
                         <TableRowCell>@user.Email</TableRowCell>
                         <TableRowCell>@user.RegistrationDateTime.ToShortDateString()</TableRowCell>
                         <TableRowCell>@user.Name</TableRowCell>
+                        <TableRowCell>@user.Company</TableRowCell>
                         <TableRowCell>@user.TaxId</TableRowCell>
                         <TableRowCell>@user.Phone</TableRowCell>
                         <TableRowCell>@user.Address</TableRowCell>
@@ -233,7 +235,7 @@
         }
         if (!string.IsNullOrEmpty(nameFilter))
         {
-            userQuery = userQuery.Where(user => user.Name.Contains(nameFilter));
+            userQuery = userQuery.Where(user => user.Name.Contains(nameFilter) || user.Company.Contains(nameFilter));
         }
         if (activityFilter != null)
         {

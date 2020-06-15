@@ -54,6 +54,12 @@
                 </Validation>
             </Field>
             <Field>
+                <FieldLabel>Empresa:</FieldLabel>
+                <Validation Validator="Helper.IsAny">
+                    <TextEdit MaxLength="100" @bind-Text="model.Company" />
+                </Validation>
+            </Field>
+            <Field>
                 <FieldLabel>NIF:</FieldLabel>
                 <Validation UsePattern="true">
                     <TextEdit MaxLength="9" Pattern="^(|\w{9})$" @bind-Text="model.TaxId">
@@ -71,14 +77,14 @@
                     </TextEdit>
                 </Validation>
             </Field>
+        </Column>
+        <Column>
             <Field>
                 <FieldLabel>Dirección:</FieldLabel>
                 <Validation Validator="Helper.IsAny">
                     <TextEdit MaxLength="100" @bind-Text="model.Address" />
                 </Validation>
             </Field>
-        </Column>
-        <Column>
             <Field>
                 <FieldLabel>Código postal:</FieldLabel>
                 <Validation UsePattern="true">

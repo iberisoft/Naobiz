@@ -27,6 +27,8 @@ namespace Naobiz.Data
             modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.Name);
             modelBuilder.Entity<User>()
+                .HasIndex(entity => entity.Company);
+            modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.Phone);
             modelBuilder.Entity<User>()
                 .HasIndex(entity => entity.Address);

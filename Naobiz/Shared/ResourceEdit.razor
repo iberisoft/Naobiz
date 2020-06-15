@@ -12,7 +12,8 @@
                     <Column>
                         <Field>
                             <FieldLabel>Proprietario:</FieldLabel>
-                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="owners" @bind-SelectedItem="owner" IsDisabled="currentUser?.Admin != true" />
+                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.NameWithCompany" Items="owners" @bind-SelectedItem="owner"
+                                         IsDisabled="currentUser?.Admin != true" />
                         </Field>
                     </Column>
                     <Column>
@@ -76,7 +77,7 @@
     {
         currentUser = await UserService.GetCurrentAsync(Service);
 
-        owners = await Service.Users.OrderBy(user => user.Name).ToListAsync();
+        owners = await Service.Users.OrderBy(user => user.Name).ThenBy(user => user.Company).ToListAsync();
         owner = resource.Owner ?? currentUser;
         activities = await Service.Activities.ToListAsync();
         activity = resource.Activity ?? activities.First();

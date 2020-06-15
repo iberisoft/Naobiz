@@ -57,6 +57,22 @@ namespace Naobiz.Data
         [MaxLength(100)]
         public string Name { get; set; }
 
+        [MaxLength(100)]
+        public string Company { get; set; }
+
+        public string NameWithCompany
+        {
+            get
+            {
+                var name = Name;
+                if (Company != null)
+                {
+                    name += $" - {Company}";
+                }
+                return name;
+            }
+        }
+
         [MaxLength(20)]
         public string Phone { get; set; }
 
