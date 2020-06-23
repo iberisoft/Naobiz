@@ -2,7 +2,7 @@
 
 <Modal @ref="modal">
     <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Large">
+    <ModalContent Centered="true" Size="ModalSize.Large">
         <ModalHeader>
             <ModalTitle>Recurso</ModalTitle>
         </ModalHeader>
@@ -12,14 +12,14 @@
                     <Column>
                         <Field>
                             <FieldLabel>Proprietario:</FieldLabel>
-                            <SelectEdit2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.NameWithCompany" Items="owners" @bind-SelectedItem="owner"
-                                         IsDisabled="currentUser?.Admin != true" />
+                            <Select2 TItem="User" KeyGetter="item => item.Id" TextGetter="item => item.NameWithCompany" Items="owners" @bind-SelectedItem="owner"
+                                     Disabled="currentUser?.Admin != true" />
                         </Field>
                     </Column>
                     <Column>
                         <Field>
                             <FieldLabel>Actividad:</FieldLabel>
-                            <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
+                            <Select2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" @bind-SelectedItem="activity" />
                         </Field>
                     </Column>
                 </Row>

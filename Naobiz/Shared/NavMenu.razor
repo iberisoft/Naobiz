@@ -35,7 +35,7 @@
             <BarEnd>
                 @if (currentUser != null)
                 {
-                    <Tooltip Text="@CurrentUserInfo" IsFade="true" Placement="Placement.Bottom">
+                    <Tooltip Text="@CurrentUserInfo" Fade="true" Placement="Placement.Bottom">
                         <Text Color="TextColor.White50" Margin="Margin.Is2">Hola @currentUser.Name.Split()[0]</Text>
                     </Tooltip>
                     <BarLink To="_logout">Salir</BarLink>

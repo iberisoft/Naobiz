@@ -103,15 +103,15 @@
             </Field>
             <Field>
                 <FieldLabel>Provincia:</FieldLabel>
-                <SelectEdit @bind-SelectedValue="model.Province">
-                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-                </SelectEdit>
+                <Select @bind-SelectedValue="model.Province">
+                    <TerritoryList Territories="TerritoryService.Provinces" Nullable="true" />
+                </Select>
             </Field>
             <Field>
                 <FieldLabel>País:</FieldLabel>
-                <SelectEdit @bind-SelectedValue="model.Country">
+                <Select @bind-SelectedValue="model.Country">
                     <TerritoryList Territories="TerritoryService.Countries" />
-                </SelectEdit>
+                </Select>
             </Field>
         </Column>
     </Row>
@@ -119,21 +119,21 @@
         <Column>
             <Field>
                 <Validation Validator="Helper.IsTrue">
-                    <CheckEdit>
+                    <Check TValue="bool">
                         <ChildContent>Acepto la información legal y política de cookies de Naobiz</ChildContent>
                         <Feedback>
                             <ValidationError>Por favor acepte</ValidationError>
                         </Feedback>
-                    </CheckEdit>
+                    </Check>
                 </Validation>
             </Field>
             <Field>
-                <CheckEdit @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</CheckEdit>
+                <Check @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</Check>
             </Field>
             <Field>
                 <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>
             </Field>
-            <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
+            <Alert Color="Color.Warning" Visible="alertMessage != null">@alertMessage</Alert>
         </Column>
     </Row>
 </Validations>

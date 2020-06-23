@@ -24,7 +24,7 @@
         </Row>
         <Row Class="resource-description" Margin="Margin.Is1.FromBottom">
             <Column ColumnSize="ColumnSize.Is11.OnFullHD.Is10.OnTablet.Is9.OnMobile">
-                <Alert Color="Color.Info" IsShow="true">
+                <Alert Color="Color.Info" Visible="true">
                     <MultilineText Text="@resource.Description" />
                 </Alert>
             </Column>
@@ -33,12 +33,12 @@
                 {
                     <Row Margin="Margin.Is1.FromBottom">
                         <Column>
-                            <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="EditResource">Editar</Button>
+                            <Button Color="Color.Primary" Outline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="EditResource">Editar</Button>
                         </Column>
                     </Row>
                     <Row>
                         <Column>
-                            <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Eliminar</Button>
+                            <Button Color="Color.Danger" Outline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteResourceConfirm.Show()">Eliminar</Button>
                         </Column>
                     </Row>
                 }
@@ -55,7 +55,7 @@
 
         @foreach (var attachment in attachments)
         {
-            <Tooltip Text="@Helper.SizeToString(attachment.Size)" IsFade="true">
+            <Tooltip Text="@Helper.SizeToString(attachment.Size)" Fade="true">
                 <Button Class="resource-attachment" Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
             </Tooltip>
         }

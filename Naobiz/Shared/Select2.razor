@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 
-<SelectEdit @ref="selectEdit" TValue="int?" IsDisabled="IsDisabled" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
-    @if (IsNullable)
+<Select @ref="select" TValue="int?" Disabled="Disabled" SelectedValue="GetKey(SelectedItem)" SelectedValueChanged="ChangeSelectedValue">
+    @if (Nullable)
     {
         <SelectItem TValue="int?"></SelectItem>
     }
@@ -12,7 +12,7 @@
             <SelectItem Value="GetKey(item)">@GetText(item)</SelectItem>
         }
     }
-</SelectEdit>
+</Select>
 
 @code {
     [Parameter]
@@ -31,16 +31,16 @@
     public EventCallback<TItem> SelectedItemChanged { get; set; }
 
     [Parameter]
-    public bool IsNullable { get; set; }
+    public bool Nullable { get; set; }
 
     [Parameter]
-    public bool IsDisabled { get; set; }
+    public bool Disabled { get; set; }
 
-    SelectEdit<int?> selectEdit;
+    Select<int?> select;
 
     public void Focus(bool scrollToElement = true)
     {
-        selectEdit?.Focus(scrollToElement);
+        select?.Focus(scrollToElement);
     }
 
     private int? GetKey(TItem item) => item != null ? KeyGetter?.Invoke(item) : null;

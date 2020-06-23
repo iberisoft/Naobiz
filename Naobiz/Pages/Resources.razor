@@ -36,10 +36,10 @@
                         @if (currentUser.Admin)
                         {
                             <Panel Float="Float.Right">
-                                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditType(type)">Editar</Button>
+                                <Button Color="Color.Primary" Outline="true" Size="ButtonSize.Small" Clicked="async () => await EditType(type)">Editar</Button>
                                 @if (resourceCount[type] == 0)
                                 {
-                                    <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteType(type)">Eliminar</Button>
+                                    <Button Color="Color.Danger" Outline="true" Size="ButtonSize.Small" Clicked="() => DeleteType(type)">Eliminar</Button>
                                 }
                             </Panel>
                         }
@@ -50,7 +50,7 @@
         <Column ColumnSize="ColumnSize.IsQuarter">
             @if (currentUser.Admin)
             {
-                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateType">Nuevo</Button>
+                <Button Color="Color.Primary" Outline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateType">Nuevo</Button>
             }
         </Column>
     </Row>

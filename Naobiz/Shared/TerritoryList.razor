@@ -1,4 +1,4 @@
-﻿@if (IsNullable)
+﻿@if (Nullable)
 {
     <SelectItem TValue="string"></SelectItem>
 }
@@ -12,5 +12,5 @@
     public IEnumerable<Territory> Territories { get; set; }
 
     [Parameter]
-    public bool IsNullable { get; set; }
+    public bool Nullable { get; set; }
 }

@@ -19,8 +19,8 @@
         <Column>
             <Field>
                 <FieldLabel>Grupo:</FieldLabel>
-                <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" SelectedItem="groupFilter" SelectedItemChanged="ChangeGroupFilter"
-                             IsNullable="true" />
+                <Select2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" SelectedItem="groupFilter" SelectedItemChanged="ChangeGroupFilter"
+                         Nullable="true" />
             </Field>
         </Column>
         <Column>
@@ -38,8 +38,8 @@
         <Column>
             <Field>
                 <FieldLabel>Actividad:</FieldLabel>
-                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
-                             IsNullable="true" />
+                <Select2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                         Nullable="true" />
             </Field>
         </Column>
     </Row>
@@ -65,23 +65,23 @@
         <Column>
             <Field>
                 <FieldLabel>Provincia:</FieldLabel>
-                <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
-                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-                </SelectEdit>
+                <Select TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                    <TerritoryList Territories="TerritoryService.Provinces" Nullable="true" />
+                </Select>
             </Field>
         </Column>
     </Row>
     <Row>
         <Column>
-            <Button Color="Color.Info" IsOutline="true" Margin="Margin.Is1.FromBottom" Clicked="ExportUsers">Exportar</Button>
+            <Button Color="Color.Info" Outline="true" Margin="Margin.Is1.FromBottom" Clicked="ExportUsers">Exportar</Button>
         </Column>
         <Column>
-            <Alert Color="Color.Warning" IsShow="alertMessage != null">@alertMessage</Alert>
+            <Alert Color="Color.Warning" Visible="alertMessage != null">@alertMessage</Alert>
         </Column>
     </Row>
 
     <Panel Class="overflow-auto" Margin="Margin.Is0.OnX">
-        <Table IsStriped="true">
+        <Table Striped="true">
             <TableHeader ThemeContrast="ThemeContrast.Light">
                 <TableRow>
                     <TableHeaderCell></TableHeaderCell>
@@ -123,7 +123,7 @@
                     var user = model.Value;
                     <TableRow>
                         <TableRowCell>
-                            <CheckEdit @bind-Checked="model.Selected" />
+                            <Check @bind-Checked="model.Selected" />
                         </TableRowCell>
                         <TableRowCell>@user.Group?.Name</TableRowCell>
                         <TableRowCell>@user.Email</TableRowCell>

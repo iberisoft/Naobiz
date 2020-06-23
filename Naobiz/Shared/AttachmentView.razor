@@ -9,7 +9,7 @@
 {
     <Row>
         <Column>
-            <Tooltip Text="@Helper.SizeToString(model.Size)" Placement="Placement.Right" IsFade="true" IsInline="true">
+            <Tooltip Text="@Helper.SizeToString(model.Size)" Placement="Placement.Right" Fade="true" Inline="true">
                 <Badge Color="Color.Light">@model.Name</Badge>
                 <CloseButton Clicked="() => Remove(model)" />
             </Tooltip>

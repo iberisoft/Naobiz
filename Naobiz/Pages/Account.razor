@@ -77,15 +77,15 @@
                     </Field>
                     <Field>
                         <FieldLabel>Provincia:</FieldLabel>
-                        <SelectEdit @bind-SelectedValue="model.Province">
-                            <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-                        </SelectEdit>
+                        <Select @bind-SelectedValue="model.Province">
+                            <TerritoryList Territories="TerritoryService.Provinces" Nullable="true" />
+                        </Select>
                     </Field>
                     <Field>
                         <FieldLabel>País:</FieldLabel>
-                        <SelectEdit @bind-SelectedValue="model.Country">
+                        <Select @bind-SelectedValue="model.Country">
                             <TerritoryList Territories="TerritoryService.Countries" />
-                        </SelectEdit>
+                        </Select>
                     </Field>
                 </Column>
             </Row>
@@ -93,15 +93,15 @@
                 <Column>
                     <Field>
                         <FieldLabel>Notificaciones:</FieldLabel>
-                        <CheckEdit @bind-Checked="model.NotifyForum">Respuestas en foro</CheckEdit>
-                        <CheckEdit @bind-Checked="model.NotifyChat">Mensajes de chat no están recibidos</CheckEdit>
+                        <Check @bind-Checked="model.NotifyForum">Respuestas en foro</Check>
+                        <Check @bind-Checked="model.NotifyChat">Mensajes de chat no están recibidos</Check>
                     </Field>
                 </Column>
             </Row>
             <Row>
                 <Column>
                     <Field>
-                        <CheckEdit @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</CheckEdit>
+                        <Check @bind-Checked="model.InfoRequested">Estoy de acuerdo en recibir información de Naobiz vía email</Check>
                     </Field>
                     <Field>
                         <Button Color="Color.Primary" Clicked="SubmitChanges">Enviar</Button>

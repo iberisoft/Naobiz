@@ -26,8 +26,8 @@
         <Column>
             <Field>
                 <FieldLabel>Actividad:</FieldLabel>
-                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
-                             IsNullable="true" />
+                <Select2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                         Nullable="true" />
             </Field>
         </Column>
         <Column>
@@ -39,9 +39,9 @@
         <Column>
             <Field>
                 <FieldLabel>Provincia:</FieldLabel>
-                <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
-                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-                </SelectEdit>
+                <Select TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                    <TerritoryList Territories="TerritoryService.Provinces" Nullable="true" />
+                </Select>
             </Field>
         </Column>
     </Row>
@@ -57,7 +57,7 @@
                                 <UserInfo User="user" />
                             </Column>
                             <Column ColumnSize="ColumnSize.Is4">
-                                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await StartChat(user)">
+                                <Button Color="Color.Info" Outline="true" Size="ButtonSize.Small" Clicked="async () => await StartChat(user)">
                                     <Icon Name="IconNameEx.Comments" />
                                 </Button>
                             </Column>
@@ -87,7 +87,7 @@
                     </Row>
                     <Row>
                         <Column>
-                            <Alert Color="Color.Info" IsShow="true">
+                            <Alert Color="Color.Info" Visible="true">
                                 <MultilineText Text="@message.Text" />
                             </Alert>
                         </Column>

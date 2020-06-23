@@ -1,6 +1,6 @@
 ﻿<Modal @ref="modal">
     <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Large">
+    <ModalContent Centered="true" Size="ModalSize.Large">
         <ModalHeader>
             <ModalTitle>Tipo de recursos</ModalTitle>
         </ModalHeader>
@@ -18,7 +18,7 @@
                 </Field>
                 <Field>
                     <FieldLabel>Grupo de usuarios:</FieldLabel>
-                    <SelectEdit2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="userGroups" @bind-SelectedItem="userGroup" IsNullable="true" />
+                    <Select2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="userGroups" @bind-SelectedItem="userGroup" Nullable="true" />
                 </Field>
             </Validations>
         </ModalBody>

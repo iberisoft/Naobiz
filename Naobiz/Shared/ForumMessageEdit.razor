@@ -1,12 +1,12 @@
 ﻿<Modal @ref="modal">
     <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Large">
+    <ModalContent Centered="true" Size="ModalSize.Large">
         <ModalHeader>
             <ModalTitle>Mensaje</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Validations @ref="validations" Mode="ValidationMode.Manual">
-                @if (IsTitleVisible)
+                @if (TitleVisible)
                 {
                     <Field>
                         <FieldLabel>Título:</FieldLabel>
@@ -35,7 +35,7 @@
 
 @code {
     [Parameter]
-    public bool IsTitleVisible { get; set; }
+    public bool TitleVisible { get; set; }
 
     [Parameter]
     public EventCallback Submitted { get; set; }
@@ -57,7 +57,7 @@
         modal.Show();
 
         await Task.Delay(10);
-        if (IsTitleVisible)
+        if (TitleVisible)
         {
             titleEdit.Focus();
         }

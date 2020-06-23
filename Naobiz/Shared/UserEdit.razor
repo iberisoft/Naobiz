@@ -1,19 +1,19 @@
 ﻿<Modal @ref="modal">
     <ModalBackdrop />
-    <ModalContent IsCentered="true" Size="ModalSize.Default">
+    <ModalContent Centered="true" Size="ModalSize.Default">
         <ModalHeader>
             <ModalTitle>Usuario</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Field>
                 <FieldLabel>Grupo:</FieldLabel>
-                <SelectEdit2 @ref="groupEdit" TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" @bind-SelectedItem="group" IsNullable="true" />
+                <Select2 @ref="groupSelect" TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="groups" @bind-SelectedItem="group" Nullable="true" />
             </Field>
             <Field>
-                <CheckEdit @bind-Checked="admin">Administrador</CheckEdit>
+                <Check @bind-Checked="admin">Administrador</Check>
             </Field>
             <Field>
-                <CheckEdit @bind-Checked="paid">Pagado</CheckEdit>
+                <Check @bind-Checked="paid">Pagado</Check>
             </Field>
         </ModalBody>
         <ModalFooter>
@@ -32,7 +32,7 @@
 
     List<UserGroup> groups;
     UserGroup group;
-    SelectEdit2<UserGroup> groupEdit;
+    Select2<UserGroup> groupSelect;
     bool admin;
     bool paid;
     Modal modal;
@@ -46,7 +46,7 @@
 
         modal.Show();
 
-        groupEdit.Focus();
+        groupSelect.Focus();
     }
 
     public void Get(User user)

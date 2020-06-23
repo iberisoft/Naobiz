@@ -17,7 +17,7 @@
 </Row>
 <Row Class="message-text" Margin="Margin.Is1.FromBottom">
     <Column ColumnSize="ColumnSize.Is11.OnFullHD.Is10.OnTablet.Is9.OnMobile">
-        <Alert Color="Color.Info" IsShow="true">
+        <Alert Color="Color.Info" Visible="true">
             <MultilineText Text="@message.Text" />
         </Alert>
     </Column>
@@ -26,11 +26,11 @@
         {
             if (message.Creator != currentUser)
             {
-                <Button Color="Color.Info" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="CreateMessage">Responder</Button>
+                <Button Color="Color.Info" Outline="true" Size="ButtonSize.Small" Float="Float.Right" Margin="Margin.Is1.FromBottom" Clicked="CreateMessage">Responder</Button>
             }
             if (message.Creator == currentUser || currentUser.Admin)
             {
-                <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageConfirm.Show()">Eliminar</Button>
+                <Button Color="Color.Danger" Outline="true" Size="ButtonSize.Small" Float="Float.Right" Clicked="() => deleteMessageConfirm.Show()">Eliminar</Button>
             }
         }
     </Column>
@@ -38,7 +38,7 @@
 
 @foreach (var attachment in attachments)
 {
-    <Tooltip Text="@Helper.SizeToString(attachment.Size)" IsFade="true">
+    <Tooltip Text="@Helper.SizeToString(attachment.Size)" Fade="true">
         <Button Class="message-attachment" Color="Color.Light" Size="ButtonSize.Small" Clicked="() => DownloadAttachment(attachment)">@attachment.Name</Button>
     </Tooltip>
 }

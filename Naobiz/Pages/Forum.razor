@@ -36,10 +36,10 @@
                         @if (currentUser?.Admin == true)
                         {
                             <Panel Float="Float.Right">
-                                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Editar</Button>
+                                <Button Color="Color.Primary" Outline="true" Size="ButtonSize.Small" Clicked="async () => await EditGroup(group)">Editar</Button>
                                 @if (topicCount[group] == 0)
                                 {
-                                    <Button Color="Color.Danger" IsOutline="true" Size="ButtonSize.Small" Clicked="() => DeleteGroup(group)">Eliminar</Button>
+                                    <Button Color="Color.Danger" Outline="true" Size="ButtonSize.Small" Clicked="() => DeleteGroup(group)">Eliminar</Button>
                                 }
                             </Panel>
                         }
@@ -50,7 +50,7 @@
         <Column ColumnSize="ColumnSize.IsQuarter">
             @if (currentUser?.Admin == true)
             {
-                <Button Color="Color.Primary" IsOutline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">Nuevo</Button>
+                <Button Color="Color.Primary" Outline="true" Size="ButtonSize.Small" Margin="Margin.Is4.OnY" Clicked="CreateGroup">Nuevo</Button>
             }
         </Column>
     </Row>

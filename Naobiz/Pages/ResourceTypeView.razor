@@ -17,16 +17,16 @@
         <Column ColumnSize="ColumnSize.Is3">
             <Field>
                 <FieldLabel>Provincia:</FieldLabel>
-                <SelectEdit TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
-                    <TerritoryList Territories="TerritoryService.Provinces" IsNullable="true" />
-                </SelectEdit>
+                <Select TValue="string" SelectedValue="provinceFilter" SelectedValueChanged="ChangeProvinceFilter">
+                    <TerritoryList Territories="TerritoryService.Provinces" Nullable="true" />
+                </Select>
             </Field>
         </Column>
         <Column ColumnSize="ColumnSize.Is4">
             <Field>
                 <FieldLabel>Actividad:</FieldLabel>
-                <SelectEdit2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
-                             IsNullable="true" />
+                <Select2 TItem="Activity" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="activities" SelectedItem="activityFilter" SelectedItemChanged="ChangeActivityFilter"
+                         Nullable="true" />
             </Field>
         </Column>
         <Column ColumnSize="ColumnSize.Is5">
