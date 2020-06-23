@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorInputFile" Version="0.2.0" />
     <PackageReference Include="Blazorise.Bootstrap" Version="0.9.0.3" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.0.3" />
     <PackageReference Include="FluentEmail.Mailgun" Version="2.8.0" />

@@ -1,4 +1,4 @@
-﻿using BlazorInputFile;
+﻿using Blazorise;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,9 +7,9 @@ namespace Naobiz.Models
 {
     public class AttachmentModel : IDisposable
     {
-        readonly IFileListEntry m_Source;
+        readonly IFileEntry m_Source;
 
-        public AttachmentModel(IFileListEntry source)
+        public AttachmentModel(IFileEntry source)
         {
             m_Source = source;
             Name = source.Name;
@@ -20,6 +20,7 @@ namespace Naobiz.Models
         {
             Name = name;
             Size = size;
+            Progress = 100;
         }
 
         public void Dispose()
@@ -37,16 +38,15 @@ namespace Naobiz.Models
 
         public MemoryStream Data { get; private set; }
 
-        public async Task UploadAsync(Action onUploading)
+        public async Task UploadAsync()
         {
             Data ??= new MemoryStream();
-            m_Source.OnDataRead += (_, e) => onUploading?.Invoke();
-            await m_Source.Data.CopyToAsync(Data);
+            await m_Source.WriteToStreamAsync(Data);
             Uploaded = true;
         }
 
         public bool Uploaded { get; private set; }
 
-        public int Progress => (int)(Data?.Position * 100 / Size ?? 100);
+        public int Progress { get; set; }
     }
 }

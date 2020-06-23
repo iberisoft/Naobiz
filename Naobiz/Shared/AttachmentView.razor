@@ -1,7 +1,7 @@
 ﻿@implements IDisposable
 
 <Field>
-    <InputFile multiple OnChange="UploadFiles" />
+    <FileEdit Multiple="true" Changed="UploadFiles" Progressed="UploadProgressed" />
     <FieldHelp>Cuota máxima es @AttachmentModel.SizeQuota MB por cada archivo</FieldHelp>
 </Field>
 
@@ -48,13 +48,22 @@
         }
     }
 
-    private async Task UploadFiles(IFileListEntry[] files)
+    private async Task UploadFiles(FileChangedEventArgs e)
     {
-        var newModels = files.Where(file => !models.Any(model => model.Name == file.Name)).Select(file => new AttachmentModel(file)).ToList();
+        var newModels = e.Files.Where(file => !models.Any(model => model.Name == file.Name)).Select(file => new AttachmentModel(file)).ToList();
         models.AddRange(newModels);
         foreach (var model in newModels.Where(model => !model.SizeExceedsQuota))
         {
-            await model.UploadAsync(async () => await InvokeAsync(StateHasChanged));
+            await model.UploadAsync();
+        }
+    }
+
+    private void UploadProgressed(FileProgressedEventArgs e)
+    {
+        var model = models.SingleOrDefault(model => model.Name == e.File.Name);
+        if (model != null)
+        {
+            model.Progress = (int)e.Percentage;
         }
     }
 
