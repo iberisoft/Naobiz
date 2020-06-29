@@ -79,7 +79,7 @@
 
     private async Task UpdateGroups()
     {
-        groups = await Service.GetForumGroups(currentUser).OrderBy(group => group.Name).ToListAsync();
+        groups = await Service.GetForumGroups(currentUser).OrderBy(group => group.OrderNumber).ThenBy(group => group.Name).ToListAsync();
         topicCount = new Dictionary<ForumGroup, int>();
         foreach (var group in groups)
         {

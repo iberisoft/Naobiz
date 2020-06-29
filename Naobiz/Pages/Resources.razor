@@ -85,7 +85,7 @@
 
     private async Task UpdateTypes()
     {
-        types = await Service.GetResourceTypes(currentUser).OrderBy(type => type.Name).ToListAsync();
+        types = await Service.GetResourceTypes(currentUser).OrderBy(type => type.OrderNumber).ThenBy(type => type.Name).ToListAsync();
         resourceCount = new Dictionary<ResourceType, int>();
         foreach (var type in types)
         {

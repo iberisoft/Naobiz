@@ -17,6 +17,10 @@
                     <TextEdit MaxLength="800" @bind-Text="imageSource" />
                 </Field>
                 <Field>
+                    <FieldLabel>Número de orden:</FieldLabel>
+                    <NumericEdit @bind-Value="orderNumber" />
+                </Field>
+                <Field>
                     <FieldLabel>Grupo de usuarios:</FieldLabel>
                     <Select2 TItem="UserGroup" KeyGetter="item => item.Id" TextGetter="item => item.Name" Items="userGroups" @bind-SelectedItem="userGroup" Nullable="true" />
                 </Field>
@@ -39,6 +43,7 @@
     string name;
     TextEdit nameEdit;
     string imageSource;
+    int orderNumber;
     List<UserGroup> userGroups;
     UserGroup userGroup;
     Modal modal;
@@ -48,6 +53,7 @@
     {
         name = type.Name;
         imageSource = type.ImageSource;
+        orderNumber = type.OrderNumber;
         userGroups = await Service.UserGroups.OrderBy(userGroup => userGroup.Name).ToListAsync();
         userGroup = type.UserGroup;
 
@@ -61,6 +67,7 @@
     {
         type.Name = name;
         type.ImageSource = imageSource;
+        type.OrderNumber = orderNumber;
         type.UserGroup = userGroup;
     }
 
