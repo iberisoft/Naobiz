@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
 using Topshelf;
 
 namespace Naobiz
@@ -27,7 +26,6 @@ namespace Naobiz
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-                .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
                 .UseSerilog((hostContext, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
