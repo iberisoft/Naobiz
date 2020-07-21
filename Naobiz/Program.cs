@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Globalization;
 using Topshelf;
 
 namespace Naobiz
@@ -9,6 +10,8 @@ namespace Naobiz
     {
         public static int Main(string[] args)
         {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("es-ES");
+
             var exitCode = HostFactory.Run(hostConfig =>
             {
                 hostConfig.Service<Service>(serviceConfig =>
