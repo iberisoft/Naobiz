@@ -12,9 +12,6 @@
             <Field>
                 <Check @bind-Checked="admin">Administrador</Check>
             </Field>
-            <Field>
-                <Check @bind-Checked="paid">Pagado</Check>
-            </Field>
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="Submit">Enviar</Button>
@@ -34,7 +31,6 @@
     UserGroup group;
     Select2<UserGroup> groupSelect;
     bool admin;
-    bool paid;
     Modal modal;
 
     public async Task Show(User user)
@@ -42,7 +38,6 @@
         groups = await Service.UserGroups.OrderBy(userGroup => userGroup.Name).ToListAsync();
         group = user.Group;
         admin = user.Admin;
-        paid = user.Paid;
 
         modal.Show();
 
@@ -53,7 +48,6 @@
     {
         user.Group = group;
         user.Admin = admin;
-        user.Paid = paid;
     }
 
     private async Task Submit()

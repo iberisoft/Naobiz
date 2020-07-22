@@ -1,0 +1,30 @@
+﻿@page "/_complete-order"
+
+@namespace Naobiz.Pages
+@using Microsoft.EntityFrameworkCore;
+@using Naobiz.Data
+@using Naobiz.Services
+
+@inject AppDbContext DbContext
+@inject PaypalService PaypalService
+
+@functions {
+    public async Task<IActionResult> OnGetAsync(string token)
+    {
+        var order = await DbContext.Orders.SingleOrDefaultAsync(order => order.PaypalToken == token && !order.Completed);
+        if (order != null)
+        {
+            if (await PaypalService.CaptureOrder(order.PaypalToken))
+            {
+                order.Completed = true;
+            }
+            else
+            {
+                DbContext.Orders.Remove(order);
+            }
+            await DbContext.SaveChangesAsync();
+        }
+
+        return LocalRedirect("/orders");
+    }
+}

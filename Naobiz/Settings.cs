@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Naobiz
 {
-    class Settings
+    public class Settings
     {
         public string DbConnection { get; set; }
 
@@ -17,9 +17,15 @@ namespace Naobiz
 
         public string SiteEmail { get; set; }
 
+        public decimal PremiumPrice { get; set; }
+
+        public decimal TaxRate { get; set; }
+
         public SmtpSettings Smtp { get; set; }
 
         public MailgunSettings Mailgun { get; set; }
+
+        public PaypalSettings Paypal { get; set; }
 
         public DashboardItemSettings[] Dashboard { get; set; }
 
@@ -28,7 +34,7 @@ namespace Naobiz
             Dashboard.Where(item => item.PaidOnly == null);
     }
 
-    class SmtpSettings
+    public class SmtpSettings
     {
         public string Host { get; set; }
 
@@ -39,7 +45,7 @@ namespace Naobiz
         public string Password { get; set; }
     }
 
-    class MailgunSettings
+    public class MailgunSettings
     {
         public string DomainName { get; set; }
 
@@ -48,7 +54,14 @@ namespace Naobiz
         public MailGunRegion Region { get; set; }
     }
 
-    class DashboardItemSettings
+    public class PaypalSettings
+    {
+        public string ClientId { get; set; }
+
+        public string ClientSecret { get; set; }
+    }
+
+    public class DashboardItemSettings
     {
         public string Name { get; set; }
 

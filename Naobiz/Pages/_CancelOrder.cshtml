@@ -1,0 +1,21 @@
+﻿@page "/_cancel-order"
+
+@namespace Naobiz.Pages
+@using Microsoft.EntityFrameworkCore;
+@using Naobiz.Data
+
+@inject AppDbContext DbContext
+
+@functions {
+    public async Task<IActionResult> OnGetAsync(string token)
+    {
+        var order = await DbContext.Orders.SingleOrDefaultAsync(order => order.PaypalToken == token && !order.Completed);
+        if (order != null)
+        {
+            DbContext.Orders.Remove(order);
+            await DbContext.SaveChangesAsync();
+        }
+
+        return LocalRedirect("/orders");
+    }
+}

@@ -1,0 +1,92 @@
+﻿@page "/orders"
+
+@inherits AuthorizedBase
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+@inject PaypalService PaypalService
+@inject Settings Settings
+
+@if (orders == null)
+{
+    <Paragraph>Loading...</Paragraph>
+    return;
+}
+
+<Panel Class="page-orders">
+    <Heading Size="HeadingSize.Is1">Mis pedidos</Heading>
+
+    <Row Margin="Margin.Is1.FromBottom">
+        <Column>
+            <Button Color="Color.Primary" Clicked="PurchasePremium">Contratar Premium</Button>
+        </Column>
+    </Row>
+
+    <Row>
+        <Column>
+            <Table Striped="true">
+                <TableHeader ThemeContrast="ThemeContrast.Light">
+                    <TableRow>
+                        <TableHeaderCell>Número</TableHeaderCell>
+                        <TableHeaderCell>Emitido</TableHeaderCell>
+                        <TableHeaderCell>Validez</TableHeaderCell>
+                        <TableHeaderCell>Importe</TableHeaderCell>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    @foreach (var order in orders)
+                    {
+                        <TableRow>
+                            <TableRowCell>@order.InvoicelId</TableRowCell>
+                            <TableRowCell>@order.CreationDateTime</TableRowCell>
+                            <TableRowCell>@order.StartDateTime.ToShortDateString()-@order.EndDateTime.ToShortDateString()</TableRowCell>
+                            <TableRowCell>@order.Value.ToString("c")</TableRowCell>
+                        </TableRow>
+                    }
+                </TableBody>
+            </Table>
+        </Column>
+    </Row>
+
+    <Modal @ref="modal">
+        <ModalContent Centered="true" Size="ModalSize.Small">
+            <ModalBody>
+                <Paragraph>Espere, el pago está efectuándose...</Paragraph>
+            </ModalBody>
+        </ModalContent>
+    </Modal>
+</Panel>
+
+@code {
+    User currentUser;
+    List<Order> orders;
+    Modal modal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        currentUser = await UserService.GetCurrentAsync(Service);
+        if (currentUser == null)
+        {
+            return;
+        }
+
+        orders = currentUser.Orders.Where(order => order.Completed).OrderByDescending(order => order.CreationDateTime).ToList();
+    }
+
+    private async Task PurchasePremium()
+    {
+        modal.Show();
+
+        var order = new Order();
+        order.Initialize(currentUser);
+        order.Value = Settings.PremiumPrice;
+        Service.Orders.Add(order);
+        await Service.SaveChangesAsync();
+
+        var uri = await PaypalService.CreateOrder(order);
+        await Service.SaveChangesAsync();
+
+        NavigationManager.NavigateTo(uri, true);
+    }
+}

@@ -65,6 +65,7 @@ namespace Naobiz
             services.AddScoped<EmailService>();
             services.AddSingleton<ChatService>();
             services.AddScoped<TerritoryService>();
+            services.AddScoped<PaypalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

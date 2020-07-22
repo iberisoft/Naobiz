@@ -12,5 +12,7 @@ namespace Naobiz.Data
 
         [MaxLength(20)]
         public string Code { get; set; }
+
+        public bool Paid { get; set; }
     }
 }

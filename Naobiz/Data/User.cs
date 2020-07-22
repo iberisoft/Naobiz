@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
@@ -13,7 +14,7 @@ namespace Naobiz.Data
 
         public bool Admin { get; set; }
 
-        public bool Paid { get; set; }
+        public bool Paid => Group?.Paid == true || DateTime.Now < MaxOrderedDateTime();
 
         public DateTime RegistrationDateTime { get; set; }
 
@@ -100,6 +101,18 @@ namespace Naobiz.Data
 
         public virtual UserGroup Group { get; set; }
 
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public DateTime? MaxOrderedDateTime()
+        {
+            var orders = Orders.Where(order => order.Completed);
+            if (orders.Any())
+            {
+                return orders.Max(order => order.EndDateTime);
+            }
+            return null;
+        }
+
         public void Initialize(bool activated)
         {
             RegistrationDateTime = DateTime.Now;
@@ -107,7 +120,6 @@ namespace Naobiz.Data
             {
                 ActivationCode = Guid.NewGuid().ToString("N");
             }
-            Paid = true;
         }
 
         public void ResetPassword()

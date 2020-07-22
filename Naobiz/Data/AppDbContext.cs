@@ -99,6 +99,10 @@ namespace Naobiz.Data
             modelBuilder.Entity<ResourceAttachment>()
                 .HasIndex(entity => new { entity.ResourceId, entity.Name })
                 .IsUnique();
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(entity => entity.PaypalToken)
+                .IsUnique();
         }
 
         private T[] LoadArray<T>(string filePath)
@@ -162,5 +166,7 @@ namespace Naobiz.Data
         public DbSet<ResourceAttachment> ResourceAttachments { get; set; }
 
         public DbSet<Blob> Blobs { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
     }
 }
