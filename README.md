@@ -44,10 +44,11 @@ The `DbConnection` setting should be `Server=(local)\\SQLEXPRESS;Database=Naobiz
 
 The following settings are used to configure emails distributing to the users:
 
-Setting       | Default Value          | Description
---------------|------------------------|------------
-SiteUrl       | http://localhost:5000/ | Site reference
-SiteEmail     | negocios@naobiz.com    | Email address
+Setting       | Default Value               | Description
+--------------|-----------------------------|------------
+SupportUrl    | http://naobiz.com/#contacta | Support page reference
+SiteUrl       | http://localhost:5000/      | Site reference
+SiteEmail     | negocios@naobiz.com         | Email address
 
 The SMTP server is defined in the `Smtp` setting:
 
