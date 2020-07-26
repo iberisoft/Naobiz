@@ -29,6 +29,9 @@ namespace Naobiz
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+#if !DEBUG
+                .UseContentRoot(System.AppDomain.CurrentDomain.BaseDirectory)
+#endif
                 .UseSerilog((hostContext, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
