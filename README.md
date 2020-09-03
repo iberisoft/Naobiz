@@ -38,7 +38,8 @@ The tool is configured in file `appsettings.json`.
 
 ### Database
 
-The `DbConnection` setting should be `Server=(local)\\SQLEXPRESS;Database=Naobiz;Trusted_Connection=True;MultipleActiveResultSets=true`.
+The `DbConnection` setting should be `Server=(local)\\SQLEXPRESS;Database=Naobiz;Trusted_Connection=True;MultipleActiveResultSets=true` and
+the `DependeeServiceName` setting should be `MSSQL$SQLEXPRESS`.
 
 ### Emails
 
