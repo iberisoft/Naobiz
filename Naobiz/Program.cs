@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Globalization;
@@ -23,6 +24,9 @@ namespace Naobiz
                 hostConfig.RunAsLocalService();
                 hostConfig.SetServiceName("Naobiz");
                 hostConfig.SetDescription("E-commerce portal");
+                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+                var settings = config.Get<Settings>();
+                hostConfig.DependsOn(settings.DependeeServiceName);
             });
             return (int)exitCode;
         }
