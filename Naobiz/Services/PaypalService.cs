@@ -15,7 +15,7 @@ namespace Naobiz.Services
 
         public PaypalService(Settings settings)
         {
-            var environment = new SandboxEnvironment(settings.Paypal.ClientId, settings.Paypal.ClientSecret);
+            var environment = new LiveEnvironment(settings.Paypal.ClientId, settings.Paypal.ClientSecret);
             m_PayPalHttpClient = new PayPalHttpClient(environment);
             m_ApplicationContext = new ApplicationContext
             {
