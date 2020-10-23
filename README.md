@@ -60,6 +60,30 @@ Port          | 587                       | Server port
 User          | postmaster@app.naobiz.com | Username to access the server
 Password      |                           | User password
 
+Alternatively, the [Mailgun](https://www.mailgun.com/) email service can be used instead of the SMTP server by defining the `Mailgun` setting:
+
+Setting       | Default Value             | Description
+--------------|---------------------------|------------
+DomainName    | app.naobiz.com            | Domain running under Mailgun account
+ApiKey        |                           | API key
+Region        | EU                        | Region (`US` or `EU`)
+
+### Payments
+
+The following settings are used to configure payments for the Premium subscription:
+
+Setting       | Default Value               | Description
+--------------|-----------------------------|------------
+PremiumPrice  | 185                         | Price in euro
+TaxRate       | 0.21 (21%)                  | Tax rate applied
+
+The PayPal service is defined in the `Paypal` setting:
+
+Setting       | Description
+--------------|------------
+ClientId      | PayPal client ID
+ClientSecret  | PayPal secret key
+
 ### Dashboard
 
 The `Dashboard` setting consist of sections, each section includes the following settings:
