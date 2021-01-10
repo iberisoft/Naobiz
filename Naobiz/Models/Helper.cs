@@ -30,7 +30,8 @@ namespace Naobiz.Models
 
         public static string PasswordRuleDescription => "8 símbolos mínimo incluyendo una letra mayúscula y un número";
 
-        public static void IsPasswordConfirmed(ValidatorEventArgs e, string password) => e.Status = password != null ? (string)e.Value == password ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
+        public static void IsPasswordConfirmed(ValidatorEventArgs e, string password) =>
+            e.Status = password != null ? (string)e.Value == password ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
 
         public static void IsUrl(ValidatorEventArgs e) => e.Status = e.Value != null ? IsUrl((string)e.Value) ? ValidationStatus.Success : ValidationStatus.Error : ValidationStatus.None;
 
