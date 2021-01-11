@@ -26,14 +26,14 @@
             <Field>
                 <FieldLabel>Contraseña:</FieldLabel>
                 <Validation Validator="Helper.IsPasswordValid">
-                    <TextEdit MaxLength="100" Role="TextRole.Password" @bind-Text="password" />
+                    <TextEdit Role="TextRole.Password" @bind-Text="password" />
                 </Validation>
                 <FieldHelp>@Helper.PasswordRuleDescription</FieldHelp>
             </Field>
             <Field>
                 <FieldLabel>Confirmar contraseña:</FieldLabel>
                 <Validation Validator="e => Helper.IsPasswordConfirmed(e, password)">
-                    <TextEdit MaxLength="100" Role="TextRole.Password">
+                    <TextEdit Role="TextRole.Password">
                         <Feedback>
                             <ValidationError>La contraseña y su confirmación no coinciden</ValidationError>
                         </Feedback>
