@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
+using System.IO;
 using System.Globalization;
 using Topshelf;
 
@@ -15,6 +17,9 @@ namespace Naobiz
 
             var exitCode = HostFactory.Run(hostConfig =>
             {
+#if !DEBUG
+                Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+#endif
                 hostConfig.Service<Service>(serviceConfig =>
                 {
                     serviceConfig.ConstructUsing(() => new Service(CreateHostBuilder(args).Build()));
@@ -33,9 +38,6 @@ namespace Naobiz
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-#if !DEBUG
-                .UseContentRoot(System.AppDomain.CurrentDomain.BaseDirectory)
-#endif
                 .UseSerilog((hostContext, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
