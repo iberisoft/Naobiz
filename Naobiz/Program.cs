@@ -5,7 +5,9 @@ using Serilog;
 using System;
 using System.IO;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Topshelf;
+using Topshelf.Runtime.DotNetCore;
 
 namespace Naobiz
 {
@@ -20,6 +22,10 @@ namespace Naobiz
 #if !DEBUG
                 Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 #endif
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    hostConfig.UseEnvironmentBuilder(hostConfig => new DotNetCoreEnvironmentBuilder(hostConfig));
+                }
                 hostConfig.Service<Service>(serviceConfig =>
                 {
                     serviceConfig.ConstructUsing(() => new Service(CreateHostBuilder(args).Build()));
