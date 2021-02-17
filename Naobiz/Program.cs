@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Topshelf;
+using Topshelf.Runtime.DotNetCore;
 
 namespace Naobiz
 {
@@ -14,6 +16,10 @@ namespace Naobiz
 
             var exitCode = HostFactory.Run(hostConfig =>
             {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    hostConfig.UseEnvironmentBuilder(hostConfig => new DotNetCoreEnvironmentBuilder(hostConfig));
+                }
                 hostConfig.Service<Service>(serviceConfig =>
                 {
                     serviceConfig.ConstructUsing(() => new Service(CreateHostBuilder(args).Build()));
